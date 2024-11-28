@@ -73,13 +73,45 @@
 |                |Управление комментариями (Просмотр жалоб, Удаление комментария)| 10.12.2024|  Надо сделать |
 | Тестирование   | Исправление багов                                             | 12.12.2024|  Надо сделать |
 | Деплой         | Исправление багов                                             | 13.12.2024|  Надо сделать |
-## Архитектура
+## Архитектура 
 
-### Технологии
-1. JavaEE (Java 21, Tomcat 11)
-2. ReactJS 18
+**REST API**
+
+### Фронтенд
+- Vite
+- ReactJS(Redux) 18
+- axios 1.7.8
+- MaterialUI 6.1
+
+FSD архитектура (shared, entities, features, widgets, pages, precesses, app)
+
+Основные страницы:
+1. Login 
+2. Article
+3. CreateArticle
+4. ProfilePage
+
+### Бекенд
+- Maven
+- JavaEE (Java 21, Tomcat 11)
+
+3-уровневая архитектура (controllers, services, respository) 
+
+Основные контроллеры:
+1. AuthenticationController 
+2. ArticleController
+3. SearchController
+4. ReactionController
+
+### Сторонние сервисы/БД/ORM
+
+1. Minio S3 3.0
+2. Сервис для модерации сообщений
 3. PostgreSQL 17
-4. Hibernate
+4. Hibernate 6.6
+
+   
+
 
 
 
