@@ -9,15 +9,15 @@ import jakarta.servlet.http.*;
 
 import java.io.*;
 
-@WebServlet("/article")
+@WebServlet(urlPatterns = {"/article"})
 public class ArticleServlet extends HttpServlet {
 
     private IArticleService articleService  = ArticleService.getInstance();
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-            ArticleDto articleDto = articleService.create();
+            ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
+            ArticleDto articleDto = articleService.create(newArticle);
             response.getWriter().write(JsonMapper.mapTo(articleDto));
     }
 }
