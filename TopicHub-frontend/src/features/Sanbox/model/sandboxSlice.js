@@ -1,0 +1,133 @@
+import { createSlice } from "@reduxjs/toolkit";
+import DomainNames from "../../../app/store/DomainNames";
+import ApiRequestCreator from "../../../app/util/requestFactory";
+import api from "../../../app/util/apiPath";
+//----state---
+const initialState = {
+  theme:"",
+  keywords:[],
+  list: [],
+  components: [
+    {
+      id: 0,
+      name: "Раздел",
+      type: "part",
+      value:""
+     
+    },
+    {
+      id: 1,
+      name: "Aбзац",
+      type: "paragraph",
+      value:""
+     
+    },
+    {
+      id: 2,
+      name: "Cписок",
+      type: "list",
+      value:[]
+    },
+    {
+      id: 3,
+      name: "Заголовок",
+      type: "chapter",
+      value:""
+    },
+    {
+      id: 4,
+      name: "Изображение",
+      type: "img",
+       value:null
+     
+    },
+  ],
+  status: "idle",
+  error: null,
+};
+//-------------
+
+
+const apiFactory = new ApiRequestCreator(DomainNames.sandbox, api.article.url);
+
+//--- create----
+export const createArticle = apiFactory.createPostRequest(api.article.create);
+//----------------------
+
+const sandboxSlice = createSlice({
+  name: DomainNames.sandbox,
+  initialState,
+  reducers: {
+    saveTheme(state,action){
+      
+        state.theme = action.payload.theme
+    },
+    saveItem(state, action) {
+
+      const { created, value } = action.payload
+      const existing = state.list.find(item => item.created === created)
+      if (existing) {
+        existing.value = value
+      }else{
+        state.list.push(action.payload);
+      }
+    },
+    setKeywords(state,action){
+      console.log(action.payload)
+      state.keywords = action.payload
+    },
+    delItem(state,action){
+      const { created } = action.payload
+      state.list = state.list.filter(item=>item.created!==created)
+    },
+    resetSandBox(state,action){
+      state.theme=""
+      state.keywords=[]
+      state.list = []
+      state.status='idle'
+      state.error=null
+
+      
+    },
+    
+  },
+  extraReducers(builder) {
+    builder
+      //---создание статьи-------------
+      .addCase(createArticle.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(createArticle.fulfilled, (state, action) => {
+        state.status = "succeeded";
+
+       
+      })
+      .addCase(createArticle.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    //----------------------------------------
+  },
+});
+
+
+export function getSandboxList(state) {
+  return state[DomainNames.sandbox].list;
+}
+export function getSandboxWords(state) {
+  return state[DomainNames.sandbox].keywords;
+}
+export function getSandboxComponents(state) {
+    return state[DomainNames.sandbox].components;
+  }
+  export function getTheme(state) {
+    return state[DomainNames.sandbox].theme;
+  }
+
+  export function isEmpty(state) {
+    return state[DomainNames.sandbox].theme.trim().length!=0 && state[DomainNames.sandbox].list.length!=0 && state[DomainNames.sandbox].list[0].value.length!=0;
+  }
+
+export const { saveItem,delItem,saveTheme,setKeywords,resetSandBox } = sandboxSlice.actions;
+
+export default sandboxSlice.reducer;
