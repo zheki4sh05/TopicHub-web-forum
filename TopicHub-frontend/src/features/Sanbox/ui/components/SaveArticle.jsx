@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createArticle,
   getSandboxList,
   getSandboxStatus,
   getSandboxWords,
@@ -14,6 +13,7 @@ import { useEffect, useState } from "react";
 import statusTypes from "../../../../app/util/statusTypes";
 import { useNavigate } from "react-router";
 import { PathConstants } from "../../../../app/pathConstants";
+import { createArticle } from "../../api/requests";
 
 function SaveArticle() {
     const navigate = useNavigate();

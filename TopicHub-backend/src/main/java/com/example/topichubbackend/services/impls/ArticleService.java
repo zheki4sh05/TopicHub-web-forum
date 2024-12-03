@@ -6,6 +6,8 @@ import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
 
+import java.sql.*;
+import java.time.*;
 import java.util.*;
 
 
@@ -25,6 +27,7 @@ public class ArticleService implements IArticleService {
                 .theme(articleDto.getTheme())
                 .keyWords(String.join(dilimiter, articleDto.getKeyWords()))
                 .likes(0L)
+                .created(Timestamp.valueOf(LocalDateTime.now()))
                 .dislikes(0l)
                 .build();
 
@@ -55,7 +58,6 @@ public class ArticleService implements IArticleService {
             ;
         });
 
-        articleDao.saveAll(articlePartList, article);
 
     }
 }

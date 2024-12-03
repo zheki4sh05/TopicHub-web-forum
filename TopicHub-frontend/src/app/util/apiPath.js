@@ -4,6 +4,10 @@ const api={
         url:base.concat("article"),
         create:"",
     },
+    hubs:{
+        url:base.concat("hubs"),
+        fetch:"",
+    },
    
 }
 

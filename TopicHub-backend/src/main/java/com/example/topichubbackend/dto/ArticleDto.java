@@ -2,6 +2,7 @@ package com.example.topichubbackend.dto;
 
 import lombok.*;
 
+import java.sql.*;
 import java.util.*;
 
 @Builder
@@ -14,5 +15,6 @@ public class ArticleDto {
     private List<ArticlePartDto> list;
     private Integer likes;
     private Integer dislikes;
+    private Timestamp created;
 
 }

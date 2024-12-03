@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import ApiRequestCreator from "../../../app/util/requestFactory";
 import api from "../../../app/util/apiPath";
+import { createArticle } from "../api/requests";
 //----state---
 const initialState = {
   theme:"",
@@ -48,11 +49,11 @@ const initialState = {
 //-------------
 
 
-const apiFactory = new ApiRequestCreator(DomainNames.sandbox, api.article.url);
+// const apiFactory = new ApiRequestCreator(DomainNames.sandbox, api.article.url);
 
-//--- create----
-export const createArticle = apiFactory.createPostRequest(api.article.create);
-//----------------------
+// //--- create----
+// // export const createArticle = apiFactory.createPostRequest(api.article.create);
+// //----------------------
 
 const sandboxSlice = createSlice({
   name: DomainNames.sandbox,

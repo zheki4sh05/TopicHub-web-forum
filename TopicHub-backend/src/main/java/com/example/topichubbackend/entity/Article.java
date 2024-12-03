@@ -3,6 +3,7 @@ package com.example.topichubbackend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.*;
 import java.util.*;
 
 @AllArgsConstructor
@@ -24,6 +25,9 @@ public class Article {
     private Long likes;
     @Column(name = "dislikes")
     private Long dislikes;
+
+    @Column(name = "created")
+    private Timestamp created;
 
 
 }
