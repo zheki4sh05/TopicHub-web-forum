@@ -14,8 +14,19 @@ public final class JsonMapper {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            return Optional.of(mapper.readValue(request.getReader(), cls));
-
+            BufferedReader reader = request.getReader();
+            StringBuilder requestBody = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                requestBody.append(line);
+            }
+            if (requestBody.length() > 0) { // Данные в request body существуют
+                return Optional.of(mapper.readValue(requestBody.toString(), cls));
+            }
+            else { // Данных в request body нет
+                return Optional.empty();
+            }
         } catch (JsonGenerationException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {

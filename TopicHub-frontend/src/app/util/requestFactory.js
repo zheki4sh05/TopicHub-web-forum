@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import getRequestConfig from "./requestConfig";
 
 
 class ApiRequestCreator{
@@ -32,7 +33,7 @@ class ApiRequestCreator{
     createPostRequest(uri){
 
         return  createAsyncThunk(this.domainName.concat(uri)  , async (initial) => {
-            const response = await axios.post(this.url.concat(uri),initial.data,initial);
+            const response = await axios.post(this.url.concat(uri),initial,getRequestConfig(""));
               return response.data
         })
     

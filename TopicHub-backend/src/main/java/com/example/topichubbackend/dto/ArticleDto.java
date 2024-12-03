@@ -7,7 +7,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class ArticleDto {
     private String theme;
     private List<String> keyWords;

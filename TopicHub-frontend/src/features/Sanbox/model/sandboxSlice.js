@@ -120,6 +120,9 @@ export function getSandboxWords(state) {
 export function getSandboxComponents(state) {
     return state[DomainNames.sandbox].components;
   }
+  export function getSandboxStatus(state) {
+    return state[DomainNames.sandbox].status;
+  }
   export function getTheme(state) {
     return state[DomainNames.sandbox].theme;
   }

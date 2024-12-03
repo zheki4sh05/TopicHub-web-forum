@@ -1,15 +1,18 @@
 package com.example.topichubbackend.entity;
 
-import jakarta.persistence.*;
+public enum ArticlePartType {
+    PARAGRAPH ("paragraph"),
+    LIST ("list"),
+    CHAPTER ("chapter"),
+    IMG ("img");
 
-@Entity
-@Table(name = "articlePartType")
-public class ArticlePartType {
-    @Column(name = "id")
-    @Id
-    private Long id;
+    private String type;
 
-    @Column(name = "name")
-    @Id
-    private String name;
+    ArticlePartType(String type) {
+        this.type = type;
+    }
+
+    public String type() {
+        return type;
+    }
 }

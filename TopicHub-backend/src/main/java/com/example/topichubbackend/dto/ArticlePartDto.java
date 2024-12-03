@@ -9,6 +9,7 @@ import lombok.*;
 public class ArticlePartDto {
     private Integer id;
     private Long created;
+    private String name;
     private String type;
     private String value;
 }

@@ -16,8 +16,20 @@ public class ArticleServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
             ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
-            ArticleDto articleDto = articleService.create(newArticle);
-            response.getWriter().write(JsonMapper.mapTo(articleDto));
+            articleService.create(newArticle);
+        response.setStatus(201);
     }
+//    @Override
+//    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//
+//        ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
+//        articleService.create(newArticle);
+//        response.setStatus(201);
+//    }
+
 }
+
+//    ArticleDto articleDto = articleService.create(newArticle);
+//            response.getWriter().write(JsonMapper.mapTo(articleDto));

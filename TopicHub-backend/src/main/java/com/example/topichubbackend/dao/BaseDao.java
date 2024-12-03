@@ -42,9 +42,11 @@ public abstract class BaseDao {
     }
 
 
-    public void save(Object entity) {
+    public Object save(Object entity) {
         transaction(em -> em.persist(entity));
+        return entity;
     }
+
     public void delete(Object entity) {
         transaction(em -> em.remove(entity));
     }
