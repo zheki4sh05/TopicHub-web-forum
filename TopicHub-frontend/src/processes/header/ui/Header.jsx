@@ -3,15 +3,23 @@ import SearchBox from "../../../features/Search/ui/SearchBox";
 import { Link, useLocation } from "react-router";
 import UserSettings from "./../../../widgets/userSettings/ui/UserSettings";
 import { PathConstants } from "./../../../app/pathConstants";
+import { useSelector } from "react-redux";
+import { getUser } from "../../../pages/Profile/model/userSlice";
+import statusTypes from "../../../app/util/statusTypes";
 
 function Header() {
   const location = useLocation();
+
+  const user = useSelector(getUser);
 
   const getLinkByPath = (path) => {
     switch (path) {
       case PathConstants.ARTICLE: {
         return (
-          <Link style={{ textDecoration: "none" }} to={{pathname: PathConstants.CREATE_ARTICLE}}>
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.CREATE_ARTICLE }}
+          >
             <Typography
               variant="subtitle1"
               style={{ color: "white", textDecoration: "underline" }}
@@ -23,7 +31,25 @@ function Header() {
       }
       case PathConstants.CREATE_ARTICLE: {
         return (
-          <Link style={{ textDecoration: "none" }} to={{pathname: PathConstants.ARTICLE}}>
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.ARTICLE }}
+          >
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Лента
+            </Typography>
+          </Link>
+        );
+      }
+      case PathConstants.MANAGE_ARTICLES: {
+        return (
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.ARTICLE }}
+          >
             <Typography
               variant="subtitle1"
               style={{ color: "white", textDecoration: "underline" }}
@@ -60,7 +86,10 @@ function Header() {
               alignItems: "center",
             }}
           >
-            <Link style={{ textDecoration: "none" }} to={{pathname: PathConstants.ARTICLE}}>
+            <Link
+              style={{ textDecoration: "none" }}
+              to={{ pathname: PathConstants.ARTICLE }}
+            >
               <Typography variant="h6" style={{ color: "white" }}>
                 TopicHub
               </Typography>
@@ -96,6 +125,22 @@ function Header() {
                 alignItems: "center",
               }}
             >
+              {user.roles.includes(statusTypes.admin) ? (
+                <Box sx={{ marginRight: "15px" }}>
+                  <Link
+                    style={{ textDecoration: "none" }}
+                    to={{ pathname: PathConstants.MANAGE_ARTICLES }}
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      style={{ color: "white", textDecoration: "underline" }}
+                    >
+                      Админ панель
+                    </Typography>
+                  </Link>
+                </Box>
+              ) : null}
+
               <Box sx={{ marginRight: "20px" }}>
                 {getLinkByPath(location.pathname)}
               </Box>

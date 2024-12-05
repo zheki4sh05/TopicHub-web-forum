@@ -8,7 +8,7 @@ import {
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
-import { Link } from "react-router";
+
 import { useEffect, useState } from "react";
 import { fetchFeed } from "../api/requests";
 import { getFeed, getFeedStatus } from "../model/feedSlice";
@@ -67,6 +67,15 @@ function Articles() {
             <Typography
               variant="body1"
               style={{ textDecoration: select == 0 ? "none" : "underline" }}
+            >
+              Все
+            </Typography>
+          </Button>
+
+          <Button variant="text" onClick={() => handleClick(0)}>
+            <Typography
+              variant="body1"
+              style={{ textDecoration: select == 1 ? "none" : "underline" }}
             >
               Моя лента
             </Typography>

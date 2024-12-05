@@ -15,4 +15,12 @@ public class DaoFactory {
     public static HubDao createHubDao(){
         return new HubDao(DaoFactory.configureManager());
     }
+
+    public static AuthDao createAuthDao(){
+        return new AuthDao(DaoFactory.configureManager());
+    }
+
+    public static SessionDao createSessionDao(){
+        return new SessionDao(DaoFactory.configureManager());
+    }
 }

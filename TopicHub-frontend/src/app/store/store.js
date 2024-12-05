@@ -4,13 +4,15 @@ import sandboxSlice from './../../features/Sanbox/model/sandboxSlice';
 import hubsSlice from './../../entities/hubs/model/hubsSlice'
 import feedSlice from "../../pages/Article/model/feedSlice";
 import articleSlice from './../../features/Article/model/articleSlice';
+import userSlice from './../../pages/Profile/model/userSlice';
 
 export default configureStore({
     reducer:{
         [DomainNames.sandbox]:sandboxSlice,
         [DomainNames.hubs]:hubsSlice,
         [DomainNames.feed]:feedSlice,
-        [DomainNames.article]:articleSlice
+        [DomainNames.article]:articleSlice,
+        [DomainNames.user]:userSlice
     },
    
 })

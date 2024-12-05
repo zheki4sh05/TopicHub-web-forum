@@ -7,6 +7,7 @@ import Profile from "../pages/Profile/ui/Profile";
 import AuthFormComponent from "../widgets/auth/ui/AuthComponent";
 import CreateArticle from "../pages/CreateArticle/ui/CreateArticle";
 import ArticleView from "../pages/ArticleView/ui/ArticleView";
+import ManageArticle from "../pages/ManagerArticle/ui/ManageArticle";
 
 
 
@@ -35,7 +36,12 @@ function App() {
         {
           path: PathConstants.VIEW,
           element: <ArticleView />,
-        }
+        },
+        {
+          path: PathConstants.MANAGE_ARTICLES,
+          element: <ManageArticle />,
+        },
+     
       ],
     },
   ]);

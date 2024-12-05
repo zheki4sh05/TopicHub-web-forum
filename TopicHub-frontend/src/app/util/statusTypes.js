@@ -4,7 +4,9 @@ const statusTypes = {
     failed:'failed',
     idle:'idle',
     short:'short',
-    long:'long'
+    long:'long',
+    user:"USER",
+    admin:"ADMIN"
 }
 
 export default statusTypes;
