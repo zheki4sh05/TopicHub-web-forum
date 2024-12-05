@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import getRequestConfig from "./requestConfig";
+import addParams from "./paramsConfig";
 
 
 class ApiRequestCreator{
@@ -17,7 +18,7 @@ class ApiRequestCreator{
         if(withParms){
 
               return  createAsyncThunk(this.domainName.concat(uri)  , async (initial) => {
-                const response = await axios.get(fullUrl.concat(addParams(initialUser.data)),  initial);
+                const response = await axios.get(fullUrl.concat(addParams(initial)),  getRequestConfig(""));
                   return response.data
             })
 

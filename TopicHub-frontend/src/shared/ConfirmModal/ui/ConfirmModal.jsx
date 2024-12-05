@@ -31,9 +31,9 @@ export default function ConfirmModal({show, title,body ,handlerAgree, handlerDis
       >
         <Box sx={{ ...style, width: 400 }}>
           <h2 id="parent-modal-title">{title}</h2>
-          {/* <p id="parent-modal-description">
-            {body} {data.name?
-          </p> */}
+          <p id="parent-modal-description">
+            {body} 
+          </p>
 
           <Box  sx={{display:"flex",flexDirection:"row", justifyContent:"space-around"}} >
           <Button onClick={handlerDisagree} color="secondary" >Отмена</Button>

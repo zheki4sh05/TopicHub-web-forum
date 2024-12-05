@@ -1,9 +1,43 @@
 import { Box, Grid2, Typography } from "@mui/material";
 import SearchBox from "../../../features/Search/ui/SearchBox";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import UserSettings from "./../../../widgets/userSettings/ui/UserSettings";
+import { PathConstants } from "./../../../app/pathConstants";
 
 function Header() {
+  const location = useLocation();
+
+  const getLinkByPath = (path) => {
+    switch (path) {
+      case PathConstants.ARTICLE: {
+        return (
+          <Link style={{ textDecoration: "none" }} to={{pathname: PathConstants.CREATE_ARTICLE}}>
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Создать статью
+            </Typography>
+          </Link>
+        );
+      }
+      case PathConstants.CREATE_ARTICLE: {
+        return (
+          <Link style={{ textDecoration: "none" }} to={{pathname: PathConstants.ARTICLE}}>
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Лента
+            </Typography>
+          </Link>
+        );
+      }
+    }
+
+    return "";
+  };
+
   return (
     <Box
       sx={{
@@ -26,7 +60,7 @@ function Header() {
               alignItems: "center",
             }}
           >
-            <Link style={{ textDecoration: "none" }}>
+            <Link style={{ textDecoration: "none" }} to={{pathname: PathConstants.ARTICLE}}>
               <Typography variant="h6" style={{ color: "white" }}>
                 TopicHub
               </Typography>
@@ -63,14 +97,7 @@ function Header() {
               }}
             >
               <Box sx={{ marginRight: "20px" }}>
-                <Link style={{ textDecoration: "none" }}>
-                  <Typography
-                    variant="subtitle1"
-                    style={{ color: "white", textDecoration: "underline" }}
-                  >
-                    Создать статью
-                  </Typography>
-                </Link>
+                {getLinkByPath(location.pathname)}
               </Box>
               <UserSettings />
             </Box>

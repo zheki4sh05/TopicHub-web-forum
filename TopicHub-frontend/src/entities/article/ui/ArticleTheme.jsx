@@ -9,18 +9,17 @@ import {
 import { useState } from "react";
 import SelectHub from "../../hubs/ui/SelectHub";
 import { useDispatch, useSelector } from "react-redux";
-import { getTheme, saveTheme } from "../../../features/Sanbox/model/sandboxSlice";
+import { getTheme, saveTheme, setHub } from "../../../features/Sanbox/model/sandboxSlice";
 
 function ArticleTheme({ data }) {
   // const [theme, setTheme] = useState(useSelector(getTheme));
   const theme = useSelector(getTheme);
   const dispatch = useDispatch()
 
-  const [hub, setHub] = useState(1);
+
 
   const handleHubChange = (value) => {
-    setHub(value);
-
+    dispatch(setHub({id:value}))
   };
 
   const handleThemeChange=(data)=>{

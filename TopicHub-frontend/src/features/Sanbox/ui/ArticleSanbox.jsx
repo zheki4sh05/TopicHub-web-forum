@@ -1,9 +1,12 @@
 import { Box } from "@mui/material";
 import SandboxSelect from "./SandboxSelect";
-import { useDispatch, useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 import { getSandboxList } from "../model/sandboxSlice";
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import ParagraphEdit from "./components/ParagraphEdit";
+import ListEdit from "./components/ListEdit";
+import ImageEdit from "./components/ImageEdit";
+import ChapterEdit from "./components/ChapterEdit";
 
 function ArticleSanbox() {
 
@@ -11,10 +14,19 @@ function ArticleSanbox() {
  
 
     const getItemByType=(item,index)=>{
-     
+        
         switch(item.type){
             case "paragraph":{
                 return (<ParagraphEdit item={item} key={index} />)
+            }
+            case "list":{
+                return (<ListEdit list={item} key={index} />)
+            }
+            case "img":{
+                return (<ImageEdit item={item} key={index} />)
+            }
+            case "chapter":{
+                return (<ChapterEdit item={item} key={index} />)
             }
         
         }

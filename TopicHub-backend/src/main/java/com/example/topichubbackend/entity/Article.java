@@ -26,6 +26,10 @@ public class Article {
     @Column(name = "dislikes")
     private Long dislikes;
 
+    @ManyToOne
+    @JoinColumn(name = "hub")
+    private Hub hub;
+
     @Column(name = "created")
     private Timestamp created;
 

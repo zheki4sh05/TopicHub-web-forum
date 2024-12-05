@@ -6,6 +6,7 @@ import { createArticle } from "../api/requests";
 //----state---
 const initialState = {
   theme:"",
+  hub:null,
   keywords:[],
   list: [],
   components: [
@@ -39,7 +40,7 @@ const initialState = {
       id: 4,
       name: "Изображение",
       type: "img",
-       value:null
+       value:""
      
     },
   ],
@@ -74,8 +75,11 @@ const sandboxSlice = createSlice({
       }
     },
     setKeywords(state,action){
-      console.log(action.payload)
+    
       state.keywords = action.payload
+    },
+    setHub(state,action){
+      state.hub = action.payload
     },
     delItem(state,action){
       const { created } = action.payload
@@ -118,6 +122,9 @@ export function getSandboxList(state) {
 export function getSandboxWords(state) {
   return state[DomainNames.sandbox].keywords;
 }
+export function getHub(state) {
+  return state[DomainNames.sandbox].hub;
+}
 export function getSandboxComponents(state) {
     return state[DomainNames.sandbox].components;
   }
@@ -129,9 +136,9 @@ export function getSandboxComponents(state) {
   }
 
   export function isEmpty(state) {
-    return state[DomainNames.sandbox].theme.trim().length!=0 && state[DomainNames.sandbox].list.length!=0 && state[DomainNames.sandbox].list[0].value.length!=0;
+    return state[DomainNames.sandbox].theme.trim().length!=0 && state[DomainNames.sandbox].list.length!=0 && state[DomainNames.sandbox].list[0].value.length!=0 && state[DomainNames.sandbox].hub!=null;
   }
 
-export const { saveItem,delItem,saveTheme,setKeywords,resetSandBox } = sandboxSlice.actions;
+export const { saveItem,delItem,saveTheme,setKeywords,resetSandBox,setHub } = sandboxSlice.actions;
 
 export default sandboxSlice.reducer;

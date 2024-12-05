@@ -6,6 +6,7 @@ import Articles from "../pages/Article/ui/Articles";
 import Profile from "../pages/Profile/ui/Profile";
 import AuthFormComponent from "../widgets/auth/ui/AuthComponent";
 import CreateArticle from "../pages/CreateArticle/ui/CreateArticle";
+import ArticleView from "../pages/ArticleView/ui/ArticleView";
 
 
 
@@ -30,6 +31,10 @@ function App() {
         {
           path: PathConstants.PROFILE,
           element: <Profile />,
+        },
+        {
+          path: PathConstants.VIEW,
+          element: <ArticleView />,
         }
       ],
     },

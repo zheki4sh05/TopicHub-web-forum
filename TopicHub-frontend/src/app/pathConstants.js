@@ -3,4 +3,5 @@ export const PathConstants = {
     ARTICLE: "/articles",
     CREATE_ARTICLE:"/create-article",
     PROFILE: "/profile",
+    VIEW:"/articles/view"
 }

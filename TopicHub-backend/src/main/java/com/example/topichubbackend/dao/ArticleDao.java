@@ -2,12 +2,13 @@ package com.example.topichubbackend.dao;
 
 import com.example.topichubbackend.entity.*;
 import jakarta.persistence.*;
-import jakarta.transaction.*;
 
 import java.util.*;
 
 
 public class ArticleDao extends BaseDao{
+
+    private final Integer batchSize  = 15;
     public ArticleDao(EntityManager entityManager) {
         this.em = entityManager;
     }
@@ -28,27 +29,60 @@ public class ArticleDao extends BaseDao{
 //            }
 //        }
 
-    public List<Article> getSortedAndPaginated(int pageNumber, int pageSize){
+    public List<Article> getSortedAndPaginated(Integer pageNumber, Integer id){
 
-        Query query = this.em.createQuery("FROM article ORDER BY created ASC", Article.class);
-        query.setFirstResult((pageNumber - 1) * pageSize);
-        query.setMaxResults(pageSize);
+        Query query = this.em.createQuery("FROM Article a WHERE a.hub.id = :id ORDER BY a.created ASC", Article.class);
+        query.setParameter("id", id);
+        query.setFirstResult((pageNumber - 1) * batchSize);
+        query.setMaxResults(batchSize);
         List<Article> results = query.getResultList();
         this.em.close();
         return results;
 
     }
 
-    private Long calcTotalEntitiesCount(){
-        String countQ = "Select count(a.id) from article a";
+    public List<Article> getSortedAndPaginated(Integer page) {
+        Query query = this.em.createQuery("FROM Article a ORDER BY a.created ASC", Article.class);
+        query.setFirstResult((page - 1) * batchSize);
+        query.setMaxResults(batchSize);
+        List<Article> results = query.getResultList();
+        return results;
+    }
+
+    public Long calcTotalEntitiesCount(){
+        String countQ = "SELECT COUNT(a.id) FROM Article a";
         Query countQuery = this.em.createQuery(countQ, Long.class);
         Long countResults =(Long) countQuery.getSingleResult();
         return countResults;
     }
 
-    private Integer getPageNumber(Long count, Integer pageSize){
+    public Integer getPageNumber(Long count, Integer pageSize){
         return (int) (Math.ceil(count / pageSize));
     }
+
+    public Integer getLastPageNumber(Long count){
+
+        return getPageNumber(count, batchSize);
+
+    }
+
+    public List<ArticlePart> findByArticleId(Long id){
+
+
+        String hql = "FROM ArticlePart ap WHERE ap.article.id = :id";
+        Query query = this.em.createQuery(hql);
+        query.setParameter("id", id);
+
+        try {
+            return (List<ArticlePart>) query.getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+
+
+
+    }
+
 
 
 }

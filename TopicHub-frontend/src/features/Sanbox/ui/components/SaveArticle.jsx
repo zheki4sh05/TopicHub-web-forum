@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getHub,
   getSandboxList,
   getSandboxStatus,
   getSandboxWords,
@@ -22,7 +23,9 @@ function SaveArticle() {
   const theme = useSelector(getTheme);
   const keyWords = useSelector(getSandboxWords);
   const list = useSelector(getSandboxList);
+  const hub = useSelector(getHub)
   const sandboxStatus = useSelector(getSandboxStatus);
+
 
   const [backDrop, setBackdrop] = useState(false);
   const handleClose = () => {
@@ -39,6 +42,7 @@ function SaveArticle() {
         theme,
         keyWords: keyWords.map((word) => word.name),
         list,
+        hub:hub.id
       })
     );
   };

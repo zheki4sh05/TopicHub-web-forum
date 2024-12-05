@@ -1,6 +1,8 @@
 const DomainNames = {
     sandbox:"sandbox",
-    hubs:"hubs"
+    hubs:"hubs",
+    feed:"feed",
+    article:"article"
 
    
 

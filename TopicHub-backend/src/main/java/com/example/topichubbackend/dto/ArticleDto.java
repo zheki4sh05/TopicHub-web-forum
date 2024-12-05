@@ -9,12 +9,16 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class ArticleDto {
+
+    private Long id;
     private String theme;
     private List<String> keyWords;
     private List<ArticlePartDto> list;
-    private Integer likes;
-    private Integer dislikes;
+    private Long likes;
+    private Long dislikes;
     private Timestamp created;
+    private Integer hub;
 
 }

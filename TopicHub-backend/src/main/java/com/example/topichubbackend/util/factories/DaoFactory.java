@@ -12,4 +12,7 @@ public class DaoFactory {
     public static ArticleDao createArticleDao(){
         return new ArticleDao(DaoFactory.configureManager());
     }
+    public static HubDao createHubDao(){
+        return new HubDao(DaoFactory.configureManager());
+    }
 }

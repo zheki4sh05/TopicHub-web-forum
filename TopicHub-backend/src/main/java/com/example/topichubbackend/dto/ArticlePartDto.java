@@ -8,6 +8,7 @@ import lombok.*;
 @Data
 public class ArticlePartDto {
     private Integer id;
+    private String uuid;
     private Long created;
     private String name;
     private String type;
