@@ -9,7 +9,7 @@ import jakarta.servlet.http.*;
 import java.io.*;
 import java.util.*;
 
-@WebServlet("/logout")
+@WebServlet("/auth/logout")
 public class LogoutServlet extends HttpServlet {
 
     private final ISessionService sessionService = ServiceFactory.getSessionService();

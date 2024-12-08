@@ -1,6 +1,4 @@
 import { Box, createTheme } from "@mui/material";
-
-import AuthFormComponent from "../../../widgets/auth/ui/AuthComponent";
 import MainBody from "../../mainBody/ui/MainBody";
 
 import { Outlet } from "react-router-dom";
@@ -21,7 +19,8 @@ function Layout() {
         <Box sx={{height:"100vh", width:"100%",bgcolor:"#F0F8FF", boxSizing:"border-box", overflow:"hidden"}}>
           {
            (authStatus !== true) ? 
-              <AuthFormComponent />
+              <>
+              </>
              : (appStatus !== true) ? 
               // <LoadingUserData  />
               <></>

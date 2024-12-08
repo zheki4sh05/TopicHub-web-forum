@@ -4,10 +4,10 @@ import Page404 from "../pages/404/ui/Page404";
 import { PathConstants } from "./pathConstants";
 import Articles from "../pages/Article/ui/Articles";
 import Profile from "../pages/Profile/ui/Profile";
-import AuthFormComponent from "../widgets/auth/ui/AuthComponent";
 import CreateArticle from "../pages/CreateArticle/ui/CreateArticle";
 import ArticleView from "../pages/ArticleView/ui/ArticleView";
 import ManageArticle from "../pages/ManagerArticle/ui/ManageArticle";
+import Login from "../pages/Login/ui/Login";
 
 
 
@@ -19,7 +19,7 @@ function App() {
       children: [
         {
           path: PathConstants.HOME,
-          element: <AuthFormComponent />,
+          element: <Login />,
         },
         {
           path: PathConstants.ARTICLE,
@@ -41,6 +41,10 @@ function App() {
           path: PathConstants.MANAGE_ARTICLES,
           element: <ManageArticle />,
         },
+        {
+          path:PathConstants.LOGIN,
+          element:<Login />,
+        }
      
       ],
     },

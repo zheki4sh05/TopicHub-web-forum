@@ -1,5 +1,6 @@
 export const PathConstants = {
     HOME: "/",
+    LOGIN:"/login",
     ARTICLE: "/articles",
     CREATE_ARTICLE:"/create-article",
     PROFILE: "/profile",

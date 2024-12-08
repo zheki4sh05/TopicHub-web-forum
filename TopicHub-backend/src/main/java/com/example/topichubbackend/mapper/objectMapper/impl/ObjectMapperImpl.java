@@ -1,9 +1,8 @@
-package com.example.topichubbackend.util.objectMapper.impl;
+package com.example.topichubbackend.mapper.objectMapper.impl;
 
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
-import com.example.topichubbackend.services.impls.*;
-import com.example.topichubbackend.util.objectMapper.*;
+import com.example.topichubbackend.mapper.objectMapper.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -36,5 +35,15 @@ public class ObjectMapperImpl implements IObjectMapper {
 
 
 
+    }
+
+    @Override
+    public UserDto mapFrom(User newUser, List<UserRole> userRoles) {
+        return UserDto.builder()
+                .id(newUser.getUuid().toString())
+                .email(newUser.getEmail())
+                .login(newUser.getLogin())
+                .roles(userRoles.stream().map(item->item.getRole().getName()).collect(Collectors.toList()))
+                .build();
     }
 }

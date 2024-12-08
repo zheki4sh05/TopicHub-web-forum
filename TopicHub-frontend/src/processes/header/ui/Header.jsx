@@ -4,13 +4,15 @@ import { Link, useLocation } from "react-router";
 import UserSettings from "./../../../widgets/userSettings/ui/UserSettings";
 import { PathConstants } from "./../../../app/pathConstants";
 import { useSelector } from "react-redux";
-import { getUser } from "../../../pages/Profile/model/userSlice";
+import { getUser, isAuth } from "../../../pages/Profile/model/userSlice";
 import statusTypes from "../../../app/util/statusTypes";
 
 function Header() {
   const location = useLocation();
 
   const user = useSelector(getUser);
+
+  const auth = useSelector(isAuth)
 
   const getLinkByPath = (path) => {
     switch (path) {
@@ -57,6 +59,53 @@ function Header() {
               Лента
             </Typography>
           </Link>
+        );
+      }
+      case PathConstants.PROFILE: {
+        return (
+          <Box sx={{display:"flex",flexDirection:"row",gap:"15px"}}>
+           <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.CREATE_ARTICLE }}
+          >
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Создать тему
+            </Typography>
+          </Link>
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.ARTICLE }}
+          >
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Лента
+            </Typography>
+          </Link>
+          </Box>
+         
+        );
+      }
+      case PathConstants.LOGIN: {
+        return (
+          
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.ARTICLE }}
+          >
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Лента
+            </Typography>
+          </Link>
+          
+         
         );
       }
     }
@@ -125,7 +174,7 @@ function Header() {
                 alignItems: "center",
               }}
             >
-              {user.roles.includes(statusTypes.admin) ? (
+              {auth && user.roles.includes(statusTypes.admin) ? (
                 <Box sx={{ marginRight: "15px" }}>
                   <Link
                     style={{ textDecoration: "none" }}

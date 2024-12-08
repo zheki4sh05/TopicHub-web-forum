@@ -14,6 +14,7 @@ import { fetchFeed } from "../api/requests";
 import { getFeed, getFeedStatus } from "../model/feedSlice";
 import statusTypes from "./../../../app/util/statusTypes";
 import Article from "../../../features/Article/ui/Article";
+import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
 
 function Articles() {
   const hubs = useSelector(getHubsList);
@@ -100,7 +101,16 @@ function Articles() {
         </Box>
       </MenuWrapper>
 
-      <Box sx={{ margin: "20px 0 20px 0" }}>
+      <ArticlesList
+      
+      status={feedStatus}
+      batch={feed}
+      makeRequest={makeRequest}
+      select={select}
+
+      />
+
+      {/* <Box sx={{ margin: "20px 0 20px 0" }}>
         {feedStatus == statusTypes.loading ? (
           <Box sx={{ width: "100%" }}>
             <LinearProgress />
@@ -129,7 +139,7 @@ function Articles() {
             </Button>
           </Box>
         )}
-      </Box>
+      </Box> */}
       <MenuWrapper>
         <Box
           sx={{

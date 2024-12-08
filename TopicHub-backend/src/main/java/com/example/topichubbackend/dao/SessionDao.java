@@ -16,4 +16,16 @@ public class SessionDao extends BaseDao{
         return Optional.of(session);
 
     }
+
+    public Optional<Session> findByUserId(UUID id) {
+        String hql = "FROM Session s WHERE s.user.uuid = :id";
+
+        try {
+            return Optional.of(this.em.createQuery(hql, Session.class)
+                    .setParameter("id", id)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
 }

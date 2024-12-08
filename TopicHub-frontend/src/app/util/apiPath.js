@@ -4,13 +4,27 @@ const api={
         url:base.concat("article"),
         hubs:"hubs/",
         feed:"",
-        create:"",
         comment:"/comment"
     },
     hubs:{
         url:base.concat("hubs"),
         fetch:"",
     },
+    auth:{
+        url:base.concat("auth"),
+        signup:"/signup",
+        signin:"/signin",
+    },
+    profile:{
+        url:base.concat("profile"),
+        articles:""
+    },
+    sandbox:{
+        url :base.concat("sandbox"),
+        create:""
+    }
+    
+   
    
 }
 

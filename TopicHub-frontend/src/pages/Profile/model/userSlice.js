@@ -1,14 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
+import { signin, signup } from "../../Login/api/requests";
+import { fetchUserArticles } from "../api/requests";
 
 
 //----state---
 const initialState = {
-  user:{
+  // user:{
 
-    roles:["USER", "ADMIN"]
-  },
+  //   roles:["USER", "ADMIN"],
+  //   id:"y8ofh234v9b34[v3",
+  //   login:"evgeniy",
+  //   email:"evgeniy.shostak.04@mail.ru",
+  //   password:null
+  // },
+
+  user:{},
+
+  articles:{},
+  others:{},
   status: "idle",
+  auth:false,
   error: null,
 };
 //-------------
@@ -20,24 +32,62 @@ const userSlice = createSlice({
   initialState,
   reducers: {
 
+    controlUserStatus(state,action){
+      state.status = action.payload
+    },
+    controlResetError(state,action){
+        state.error = null
+        state.errorCode = null
+    }
     
   },
   extraReducers(builder) {
     builder
-    //   //---запрос статей-------------
-    //   .addCase(fetchFeed.pending, (state, action) => {
-    //     state.status = "loading";
-    //   })
-    //   .addCase(fetchFeed.fulfilled, (state, action) => {
-    //     state.status = "succeeded";
-    //     state.list = action.payload
-    //     state.error=null
-    //   })
-    //   .addCase(fetchFeed.rejected, (state, action) => {
-    //     state.status = "failed";
-    //     state.error = action.error.message;
-    //   })
-    // //----------------------------------------
+      //---регистрация-------------
+      .addCase(signup.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(signup.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.error=null
+      })
+      .addCase(signup.rejected, (state, action) => {
+        state.status = "failed";
+      
+        state.error = action.payload.error;
+    
+      
+      })
+    //----------------------------------------
+    //---авторизация-------------
+    .addCase(signin.pending, (state, action) => {
+      state.status = "loading";
+    })
+    .addCase(signin.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.user = action.payload
+      state.auth = true;
+      state.error=null
+    })
+    .addCase(signin.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error;
+    })
+  //----------------------------------------
+    //---Пользовательские статьи-------------
+    .addCase(fetchUserArticles.pending, (state, action) => {
+      state.status = "loading";
+    })
+    .addCase(fetchUserArticles.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.articles = action.payload
+      state.error=null
+    })
+    .addCase(fetchUserArticles.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error;
+    })
+  //----------------------------------------
 
   },
 });
@@ -46,10 +96,19 @@ const userSlice = createSlice({
 export function getUser(state) {
   return state[DomainNames.user].user;
 }
-export function getStatus(state){
+export function getUserArticles(state) {
+  return state[DomainNames.user].articles;
+}
+export function isAuth(state) {
+  return state[DomainNames.user].auth;
+}
+export function getUserStatus(state){
   return state[DomainNames.user].status;
 }
+export function getUserError(state){
+  return state[DomainNames.user].error;
+}
 
-
+export const { controlUserStatus,controlResetError } = userSlice.actions;
 
 export default userSlice.reducer;

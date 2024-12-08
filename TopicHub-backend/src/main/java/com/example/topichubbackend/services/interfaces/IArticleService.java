@@ -6,4 +6,6 @@ public interface IArticleService {
     void create(ArticleDto articleDto);
 
     ArticleBatchDto fetch(Integer param, Integer page);
+
+    ArticleBatchDto fetch(String type, Integer page);
 }

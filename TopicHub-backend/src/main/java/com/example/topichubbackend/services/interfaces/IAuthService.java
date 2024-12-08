@@ -6,7 +6,9 @@ import com.example.topichubbackend.entity.*;
 import java.util.*;
 
 public interface IAuthService {
-    User register(UserDto userDto);
+    UserDto register(UserDto userDto);
 
-    Optional<User> find(UserDto userDto);
+    Optional<User> login(AuthDto userDto);
+
+    List<UserRole> getUserRole(UUID id);
 }

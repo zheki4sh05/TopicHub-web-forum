@@ -3,9 +3,7 @@ const DomainNames = {
     hubs:"hubs",
     feed:"feed",
     article:"article",
-    user:"user"
-
-   
-
+    user:"user",
+    userArticles:"userArticles"
 }
 export default DomainNames;

@@ -14,7 +14,7 @@ import java.util.*;
 public class Role {
     @Column(name = "id")
     @Id
-    private UUID uuid;
+    private Integer uuid;
 
     @Column(name = "name")
     private String name;

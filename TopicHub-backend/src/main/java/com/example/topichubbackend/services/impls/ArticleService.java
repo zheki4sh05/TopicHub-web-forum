@@ -6,8 +6,8 @@ import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
-import com.example.topichubbackend.util.objectMapper.*;
-import com.example.topichubbackend.util.objectMapper.impl.*;
+import com.example.topichubbackend.mapper.objectMapper.*;
+import com.example.topichubbackend.mapper.objectMapper.impl.*;
 
 import java.sql.*;
 import java.time.*;
@@ -80,6 +80,14 @@ public class ArticleService implements IArticleService {
                 });
 
         return articleBatchDto;
+    }
+
+    @Override
+    public ArticleBatchDto fetch(String type, Integer page) {
+
+
+
+        return new ArticleBatchDto();
     }
 
     private List<ArticleDto> getArticleByType(Integer id, Integer page) {

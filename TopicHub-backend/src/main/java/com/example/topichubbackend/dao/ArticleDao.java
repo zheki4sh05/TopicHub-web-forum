@@ -2,6 +2,7 @@ package com.example.topichubbackend.dao;
 
 import com.example.topichubbackend.entity.*;
 import jakarta.persistence.*;
+import jakarta.transaction.*;
 
 import java.util.*;
 
@@ -66,6 +67,7 @@ public class ArticleDao extends BaseDao{
 
     }
 
+    
     public List<ArticlePart> findByArticleId(Long id){
 
 

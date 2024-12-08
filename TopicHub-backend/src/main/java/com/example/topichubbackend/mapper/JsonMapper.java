@@ -1,4 +1,4 @@
-package com.example.topichubbackend.util;
+package com.example.topichubbackend.mapper;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
