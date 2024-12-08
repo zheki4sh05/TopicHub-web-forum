@@ -10,4 +10,6 @@ public interface IArticleService {
     ArticleBatchDto fetch(String userId, String type, Integer page);
 
     void delete(String id, String userId);
+
+    ArticleBatchDto search(String author, String theme, String keywords);
 }

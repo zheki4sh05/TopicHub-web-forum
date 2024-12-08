@@ -24,6 +24,7 @@ function CreateArticle() {
         maxWidth: "1000px",
         margin: "0 auto",
         gap: "10px",
+       
       }}
     >
 

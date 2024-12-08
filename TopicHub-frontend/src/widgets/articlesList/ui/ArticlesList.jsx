@@ -21,7 +21,7 @@ function ArticlesList({status, batch ,makeRequest,select, edit=false}) {
               ))}
             </Box>
           </>
-        ) : (
+        ) : status == statusTypes.failed ?  (
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Typography variant="subtitle1" gutterBottom sx={{ color: "red" }}>
               Ошибка загрузки!
@@ -34,7 +34,10 @@ function ArticlesList({status, batch ,makeRequest,select, edit=false}) {
               Попробовать еще раз
             </Button>
           </Box>
-        )}
+        ) 
+      :
+      (<></>)
+      }
       </Box>
 
      );

@@ -63,7 +63,7 @@ function SaveArticle() {
 
   return (
     <>
-      <Button variant="contained" disabled={!empty} onClick={handleSave}>
+      <Button variant="contained" disabled={!empty} onClick={handleSave} sx={{marginBottom:"20px"}}>
         Опубликовать
       </Button>
 

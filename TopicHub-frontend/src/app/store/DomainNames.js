@@ -4,6 +4,7 @@ const DomainNames = {
     feed:"feed",
     article:"article",
     user:"user",
-    userArticles:"userArticles"
+    userArticles:"userArticles",
+    search:"search"
 }
 export default DomainNames;

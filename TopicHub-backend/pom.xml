@@ -68,7 +68,46 @@
           <artifactId>hibernate-validator</artifactId>
           <version>8.0.0.Final</version>
       </dependency>
-      <!-- https://mvnrepository.com/artifact/org.opendaylight.controller.thirdparty/org.apache.catalina.filters.CorsFilter -->
+
+      <dependency>
+          <groupId>org.hibernate.search</groupId>
+          <artifactId>hibernate-search-mapper-orm</artifactId>
+          <version>7.2.2.Final</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.jboss.logging</groupId>
+                  <artifactId>jboss-logging</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+
+      <dependency>
+          <groupId>org.hibernate.search</groupId>
+          <artifactId>hibernate-search-backend-lucene</artifactId>
+          <version>7.2.2.Final</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.jboss.logging</groupId>
+                  <artifactId>jboss-logging</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.jboss.logging/jboss-logging -->
+      <dependency>
+          <groupId>org.jboss.logging</groupId>
+          <artifactId>jboss-logging</artifactId>
+          <version>3.6.1.Final</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+<!--      <dependency>-->
+<!--          <groupId>jakarta.persistence</groupId>-->
+<!--          <artifactId>jakarta.persistence-api</artifactId>-->
+<!--          <version>3.2.0</version>-->
+<!--      </dependency>-->
+
+
+
 
 
 

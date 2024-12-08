@@ -16,7 +16,7 @@ function Layout() {
   
     return (
       <ThemeProvider theme={theme}>
-        <Box sx={{height:"100vh", width:"100%",bgcolor:"#F0F8FF", boxSizing:"border-box", overflow:"hidden"}}>
+        <Box sx={{height:"100vh", width:"100%",bgcolor:"#F0F8FF", boxSizing:"border-box", overflow:"hidden", overflowY:"scroll"}}>
           {
            (authStatus !== true) ? 
               <>

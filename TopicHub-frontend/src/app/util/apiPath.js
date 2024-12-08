@@ -23,6 +23,10 @@ const api={
     sandbox:{
         url :base.concat("sandbox"),
         create:""
+    },
+    search:{
+        url :base.concat("search"),
+        search:""
     }
     
    

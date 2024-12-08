@@ -108,10 +108,40 @@ function Header() {
          
         );
       }
+      case PathConstants.SEARCH: {
+        return (
+          
+          <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.ARTICLE }}
+          >
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Лента
+            </Typography>
+          </Link>
+          
+         
+        );
+      }
+   
     }
 
     return "";
   };
+
+  const showSearchBox=(path)=>{
+
+    const names=[PathConstants.ARTICLE, PathConstants.PROFILE, PathConstants.SEARCH]
+
+    if(names.includes(path)){
+      return  <SearchBox />
+    }else{
+      return <></>
+    }
+  }
 
   return (
     <Box
@@ -155,7 +185,9 @@ function Header() {
               alignItems: "center",
             }}
           >
-            <SearchBox />
+
+            {showSearchBox(location.pathname)}
+            
           </Box>
         </Grid2>
         <Grid2 size={4}>

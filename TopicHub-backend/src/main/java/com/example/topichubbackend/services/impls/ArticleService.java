@@ -115,6 +115,30 @@ public class ArticleService implements IArticleService {
         }
     }
 
+    @Override
+    public ArticleBatchDto search(String author, String theme, String keywords) {
+        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+        List<Article> articles = new ArrayList<>();
+
+        if(!author.isEmpty() && theme.isEmpty() && keywords.isEmpty() ){
+
+            articles.addAll(articleDao.search(author));
+            articleBatchDto.setArticleDtoList(doMapping(articles));
+        }else if(!author.isEmpty()){
+            articles.addAll(articleDao.search(theme,  keywords));
+            var filtered = articles.stream().filter(item->item.getAuthor().getLogin().startsWith(author));
+
+            articleBatchDto.setArticleDtoList(doMapping(filtered.collect(Collectors.toList())));
+        }else{
+            articles.addAll(articleDao.search(theme,  keywords));
+            articleBatchDto.setArticleDtoList(doMapping(articles));
+        }
+
+
+
+        return articleBatchDto;
+    }
+
 
     private List<ArticleDto> getArticleByType(Integer id, Integer page) {
         List<Article> articles;

@@ -2,9 +2,14 @@ package com.example.topichubbackend.dao;
 
 import com.example.topichubbackend.entity.*;
 import jakarta.persistence.*;
-import jakarta.transaction.*;
+import jakarta.persistence.Query;
+import org.hibernate.search.mapper.orm.*;
+import org.hibernate.search.mapper.orm.session.*;
+
 
 import java.util.*;
+
+
 
 
 public class ArticleDao extends BaseDao{
@@ -16,9 +21,14 @@ public class ArticleDao extends BaseDao{
     public final static String hubArticles = "FROM Article a WHERE a.hub.id = :id ORDER BY a.created ASC";
 
     public final static String authorArticles = "FROM Article a WHERE a.author.id = :id ORDER BY a.created ASC";
+
+    private final SearchSession searchSession;
     public ArticleDao(EntityManager entityManager) {
+
         this.em = entityManager;
+        searchSession= Search.session( entityManager );
     }
+
 
 
 
@@ -100,5 +110,34 @@ public class ArticleDao extends BaseDao{
     }
 
 
+    public List<Article> search(String theme, String keywords) {
+        var query = searchSession.search(Article.class)
+                .where(f -> f.bool(b -> {
+                    if (theme != null && !theme.isEmpty()) {
+                        b.should(f.match().field("theme").matching(theme)); }
+                    if (keywords != null && !keywords.isEmpty()) {
+                        b.should(f.match().field("keyWords").matching(keywords));
+                    } }));
 
+//        var query  = searchSession.search( Article.class )
+//                .where( f -> f.match()
+//                .field( "theme" )
+//                .matching( theme ) )
+//                .fetch( 20 );
+
+
+        return query.fetchAllHits();
+
+        }
+
+
+    public List<Article> search(String author) {
+        Query query = this.em.createQuery("FROM Article a WHERE a.author.login = :login ORDER BY a.created ASC", Article.class);
+        query.setParameter("login", author);
+        query.setMaxResults(batchSize);
+        List<Article> results = query.getResultList();
+        return results;
+
+
+    }
 }

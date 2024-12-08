@@ -23,6 +23,7 @@ public class AuthorizationFilter implements Filter {
         PUBLIC_PATH.add(UrlPath.LOGIN);
         PUBLIC_PATH.add(UrlPath.REGISTRATION);
         PUBLIC_PATH.add(UrlPath.ARTICLE);
+        PUBLIC_PATH.add(UrlPath.SEARCH);
     }
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

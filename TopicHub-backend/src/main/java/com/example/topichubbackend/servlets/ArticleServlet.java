@@ -15,42 +15,26 @@ public class ArticleServlet extends HttpServlet {
 
     private final IArticleService articleService  = ArticleService.getInstance();
 
-//    @Override
-//    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//
-//            ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
-//
-//           String email  =  request.getParameter("email");
-//
-//            articleService.create(newArticle);
-//        response.setStatus(201);
-//    }
-
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Integer hub = Integer.valueOf(request.getParameter("hub"));
-        Integer page = Integer.valueOf(request.getParameter("page"));
-        if(hub!=null && page!=null){
+        try{
+            Integer hub = Integer.valueOf(request.getParameter("hub"));
+            Integer page = Integer.valueOf(request.getParameter("page"));
 
-            try{
-                ArticleBatchDto articleBatchDto = articleService.fetch(hub,page);
-                response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
-                response.setStatus(200);
+            ArticleBatchDto articleBatchDto = articleService.fetch(hub,page);
+            response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
+            response.setStatus(200);
 
-            }catch (EntityNotFoundException e){
-                response.getWriter().write(e.getMessage());
-                response.setStatus(404);
-            }
-
-
-        }else{
+        }
+        catch (EntityNotFoundException e){
+            response.getWriter().write(e.getMessage());
+            response.setStatus(404);
+        }
+        catch (NumberFormatException e){
             response.setStatus(400);
         }
 
     }
 
 }
-
-//    ArticleDto articleDto = articleService.create(newArticle);
-//            response.getWriter().write(JsonMapper.mapTo(articleDto));

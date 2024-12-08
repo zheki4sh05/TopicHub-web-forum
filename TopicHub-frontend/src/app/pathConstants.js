@@ -9,5 +9,6 @@ export const PathConstants = {
     MANAGE_USER:"/admin/profile",
     MANAGE_COMMENTS:"/admin/comments",
     MANAGE_HUBS:"/admin/hubs",
-    PROFILE_ARTICLE:"/profile/article"
+    PROFILE_ARTICLE:"/profile/article",
+    SEARCH:"/search"
 }

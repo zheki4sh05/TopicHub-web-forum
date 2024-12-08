@@ -5,6 +5,7 @@ import hubsSlice from './../../entities/hubs/model/hubsSlice'
 import feedSlice from "../../pages/Article/model/feedSlice";
 import articleSlice from './../../features/Article/model/articleSlice';
 import userSlice from './../../pages/Profile/model/userSlice';
+import searchSlice from "../../features/Search/model/searchSlice";
 
 export default configureStore({
     reducer:{
@@ -12,7 +13,8 @@ export default configureStore({
         [DomainNames.hubs]:hubsSlice,
         [DomainNames.feed]:feedSlice,
         [DomainNames.article]:articleSlice,
-        [DomainNames.user]:userSlice
+        [DomainNames.user]:userSlice,
+        [DomainNames.search]:searchSlice
     },
    
 })

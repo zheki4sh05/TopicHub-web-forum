@@ -9,6 +9,7 @@ import ArticleView from "../pages/ArticleView/ui/ArticleView";
 import ManageArticle from "../pages/ManagerArticle/ui/ManageArticle";
 import Login from "../pages/Login/ui/Login";
 import ProfileArticle from "../pages/Profile/ui/ProfileArticle";
+import SearchPage from "../pages/SearchPage/ui/SearchPage";
 
 
 
@@ -50,6 +51,10 @@ function App() {
           path:PathConstants.PROFILE_ARTICLE,
           element:<ProfileArticle />,
         },
+        {
+          path:PathConstants.SEARCH,
+          element:<SearchPage />,
+        }
 
      
       ],

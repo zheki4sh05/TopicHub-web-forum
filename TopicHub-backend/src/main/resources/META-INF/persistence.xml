@@ -24,6 +24,9 @@
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
             <property name="hibernate.highlight_sql" value="true" />
+            <property name="hibernate.search.backend.directory.type" value="local-heap"/>
+            <property name="hibernate.search.backend.directory.root" value="/path/to/indexes"/>
+
         </properties>
 
     </persistence-unit>
