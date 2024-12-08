@@ -53,6 +53,7 @@ function SaveArticle() {
     } else if (sandboxStatus == statusTypes.succeeded) {
         handleClose()
         dispatch(resetSandBox())
+        
         navigate(PathConstants.PROFILE)
     }else if (sandboxStatus == statusTypes.failed){
         handleClose()

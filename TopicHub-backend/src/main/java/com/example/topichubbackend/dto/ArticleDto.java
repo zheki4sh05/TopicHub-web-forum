@@ -20,5 +20,6 @@ public class ArticleDto {
     private Long dislikes;
     private Timestamp created;
     private Integer hub;
+    private UserDto userDto;
 
 }

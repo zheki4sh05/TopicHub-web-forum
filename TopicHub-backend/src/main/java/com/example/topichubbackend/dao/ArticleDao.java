@@ -10,25 +10,27 @@ import java.util.*;
 public class ArticleDao extends BaseDao{
 
     private final Integer batchSize  = 15;
+
+    public final static String feedArticles = "FROM Article a ORDER BY a.created ASC";
+
+    public final static String hubArticles = "FROM Article a WHERE a.hub.id = :id ORDER BY a.created ASC";
+
+    public final static String authorArticles = "FROM Article a WHERE a.author.id = :id ORDER BY a.created ASC";
     public ArticleDao(EntityManager entityManager) {
         this.em = entityManager;
     }
 
-//    @Transactional
-//    public void saveAll(List<ArticlePart> articles , Article article) {
-//        for (int i = 0; i < articles.size(); i++) {
-//            merge(article);
-//            ArticlePart articlePart = articles.get(i);
-//            articlePart.setArticle(article);
-//
-//            save(articlePart);
-//            if (i % 20 == 0) {
-//                this.em.flush();
-//                this.em.clear();
-//
-//            }
-//            }
-//        }
+
+
+    public List<Article> getSortedAndPaginated(String sql, Integer pageNumber, String id){
+
+        Query query = this.em.createQuery(sql, Article.class);
+        query.setParameter("id", UUID.fromString(id));
+        query.setFirstResult((pageNumber - 1) * batchSize);
+        query.setMaxResults(batchSize);
+        List<Article> results = query.getResultList();
+        return results;
+    }
 
     public List<Article> getSortedAndPaginated(Integer pageNumber, Integer id){
 
@@ -37,7 +39,6 @@ public class ArticleDao extends BaseDao{
         query.setFirstResult((pageNumber - 1) * batchSize);
         query.setMaxResults(batchSize);
         List<Article> results = query.getResultList();
-        this.em.close();
         return results;
 
     }
@@ -81,7 +82,20 @@ public class ArticleDao extends BaseDao{
             return null;
         }
 
+    }
 
+    public Optional<Article> findById(Long id){
+
+
+        String hql = "FROM Article a WHERE a.id = :id";
+        Query query = this.em.createQuery(hql, Article.class);
+        query.setParameter("id", id);
+
+        try {
+            return Optional.of((Article)query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
 
     }
 

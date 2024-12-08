@@ -1,41 +1,63 @@
-import { Box, Button, Chip, IconButton, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  IconButton,
+  Paper,
+  Typography,
+} from "@mui/material";
 import statusTypes from "../../../app/util/statusTypes";
 import { formatDateFromTimestamp } from "../../../app/util/date";
 import { useDispatch, useSelector } from "react-redux";
 import { getHubs } from "../../../pages/Article/model/feedSlice";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import { Link, useLocation } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
 import { setArticle } from "../model/articleSlice";
 import ReactionBox from "../../../shared/ReactionBox/ui/ReactionBox";
-function Article({ item = {}, mode }) {
-
-  const hubs = useSelector(getHubs)
-  const dispatch = useDispatch()
+import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
+  const hubs = useSelector(getHubs);
+  const dispatch = useDispatch();
   const getArticlePart = (item, index) => {
     switch (item.type) {
       case "list": {
         return <></>;
       }
       case "img": {
-        return (  <Box key={index}>
-          <img src={item.value} alt="Не удалось загрузить изображение!" />
-          <Typography variant="body2" gutterBottom sx={{ width: "100%" }}>
+        return (
+          <Box key={index}>
+            <img src={item.value} alt="Не удалось загрузить изображение!" />
+            <Typography variant="body2" gutterBottom sx={{ width: "100%" }}>
+              {item.value}
+            </Typography>
+          </Box>
+        );
+      }
+      case "paragraph": {
+        return (
+          <Typography
+            variant="body2"
+            gutterBottom
+            sx={{ width: "100%" }}
+            key={index}
+          >
             {item.value}
           </Typography>
-        </Box>)
+        );
       }
-      case "paragraph":{
-        return ( <Typography variant="body2" gutterBottom sx={{ width: "100%" }} key={index}>
-        {item.value}
-      </Typography>)
-      }
-      case "chapter":{
-       return ( <Typography variant="h6" gutterBottom sx={{ width: "100%" }} key={index}>
+      case "chapter": {
+        return (
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ width: "100%" }}
+            key={index}
+          >
             {item.value}
-          </Typography>)
+          </Typography>
+        );
       }
     }
   };
@@ -49,7 +71,6 @@ function Article({ item = {}, mode }) {
         return (
           <Box sx={{ maxHeight: "170px", overflow: "hidden" }}>
             {getContent(item)}
-            
           </Box>
         );
       }
@@ -63,10 +84,9 @@ function Article({ item = {}, mode }) {
     }
   };
 
-  const handleActive=()=>{
-  
-    dispatch(setArticle(item))
-  }
+  const handleActive = () => {
+    dispatch(setArticle(item));
+  };
 
   return (
     <Paper elevation={1}>
@@ -79,6 +99,20 @@ function Article({ item = {}, mode }) {
           boxSizing: "border-box",
         }}
       >
+        {mode == "long" && edit ? (
+          
+            <Box sx={{ display: "flex", justifyContent: "space-between",marginBottom:"15px" }}>
+              <IconButton onClick={handleEdit} >
+                <EditIcon />
+              </IconButton>
+
+              <IconButton>
+                <DeleteIcon onClick={handleDelete}/>
+              </IconButton>
+            </Box>
+         
+        ) : null}
+
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box
             sx={{
@@ -89,7 +123,7 @@ function Article({ item = {}, mode }) {
           >
             <img src="" alt="logo" />
             <Typography sx={{ marginLeft: "15px" }} variant="subtitle1">
-              Имя автора
+              {item.userDto.login}
             </Typography>
             <Typography sx={{ marginLeft: "15px" }} variant="caption">
               {formatDateFromTimestamp(item.created)}
@@ -100,7 +134,7 @@ function Article({ item = {}, mode }) {
               variant="body1"
               sx={{ color: "#6495ED", textDecoration: "underline" }}
             >
-              {hubs.find(hub=>hub.id==item.hub).name}
+              {hubs.find((hub) => hub.id == item.hub).name}
             </Typography>
           </Box>
         </Box>
@@ -111,40 +145,42 @@ function Article({ item = {}, mode }) {
           </Box>
           {getViewByMode(mode, item)}
 
-          <Box sx={{display:"flex", flexDirection:"row", borderBottom:"1px solid #C4C4C4",marginTop:"15px"}} >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              borderBottom: "1px solid #C4C4C4",
+              marginTop: "15px",
+            }}
+          >
+            {mode == "short" ? (
+              <Box sx={{ height: "30px", width: "140px" }}>
+                <Link to={ edit ? PathConstants.PROFILE_ARTICLE : PathConstants.VIEW}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={handleActive}
+                  >
+                    Читать далее
+                  </Button>
+                </Link>
+              </Box>
+            ) : null}
 
-            {
-
-              mode =="short" ?
-              <Box sx={{height:"30px",width:"140px"}}>
-                  <Link to={PathConstants.VIEW}>
-
-                      <Button variant="contained" size="small" onClick={handleActive}>Читать далее</Button>
-                  </Link>
-                  
-            </Box>
-            :
-            null
-            }
-            
-            <Box sx={{ paddingBottom:"10px"}} >
-              {item.keyWords.map((item,index)=>(
-                <Chip label={item} key={index} sx={{margin:"0 5px"}} />
+            <Box sx={{ paddingBottom: "10px" }}>
+              {item.keyWords.map((item, index) => (
+                <Chip label={item} key={index} sx={{ margin: "0 5px" }} />
               ))}
             </Box>
-
           </Box>
           <ReactionBox
-          item={item}
-          handleLike={()=>{}}
-          handleDislike={()=>{}}
-          handleComment={()=>{}}
-          showDanger={true}
-          handleDanger={()=>{}}
-
+            item={item}
+            handleLike={() => {}}
+            handleDislike={() => {}}
+            handleComment={() => {}}
+            showDanger={true}
+            handleDanger={() => {}}
           />
-    
-
         </Box>
       </Box>
     </Paper>

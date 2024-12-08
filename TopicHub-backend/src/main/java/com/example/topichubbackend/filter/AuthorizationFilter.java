@@ -33,7 +33,7 @@ public class AuthorizationFilter implements Filter {
             Optional<Cookie> cookie = HttpRequestHandler.getSessionCookie((HttpServletRequest) servletRequest);
             if(sessionService.isSessionActiveBy(cookie)){
                 User user = httpRequestHandler.findUserByCookie(cookie.get());
-                servletRequest.setAttribute("email", user.getEmail());
+                servletRequest.setAttribute("id", user.getUuid().toString());
 
                 filterChain.doFilter(servletRequest,servletResponse);
             }else {

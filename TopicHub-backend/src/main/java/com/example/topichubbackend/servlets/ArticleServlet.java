@@ -29,13 +29,12 @@ public class ArticleServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Integer param = Integer.valueOf(request.getParameter("type"));
+        Integer hub = Integer.valueOf(request.getParameter("hub"));
         Integer page = Integer.valueOf(request.getParameter("page"));
-
-        if(param!=null && page!=null){
+        if(hub!=null && page!=null){
 
             try{
-                ArticleBatchDto articleBatchDto = articleService.fetch(param,page);
+                ArticleBatchDto articleBatchDto = articleService.fetch(hub,page);
                 response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
                 response.setStatus(200);
 

@@ -4,7 +4,7 @@ const api={
         url:base.concat("article"),
         hubs:"hubs/",
         feed:"",
-        comment:"/comment"
+        comment:"/comment",
     },
     hubs:{
         url:base.concat("hubs"),
@@ -18,6 +18,7 @@ const api={
     profile:{
         url:base.concat("profile"),
         articles:""
+
     },
     sandbox:{
         url :base.concat("sandbox"),

@@ -5,6 +5,7 @@ import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
+import com.example.topichubbackend.servlets.*;
 import com.example.topichubbackend.util.factories.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
 import com.example.topichubbackend.mapper.objectMapper.impl.*;
@@ -24,13 +25,17 @@ public class ArticleService implements IArticleService {
     private final ArticleDao articleDao = DaoFactory.createArticleDao();
     private final HubDao hubDao = DaoFactory.createHubDao();
 
+    private final AuthDao authDao = DaoFactory.createAuthDao();
+
     private IObjectMapper objectMapper = new ObjectMapperImpl();
 
     public static final String dilimiter = "|";
     @Override
-    public void create(ArticleDto articleDto) {
+    public void create(ArticleDto articleDto, String id) {
 
         List<Hub> hubList = hubDao.fetchAll();
+
+        User user = authDao.findById(id);
 
         final Article article = Article.builder()
                 .theme(articleDto.getTheme())
@@ -38,6 +43,7 @@ public class ArticleService implements IArticleService {
                 .likes(0L)
                 .created(Timestamp.valueOf(LocalDateTime.now()))
                 .dislikes(0l)
+                .author(user)
                 .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
                 .build();
 
@@ -83,12 +89,32 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public ArticleBatchDto fetch(String type, Integer page) {
+    public ArticleBatchDto fetch(String userId, String type, Integer page) {
 
+        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+        Long totalCount = articleDao.calcTotalEntitiesCount();
+        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        articleBatchDto.setPageCount(pageCount);
 
+        if(type.equals(ArticlesSource.OWN.type())){
 
-        return new ArticleBatchDto();
+            articleBatchDto.setArticleDtoList(getOwnArticles(page, userId));
+
+        }
+
+        return articleBatchDto;
     }
+
+    @Override
+    public void delete(String id, String userId) {
+        Article article = articleDao.findById(Long.parseLong(id)).orElseThrow(EntityNotFoundException::new);
+        if(article.getAuthor().getUuid().toString().equals(userId)){
+            articleDao.delete(article);
+        }else{
+            throw new EntityNotFoundException("Not found article for user");
+        }
+    }
+
 
     private List<ArticleDto> getArticleByType(Integer id, Integer page) {
         List<Article> articles;
@@ -97,25 +123,27 @@ public class ArticleService implements IArticleService {
         }else{
             articles = articleDao.getSortedAndPaginated(page,id);
         }
+        return  doMapping(articles);
 
-        List<ArticleDto> articleDtos = new ArrayList<>();
+    }
 
-        articles.forEach(item->{
-
-            ArticleDto articleDto = objectMapper.mapFrom(item, dilimiter);
-
-            articleDto.setList(getArticlePart(articleDto.getId()).stream().map(part->objectMapper.mapFrom(part)).collect(Collectors.toList()));
-
-            articleDtos.add(articleDto);
-        });
-
-
-        return  articleDtos;
-
+    private List<ArticleDto> getOwnArticles(Integer page, String id){
+        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,id );
+        return doMapping(articles);
     }
 
     private List<ArticlePart> getArticlePart(Long id){
         return  articleDao.findByArticleId(id);
+    }
+
+    private List<ArticleDto> doMapping(List<Article> articles){
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        articles.forEach(item->{
+            ArticleDto articleDto = objectMapper.mapFrom(item, dilimiter);
+            articleDto.setList(getArticlePart(articleDto.getId()).stream().map(part->objectMapper.mapFrom(part)).collect(Collectors.toList()));
+            articleDtos.add(articleDto);
+        });
+        return articleDtos;
     }
 
 

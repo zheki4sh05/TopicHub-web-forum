@@ -17,10 +17,8 @@ public class SandboxServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
-
-        String email  =  request.getParameter("email");
-
-        articleService.create(newArticle);
+        String id = (String)request.getAttribute("id");
+        articleService.create(newArticle,id);
         response.setStatus(201);
     }
 }

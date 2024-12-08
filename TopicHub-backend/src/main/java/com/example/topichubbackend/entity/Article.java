@@ -30,6 +30,10 @@ public class Article {
     @JoinColumn(name = "hub")
     private Hub hub;
 
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private User author;
+
     @Column(name = "created")
     private Timestamp created;
 

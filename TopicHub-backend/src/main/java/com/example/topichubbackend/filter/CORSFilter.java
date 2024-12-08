@@ -15,11 +15,11 @@ public class CORSFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-
+        System.out.println("CORSFilter HTTP Request: " + request.getMethod());
 
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Max-Age", "3600");
-        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, PUT, POST");
+        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "OPTIONS, GET,HEAD, PUT, POST, DELETE");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Credentials", "true");
 

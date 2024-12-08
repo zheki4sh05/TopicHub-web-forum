@@ -4,7 +4,12 @@ import { fetchFeed, fetchHubs } from "../api/requests";
 
 //----state---
 const initialState = {
-  list: {},
+  list: {
+
+    articleDtoList:[],
+    pageCount:0
+
+  },
   hubs:[
     {
       id:0,

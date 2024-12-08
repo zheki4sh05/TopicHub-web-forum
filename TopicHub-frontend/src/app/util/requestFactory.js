@@ -46,7 +46,24 @@ class ApiRequestCreator {
     });
   }
 
-  createDeleteRequest() {}
+  createDeleteRequest(uri, withParms = false) {
+    let fullUrl = this.url.concat(uri);
+
+    if (withParms) {
+      return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
+        const response = await axios.delete(
+          fullUrl.concat(addParams(initial)),
+          getRequestConfig("")
+        );
+        return response.data;
+      });
+    } else {
+      return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
+        const response = await axios.get(fullUrl, initial);
+        return response.data;
+      });
+    }
+  }
 
   createPatchRequest(uri) {
     return createAsyncThunk(this.domainName.concat(uri), async (initial) => {

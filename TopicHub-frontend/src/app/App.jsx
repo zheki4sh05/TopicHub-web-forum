@@ -8,6 +8,7 @@ import CreateArticle from "../pages/CreateArticle/ui/CreateArticle";
 import ArticleView from "../pages/ArticleView/ui/ArticleView";
 import ManageArticle from "../pages/ManagerArticle/ui/ManageArticle";
 import Login from "../pages/Login/ui/Login";
+import ProfileArticle from "../pages/Profile/ui/ProfileArticle";
 
 
 
@@ -44,7 +45,12 @@ function App() {
         {
           path:PathConstants.LOGIN,
           element:<Login />,
-        }
+        },
+        {
+          path:PathConstants.PROFILE_ARTICLE,
+          element:<ProfileArticle />,
+        },
+
      
       ],
     },

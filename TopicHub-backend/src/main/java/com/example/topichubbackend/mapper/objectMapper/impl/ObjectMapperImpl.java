@@ -4,6 +4,7 @@ import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -18,6 +19,11 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .likes(item.getLikes())
                 .dislikes(item.getDislikes())
                 .hub(item.getHub().getId())
+                .userDto(mapFrom(item.getAuthor(),List.of(UserRole.builder()
+                                .role(Role.builder()
+                                        .name(RoleDto.USER.name())
+                                        .build())
+                        .build())))
                 .keyWords(Arrays.stream(item.getKeyWords().split(delimiter)).collect(Collectors.toList()))
                 .build();
     }

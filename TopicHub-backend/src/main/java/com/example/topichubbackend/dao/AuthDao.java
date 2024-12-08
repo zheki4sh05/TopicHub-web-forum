@@ -70,4 +70,18 @@ public class AuthDao extends BaseDao{
             throw new RuntimeException();
         }
     }
+
+    public User findById(String id) {
+        String hql = "FROM User u WHERE u.uuid = :id";
+        UUID uuid = UUID.fromString(id);
+        try {
+            return this.em.createQuery(hql, User.class)
+                    .setParameter("id", uuid)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new RuntimeException();
+        }
+
+
+    }
 }

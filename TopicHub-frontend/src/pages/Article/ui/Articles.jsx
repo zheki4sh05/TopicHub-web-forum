@@ -33,7 +33,7 @@ function Articles() {
     dispatch(
       fetchFeed({
         page: page,
-        type: select,
+        hub: select,
       })
     );
   };
@@ -110,36 +110,7 @@ function Articles() {
 
       />
 
-      {/* <Box sx={{ margin: "20px 0 20px 0" }}>
-        {feedStatus == statusTypes.loading ? (
-          <Box sx={{ width: "100%" }}>
-            <LinearProgress />
-          </Box>
-        ) : feedStatus == statusTypes.succeeded ? (
-          <>
-            <Box sx={{ maxWidth: "820px", margin: "0 auto" }}>
-              {feed.articleDtoList.map((item, index) => (
-                <Box key={index} sx={{marginBottom:"10px"}}>
-                  <Article  item={item} mode={statusTypes.short} />
-                </Box>
-              ))}
-            </Box>
-          </>
-        ) : (
-          <Box sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography variant="subtitle1" gutterBottom sx={{ color: "red" }}>
-              Ошибка загрузки!
-            </Typography>
-            <Button
-              sx={{ marginLeft: "15px" }}
-              variant="outlined"
-              onClick={() => makeRequest(select, 1)}
-            >
-              Попробовать еще раз
-            </Button>
-          </Box>
-        )}
-      </Box> */}
+
       <MenuWrapper>
         <Box
           sx={{

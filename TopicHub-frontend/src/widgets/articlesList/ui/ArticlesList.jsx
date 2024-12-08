@@ -2,7 +2,7 @@ import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import statusTypes from "../../../app/util/statusTypes";
 import Article from "../../../features/Article/ui/Article";
 
-function ArticlesList({status, batch ,makeRequest,select}) {
+function ArticlesList({status, batch ,makeRequest,select, edit=false}) {
     return ( 
 
 
@@ -11,12 +11,12 @@ function ArticlesList({status, batch ,makeRequest,select}) {
           <Box sx={{ width: "100%" }}>
             <LinearProgress />
           </Box>
-        ) : status == statusTypes.succeeded ? (
+        ) : status == statusTypes.succeeded || batch.articleDtoList.length>0 ? (
           <>
             <Box sx={{ maxWidth: "820px", margin: "0 auto" }}>
               {batch.articleDtoList.map((item, index) => (
                 <Box key={index} sx={{marginBottom:"10px"}}>
-                  <Article  item={item} mode={statusTypes.short} />
+                  <Article  item={item} mode={statusTypes.short} edit={edit}/>
                 </Box>
               ))}
             </Box>
