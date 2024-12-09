@@ -7,6 +7,7 @@ import java.util.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "subscription")
+@Builder
 public class Subscription {
 
     @Id

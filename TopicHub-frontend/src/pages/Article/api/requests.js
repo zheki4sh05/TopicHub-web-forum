@@ -7,4 +7,5 @@ const apiFactory = new ApiRequestCreator(DomainNames.feed, api.article.url);
 
 export const fetchFeed = apiFactory.createGetRequest(api.article.feed,true);
 
+
 export const fetchHubs = apiFactory.createGetRequest(api.article.hubs,false);

@@ -16,7 +16,7 @@ class ApiRequestCreator {
       return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
         const response = await axios.get(
           fullUrl.concat(addParams(initial)),
-          getRequestConfig("")
+          getRequestConfig()
         );
         return response.data;
       });
@@ -35,7 +35,7 @@ class ApiRequestCreator {
         const response = await axios.post(
           this.url.concat(uri),
           initial,
-          getRequestConfig("")
+          getRequestConfig()
         );
         return response.data;
       }catch(error){
@@ -53,13 +53,13 @@ class ApiRequestCreator {
       return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
         const response = await axios.delete(
           fullUrl.concat(addParams(initial)),
-          getRequestConfig("")
+          getRequestConfig()
         );
         return response.data;
       });
     } else {
       return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
-        const response = await axios.get(fullUrl, initial);
+        const response = await axios.delete(fullUrl, initial, getRequestConfig());
         return response.data;
       });
     }

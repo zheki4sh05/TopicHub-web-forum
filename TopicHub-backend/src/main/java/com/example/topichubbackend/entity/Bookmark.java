@@ -10,6 +10,7 @@ import java.util.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "bookmark")
+@Builder
 public class Bookmark {
     @Id
     @Column(name = "id")

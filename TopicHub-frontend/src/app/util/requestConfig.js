@@ -1,7 +1,7 @@
 
 
 
-function getRequestConfig(data){
+function getRequestConfig(){
     return {
        withCredentials: true,
         credentials: 'include',

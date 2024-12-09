@@ -11,19 +11,18 @@ import jakarta.servlet.http.*;
 
 import java.io.*;
 
-@WebServlet(urlPatterns = {"/subscription"})
-public class SubscribeServlet extends HttpServlet{
-
+@WebServlet(urlPatterns = {"/bookmarks"})
+public class BookmarksServlet extends HttpServlet {
     private final IReactionService reactionService = ServiceFactory.getReactionService();
 
     private final CustomValidator customValidator =new CustomValidator();
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try{
-            SubscriptionRequestDto subscriptionRequestDto =(SubscriptionRequestDto) JsonMapper.mapFrom(request, SubscriptionRequestDto.class).orElseThrow(RuntimeException::new);
-            customValidator.validate(subscriptionRequestDto);
+            BookmarksRequestDto bookmarksRequestDto =(BookmarksRequestDto) JsonMapper.mapFrom(request, BookmarksRequestDto.class).orElseThrow(RuntimeException::new);
+            customValidator.validate(bookmarksRequestDto);
             String userId = (String) request.getAttribute("id");
-            reactionService.manageSubscription(1, subscriptionRequestDto.getAuthor(),userId);
+            reactionService.manageBookmarks(1, bookmarksRequestDto.getArticle(),userId);
 
         }catch (BadRequestException e){
             response.setStatus(400);
@@ -36,13 +35,13 @@ public class SubscribeServlet extends HttpServlet{
     @Override
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String author = request.getParameter("author");
+        String article = request.getParameter("article");
 
-        if(author==null){
+        if(article==null){
             response.setStatus(400);
         }else{
             String userId = (String) request.getAttribute("id");
-            reactionService.manageSubscription(-1, author,userId);
+            reactionService.manageBookmarks(-1, article,userId);
         }
 
     }

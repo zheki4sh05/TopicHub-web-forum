@@ -5,6 +5,11 @@ const DomainNames = {
     article:"article",
     user:"user",
     userArticles:"userArticles",
-    search:"search"
+    search:"search",
+    reaction:"reaction",
+    subscription:"subscription",
+    unsubscription:"unsubscription",
+    bookMarks:"bookMarks",
+    removeBookMarks:"removeBookMarks"
 }
 export default DomainNames;

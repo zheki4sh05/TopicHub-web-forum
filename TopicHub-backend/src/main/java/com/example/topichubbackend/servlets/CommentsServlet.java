@@ -10,7 +10,7 @@ import jakarta.servlet.http.*;
 import java.io.*;
 import java.util.*;
 
-@WebServlet(urlPatterns = {"/react"})
+@WebServlet(urlPatterns = {"/comment"})
 public class CommentsServlet extends HttpServlet {
 
     private final ICommentsService commentsService = ServiceFactory.getCommentsService();
@@ -23,7 +23,7 @@ public class CommentsServlet extends HttpServlet {
 
         List<CommentDto> commentDtoList = commentsService.fetch(type, article);
 
-
+        response.getWriter().write(JsonMapper.mapTo(commentDtoList));
 
 
     }

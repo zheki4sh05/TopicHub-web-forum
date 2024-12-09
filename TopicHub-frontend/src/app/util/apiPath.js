@@ -27,6 +27,17 @@ const api={
     search:{
         url :base.concat("search"),
         search:""
+    },
+    reactions:{
+        url:base.concat("reaction"),
+        check:"",
+        reaction:""
+    },
+    subscription:{
+        url:base.concat("subscription"),
+    },
+    bookmark:{
+        url:base.concat("bookmarks"),
     }
     
    

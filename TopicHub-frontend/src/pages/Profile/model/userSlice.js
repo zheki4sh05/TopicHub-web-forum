@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import { signin, signup } from "../../Login/api/requests";
 import { delUserArticle, fetchUserArticles } from "../api/requests";
+import { addBookmark, removeBookmark, subscribe, unsubscribe } from "../../ArticleView/api/requests";
 
 
 //----state---
@@ -23,6 +24,7 @@ const initialState = {
   },
   others:{},
   status: "idle",
+
   auth:false,
   error: null,
 };
@@ -108,6 +110,66 @@ const userSlice = createSlice({
       state.error = action.error;
     })
   //----------------------------------------
+  //   //---подписаться-------------
+  //   .addCase(subscribe.pending, (state, action) => {
+  //     state.status = "loading";
+  //   })
+  //   .addCase(subscribe.fulfilled, (state, action) => {
+  //     state.status = "succeeded";
+  
+  //     state.error = null
+  //   })
+  //   .addCase(subscribe.rejected, (state, action) => {
+  //     state.status = "failed";
+  //     state.error = action.error.message;
+  //   })
+  
+  // //----------------------------------------
+  //     //--отписаться-------------
+  //     .addCase(unsubscribe.pending, (state, action) => {
+  //       state.status = "loading";
+  //     })
+  //     .addCase(unsubscribe.fulfilled, (state, action) => {
+  //       state.status = "succeeded";
+    
+  //       state.error = null
+  //     })
+  //     .addCase(unsubscribe.rejected, (state, action) => {
+  //       state.status = "failed";
+  //       state.error = action.error.message;
+  //     })
+    
+  //    //----------------------------------------
+  //    //--добавить закладку-------------
+  //    .addCase(addBookmark.pending, (state, action) => {
+  //     state.status = "loading";
+  //   })
+  //   .addCase(addBookmark.fulfilled, (state, action) => {
+  //     state.status = "succeeded";
+  
+  //     state.error = null
+  //   })
+  //   .addCase(addBookmark.rejected, (state, action) => {
+  //     state.status = "failed";
+  //     state.error = action.error.message;
+  //   })
+  
+  // // //----------------------------------------
+  //   //--убрать закладку-------------
+  //   .addCase(removeBookmark.pending, (state, action) => {
+  //     state.status = "loading";
+  //   })
+  //   .addCase(removeBookmark.fulfilled, (state, action) => {
+  //     state.status = "succeeded";
+  
+  //     state.error = null
+  //   })
+  //   .addCase(removeBookmark.rejected, (state, action) => {
+  //     state.status = "failed";
+  //     state.error = action.error.message;
+  //   });
+  
+  // // //----------------------------------------
 
   },
 });

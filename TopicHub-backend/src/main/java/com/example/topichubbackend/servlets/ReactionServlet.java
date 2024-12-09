@@ -9,15 +9,20 @@ import jakarta.servlet.http.*;
 
 import java.io.*;
 
-@WebServlet(urlPatterns = {"/react"})
+@WebServlet(urlPatterns = {"/reaction"})
 public class ReactionServlet extends HttpServlet{
     private IReactionService reactionService = ServiceFactory.getReactionService();
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
-        response.setStatus(201);
+//        String type = request.getParameter("type");
+//        String value = request.getParameter("value");
+//        String targetId = request.getParameter("id");
+//        String email = (String) request.getAttribute("user");
+//
+//        reactionService.makeReaction(type, value, email,targetId);
+
     }
 
     @Override
@@ -25,7 +30,7 @@ public class ReactionServlet extends HttpServlet{
 
         String articleId = request.getParameter("article");
         String authorId = request.getParameter("author");
-        String userId = (String)request.getAttribute("user");
+        String userId = (String)request.getAttribute("id");
 
         if((articleId==null || authorId==null) ){
             response.setStatus(400);
@@ -35,5 +40,7 @@ public class ReactionServlet extends HttpServlet{
         }
 
     }
+
+
 
 }

@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
+import { addBookmark, checkReactions, removeBookmark, subscribe, unsubscribe } from "../../../pages/ArticleView/api/requests";
 
 
 //----state---
 const initialState = {
   article:{},
-  addititonal:{},
+  reaction:{},
   status: "idle",
+  subscriptionStatus:'idle',
+  bookmarkStatus:'idle',
   error: null,
 };
 //-------------
@@ -20,12 +23,95 @@ const articleSlice = createSlice({
 
       setArticle(state,action){
         state.article = action.payload
+      },
+      controlArticleStatus(state,action){
+          state.status = action.payload
+      },
+      manageSubscriptionStatus(state,action){
+        state.subscriptionStatus = action.payload
+      },
+      manageBookmarkStatus(state,action){
+        state.bookmarkStatus = action.payload
       }
   },
   extraReducers(builder) {
     builder
-      
+       //---проверка подписки и добавления в закладки-------------
+       .addCase(checkReactions.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(checkReactions.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.reaction =action.payload
+        state.error = null
+      })
+      .addCase(checkReactions.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+    
     //----------------------------------------
+     //---подписаться-------------
+     .addCase(subscribe.pending, (state, action) => {
+      state.subscriptionStatus = "loading";
+    })
+    .addCase(subscribe.fulfilled, (state, action) => {
+      state.subscriptionStatus = "succeeded";
+    state.reaction.isSubscribe = !state.reaction.isSubscribe
+      state.error = null
+    })
+    .addCase(subscribe.rejected, (state, action) => {
+      state.subscriptionStatus = "failed";
+      state.error = action.error.message;
+    })
+  
+  //----------------------------------------
+      //--отписаться-------------
+      .addCase(unsubscribe.pending, (state, action) => {
+        state.subscriptionStatus = "loading";
+      })
+      .addCase(unsubscribe.fulfilled, (state, action) => {
+        state.subscriptionStatus = "succeeded";
+        state.reaction.isSubscribe = !state.reaction.isSubscribe
+        state.error = null
+      })
+      .addCase(unsubscribe.rejected, (state, action) => {
+        state.subscriptionStatus = "failed";
+        state.error = action.error.message;
+      })
+    
+     //----------------------------------------
+     //--добавить закладку-------------
+     .addCase(addBookmark.pending, (state, action) => {
+      state.bookmarkStatus = "loading";
+    })
+    .addCase(addBookmark.fulfilled, (state, action) => {
+      state.bookmarkStatus = "succeeded";
+      state.reaction.isMarked = !state.reaction.isMarked
+      state.error = null
+    })
+    .addCase(addBookmark.rejected, (state, action) => {
+      state.bookmarkStatus = "failed";
+      state.error = action.error.message;
+    })
+  
+  // //----------------------------------------
+    //--убрать закладку-------------
+    .addCase(removeBookmark.pending, (state, action) => {
+      state.bookmarkStatus = "loading";
+    })
+    .addCase(removeBookmark.fulfilled, (state, action) => {
+      state.bookmarkStatus = "succeeded";
+      state.reaction.isMarked = !state.reaction.isMarked
+      state.error = null
+    })
+    .addCase(removeBookmark.rejected, (state, action) => {
+      state.bookmarkStatus = "failed";
+      state.error = action.error.message;
+    });
+  
+  // //----------------------------------------
+   
   },
 });
 
@@ -37,6 +123,16 @@ export function getArticle(state) {
 export function getArticleStatus(state) {
   return state[DomainNames.article].status;
 }
-export const { setArticle } = articleSlice.actions;
+
+export function getSubscriptionStatus(state) {
+  return state[DomainNames.article].subscriptionStatus;
+}
+export function getBookmarksStatus(state) {
+  return state[DomainNames.article].bookmarkStatus;
+}
+export function getReactions(state) {
+  return state[DomainNames.article].reaction;
+}
+export const { setArticle,manageSubscription,manageBookmarkStatus,manageSubscriptionStatus } = articleSlice.actions;
 
 export default articleSlice.reducer;

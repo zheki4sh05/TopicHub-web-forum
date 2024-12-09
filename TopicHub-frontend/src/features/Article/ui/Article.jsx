@@ -180,6 +180,7 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
             handleComment={() => {}}
             showDanger={true}
             handleDanger={() => {}}
+          
           />
         </Box>
       </Box>
