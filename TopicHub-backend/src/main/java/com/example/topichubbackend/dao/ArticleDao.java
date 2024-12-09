@@ -16,11 +16,11 @@ public class ArticleDao extends BaseDao{
 
     private final Integer batchSize  = 15;
 
-    public final static String feedArticles = "FROM Article a ORDER BY a.created ASC";
+    public final static String feedArticles = "FROM Article a ORDER BY a.created DESC";
 
-    public final static String hubArticles = "FROM Article a WHERE a.hub.id = :id ORDER BY a.created ASC";
+    public final static String hubArticles = "FROM Article a WHERE a.hub.id = :id ORDER BY a.created DESC";
 
-    public final static String authorArticles = "FROM Article a WHERE a.author.id = :id ORDER BY a.created ASC";
+    public final static String authorArticles = "FROM Article a WHERE a.author.id = :id ORDER BY a.created DESC";
 
     private final SearchSession searchSession;
     public ArticleDao(EntityManager entityManager) {
@@ -44,7 +44,7 @@ public class ArticleDao extends BaseDao{
 
     public List<Article> getSortedAndPaginated(Integer pageNumber, Integer id){
 
-        Query query = this.em.createQuery("FROM Article a WHERE a.hub.id = :id ORDER BY a.created ASC", Article.class);
+        Query query = this.em.createQuery("FROM Article a WHERE a.hub.id = :id ORDER BY a.created DESC", Article.class);
         query.setParameter("id", id);
         query.setFirstResult((pageNumber - 1) * batchSize);
         query.setMaxResults(batchSize);
@@ -54,7 +54,7 @@ public class ArticleDao extends BaseDao{
     }
 
     public List<Article> getSortedAndPaginated(Integer page) {
-        Query query = this.em.createQuery("FROM Article a ORDER BY a.created ASC", Article.class);
+        Query query = this.em.createQuery("FROM Article a ORDER BY a.created DESC", Article.class);
         query.setFirstResult((page - 1) * batchSize);
         query.setMaxResults(batchSize);
         List<Article> results = query.getResultList();

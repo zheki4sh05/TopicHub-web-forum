@@ -13,6 +13,8 @@ function ArticleView() {
 
     const article = useSelector(getArticle)
 
+
+
   return (
     <Box 
     
@@ -56,7 +58,7 @@ function ArticleView() {
                         <Box   sx={{display:"flex", flexDirection:"row", gap:"10px"}}>
 
                         <img alt="лого" />
-                        <Typography>Имя автора</Typography>
+                        <Typography>{article.userDto.login}</Typography>
 
                         </Box>
                     <Button variant="outlined" color="success">Подписаться</Button>

@@ -1,7 +1,7 @@
 package com.example.topichubbackend.servlets;
 
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.exceptions.*;
+
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.services.interfaces.*;
@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
 
 import java.io.*;
-import java.net.http.*;
+
 
 @WebServlet(urlPatterns = {"/search"})
 public class SearchServlet extends HttpServlet {

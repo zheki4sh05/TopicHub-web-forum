@@ -76,4 +76,6 @@ public class ProfileServlet extends HttpServlet{
     private Boolean isValid(String type){
         return type.equals("articles");
     }
+
+
 }

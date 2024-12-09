@@ -1,7 +1,7 @@
 
 
 export const articleTheme={
-    login:"Логин автора",
+    login:"",
     themeName:"",
     hub:0
 }

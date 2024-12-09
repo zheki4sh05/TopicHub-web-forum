@@ -2,11 +2,14 @@ package com.example.topichubbackend.dto;
 
 import lombok.*;
 
+
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class ReactionDto {
-    private String type;
-    private String object;
-    private String objectId;
+
+   private Boolean isSubscribe;
+   private Boolean isMarked;
 }

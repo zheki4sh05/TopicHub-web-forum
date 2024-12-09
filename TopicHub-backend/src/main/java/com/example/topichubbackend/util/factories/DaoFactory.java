@@ -23,4 +23,8 @@ public class DaoFactory {
     public static SessionDao createSessionDao(){
         return new SessionDao(DaoFactory.configureManager());
     }
+
+    public static ReactionDao createReactionDao(){
+        return new ReactionDao(DaoFactory.configureManager());
+    }
 }

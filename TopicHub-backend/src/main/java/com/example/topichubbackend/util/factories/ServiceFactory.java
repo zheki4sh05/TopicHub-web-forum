@@ -10,4 +10,12 @@ public class ServiceFactory {
     public static SessionService getSessionService(){
         return SessionService.getInstance();
     }
+
+    public static CommentsService getCommentsService(){
+        return CommentsService.getInstance();
+    }
+
+    public static ReactionService getReactionService(){
+        return ReactionService.getInstance();
+    }
 }

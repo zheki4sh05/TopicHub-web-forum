@@ -5,6 +5,7 @@ import DomainNames from "../../../app/store/DomainNames";
 //----state---
 const initialState = {
   article:{},
+  comments:{},
   status: "idle",
   error: null,
 };
