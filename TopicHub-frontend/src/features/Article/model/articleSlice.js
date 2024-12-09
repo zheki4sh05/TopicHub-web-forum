@@ -5,7 +5,7 @@ import DomainNames from "../../../app/store/DomainNames";
 //----state---
 const initialState = {
   article:{},
-  comments:{},
+  addititonal:{},
   status: "idle",
   error: null,
 };
@@ -28,6 +28,7 @@ const articleSlice = createSlice({
     //----------------------------------------
   },
 });
+
 
 
 export function getArticle(state) {

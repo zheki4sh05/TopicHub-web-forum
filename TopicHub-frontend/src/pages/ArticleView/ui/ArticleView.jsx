@@ -6,12 +6,21 @@ import { useSelector } from "react-redux";
 import { getArticle } from "../../../features/Article/model/articleSlice";
 import Article from "../../../features/Article/ui/Article";
 import CommentsList from "../../../widgets/comments/ui/CommentsList";
+import { useEffect } from "react";
 
 
 
 function ArticleView() {
 
     const article = useSelector(getArticle)
+
+
+    useEffect(()=>{
+
+
+      
+
+    },[])
 
 
 
