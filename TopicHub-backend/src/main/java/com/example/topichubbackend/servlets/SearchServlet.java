@@ -21,12 +21,14 @@ public class SearchServlet extends HttpServlet {
             String author = request.getParameter("author");
             String theme = request.getParameter("theme");
             String keywords = request.getParameter("keywords");
+            String user = request.getParameter("user");
+
 
             if(author.isEmpty() && (theme==null || theme.isEmpty()) &&  (keywords==null || keywords.isEmpty())){
                 response.setStatus(400);
             }else{
 
-                ArticleBatchDto articleBatchDto = articleService.search(author,theme,keywords);
+                ArticleBatchDto articleBatchDto = articleService.search(author,theme,keywords,user);
                 response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
                 response.setStatus(200);
             }

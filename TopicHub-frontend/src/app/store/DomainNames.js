@@ -10,6 +10,7 @@ const DomainNames = {
     subscription:"subscription",
     unsubscription:"unsubscription",
     bookMarks:"bookMarks",
-    removeBookMarks:"removeBookMarks"
+    removeBookMarks:"removeBookMarks",
+    like:"like"
 }
 export default DomainNames;

@@ -32,7 +32,8 @@ const articleSlice = createSlice({
       },
       manageBookmarkStatus(state,action){
         state.bookmarkStatus = action.payload
-      }
+      },
+   
   },
   extraReducers(builder) {
     builder
@@ -109,8 +110,8 @@ const articleSlice = createSlice({
       state.bookmarkStatus = "failed";
       state.error = action.error.message;
     });
-  
   // //----------------------------------------
+    
    
   },
 });

@@ -17,7 +17,6 @@ public class ProfileServlet extends HttpServlet{
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-
         try{
             String type= request.getParameter("type");
             if(!isValid(type)){
@@ -31,7 +30,7 @@ public class ProfileServlet extends HttpServlet{
             switch(type){
                 case "articles":{
                     String userId =(String) request.getAttribute("id");
-                   ArticleBatchDto articleBatchDto = articleService.fetch(userId, ArticlesSource.OWN.type(),page);
+                   ArticleBatchDto articleBatchDto = articleService.fetch(ArticlesSource.OWN.type(),page,userId);
                    result = JsonMapper.mapTo(articleBatchDto);
                 }
             }

@@ -18,15 +18,6 @@ public abstract class BaseDao {
 
     public BaseDao() {
     }
-//
-//
-//    public BaseDao(EntityManager em) {
-//        this.em = em;
-//    }
-
-    //    public BaseDao() {
-//        this.em = PersistUtil.getEntityManager();
-//    }
     public <T> void merge(T entity) {
         transaction(em -> em.merge(entity));
     }
@@ -88,8 +79,6 @@ public abstract class BaseDao {
             throw new SuchLoginAlreadyExistsException();
         }
     }
-
-
 
 
 

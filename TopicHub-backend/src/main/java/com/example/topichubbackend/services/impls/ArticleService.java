@@ -27,6 +27,8 @@ public class ArticleService implements IArticleService {
 
     private final AuthDao authDao = DaoFactory.createAuthDao();
 
+    private final ReactionDao reactionDao = DaoFactory.createReactionDao();
+
     private IObjectMapper objectMapper = new ObjectMapperImpl();
 
     public static final String dilimiter = "|";
@@ -48,7 +50,6 @@ public class ArticleService implements IArticleService {
                 .build();
 
        articleDao.save(article);
-       articleDao.merge(article);
 
         articleDto.getList().forEach(item->{
 
@@ -65,7 +66,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public ArticleBatchDto fetch(Integer param, Integer page) {
+    public ArticleBatchDto fetch(Integer param, Integer page, String userId) {
 
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
 
@@ -79,7 +80,7 @@ public class ArticleService implements IArticleService {
                     Integer pageCount = articleDao.getLastPageNumber(totalCount);
 
                     articleBatchDto.setPageCount(pageCount);
-                    articleBatchDto.setArticleDtoList(getArticleByType(result.get().getId(),page));
+                    articleBatchDto.setArticleDtoList(getArticleByType(result.get().getId(),page,userId));
 
                     },
                 ()->{ throw new EntityNotFoundException("No hub with such name!");
@@ -89,19 +90,14 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public ArticleBatchDto fetch(String userId, String type, Integer page) {
-
+    public ArticleBatchDto fetch(String type, Integer page,String userId) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
         Long totalCount = articleDao.calcTotalEntitiesCount();
         Integer pageCount = articleDao.getLastPageNumber(totalCount);
         articleBatchDto.setPageCount(pageCount);
-
         if(type.equals(ArticlesSource.OWN.type())){
-
-            articleBatchDto.setArticleDtoList(getOwnArticles(page, userId));
-
+            articleBatchDto.setArticleDtoList(getOwnArticles(page, userId,userId));
         }
-
         return articleBatchDto;
     }
 
@@ -116,59 +112,66 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public ArticleBatchDto search(String author, String theme, String keywords) {
+    public ArticleBatchDto search(String author, String theme, String keywords, String userId) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
         List<Article> articles = new ArrayList<>();
 
         if(!author.isEmpty() && theme.isEmpty() && keywords.isEmpty() ){
 
             articles.addAll(articleDao.search(author));
-            articleBatchDto.setArticleDtoList(doMapping(articles));
+            articleBatchDto.setArticleDtoList(doMapping(articles,userId));
         }else if(!author.isEmpty()){
             articles.addAll(articleDao.search(theme,  keywords));
             var filtered = articles.stream().filter(item->item.getAuthor().getLogin().startsWith(author));
 
-            articleBatchDto.setArticleDtoList(doMapping(filtered.collect(Collectors.toList())));
+            articleBatchDto.setArticleDtoList(doMapping(filtered.collect(Collectors.toList()),userId));
         }else{
             articles.addAll(articleDao.search(theme,  keywords));
-            articleBatchDto.setArticleDtoList(doMapping(articles));
+            articleBatchDto.setArticleDtoList(doMapping(articles,userId));
         }
-
-
-
         return articleBatchDto;
     }
 
 
-    private List<ArticleDto> getArticleByType(Integer id, Integer page) {
+    private List<ArticleDto> getArticleByType(Integer id, Integer page, String userId) {
         List<Article> articles;
         if(id.equals(0)){
             articles = articleDao.getSortedAndPaginated(page);
         }else{
             articles = articleDao.getSortedAndPaginated(page,id);
         }
-        return  doMapping(articles);
-
+        return  doMapping(articles,userId);
     }
 
-    private List<ArticleDto> getOwnArticles(Integer page, String id){
+    private List<ArticleDto> getOwnArticles(Integer page, String id,String userId){
         List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,id );
-        return doMapping(articles);
+        return doMapping(articles,userId);
     }
 
     private List<ArticlePart> getArticlePart(Long id){
         return  articleDao.findByArticleId(id);
     }
 
-    private List<ArticleDto> doMapping(List<Article> articles){
+    private List<ArticleDto> doMapping(List<Article> articles,String userId){
         List<ArticleDto> articleDtos = new ArrayList<>();
         articles.forEach(item->{
-            ArticleDto articleDto = objectMapper.mapFrom(item, dilimiter);
+           // ArticleDto articleDto = objectMapper.mapFrom(item, dilimiter);
+            ArticleDto articleDto = getLikesAndDislikes(item, userId);
             articleDto.setList(getArticlePart(articleDto.getId()).stream().map(part->objectMapper.mapFrom(part)).collect(Collectors.toList()));
             articleDtos.add(articleDto);
         });
         return articleDtos;
     }
+
+    private ArticleDto getLikesAndDislikes(Article item, String userId){
+        var dto = objectMapper.mapFrom(item, dilimiter);
+        Long[] list= reactionDao.getLikesAndDislikes(item.getId());
+        dto.setLikes(list[0]);
+        dto.setDislikes(list[1]);
+        dto.setLikeState(reactionDao.userLikeState(userId, item.getId()));
+        return dto;
+    }
+
 
 
 }

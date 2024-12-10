@@ -118,14 +118,6 @@ public class ArticleDao extends BaseDao{
                     if (keywords != null && !keywords.isEmpty()) {
                         b.should(f.match().field("keyWords").matching(keywords));
                     } }));
-
-//        var query  = searchSession.search( Article.class )
-//                .where( f -> f.match()
-//                .field( "theme" )
-//                .matching( theme ) )
-//                .fetch( 20 );
-
-
         return query.fetchAllHits();
 
         }
@@ -137,7 +129,6 @@ public class ArticleDao extends BaseDao{
         query.setMaxResults(batchSize);
         List<Article> results = query.getResultList();
         return results;
-
 
     }
 }

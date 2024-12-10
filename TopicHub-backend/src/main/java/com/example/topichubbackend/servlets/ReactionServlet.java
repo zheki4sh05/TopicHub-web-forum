@@ -1,8 +1,10 @@
 package com.example.topichubbackend.servlets;
 
 import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.services.interfaces.*;
+import com.example.topichubbackend.util.*;
 import com.example.topichubbackend.util.factories.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
@@ -12,16 +14,45 @@ import java.io.*;
 @WebServlet(urlPatterns = {"/reaction"})
 public class ReactionServlet extends HttpServlet{
     private IReactionService reactionService = ServiceFactory.getReactionService();
+    private final CustomValidator customValidator = new CustomValidator();
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-//        String type = request.getParameter("type");
-//        String value = request.getParameter("value");
-//        String targetId = request.getParameter("id");
-//        String email = (String) request.getAttribute("user");
-//
-//        reactionService.makeReaction(type, value, email,targetId);
+        String userId = (String) request.getAttribute("id");
+
+            try{
+                LikeRequestDto reactionDto = (LikeRequestDto) JsonMapper.mapFrom(request, LikeRequestDto.class).orElseThrow(RuntimeException::new);
+                customValidator.validate(reactionDto);
+                reactionService.makeReaction(reactionDto.getType(), Integer.valueOf(reactionDto.getValue()), userId,Long.valueOf(reactionDto.getTargetId()));
+                response.setStatus(200);
+            }catch (BadRequestException | NumberFormatException e){
+                response.setStatus(400);
+            }catch (RuntimeException e){
+                response.getWriter().write(e.getMessage());
+                response.setStatus(400);
+            }
+
+    }
+
+    @Override
+    public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String type = request.getParameter("type"); // article, comment
+        String targetId = request.getParameter("targetId");
+        String userId = (String) request.getAttribute("id");
+
+        if(type==null || targetId==null){
+            response.setStatus(400);
+        }else{
+            try{
+
+                reactionService.removeReaction(type,userId,Long.valueOf(targetId));
+                response.setStatus(200);
+            }catch (BadRequestException e){
+                response.setStatus(400);
+            }
+        }
 
     }
 

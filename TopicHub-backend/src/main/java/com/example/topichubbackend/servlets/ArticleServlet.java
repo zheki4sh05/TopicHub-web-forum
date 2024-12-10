@@ -21,8 +21,9 @@ public class ArticleServlet extends HttpServlet {
         try{
             Integer hub = Integer.valueOf(request.getParameter("hub"));
             Integer page = Integer.valueOf(request.getParameter("page"));
+            String user = request.getParameter("user");
 
-            ArticleBatchDto articleBatchDto = articleService.fetch(hub,page);
+            ArticleBatchDto articleBatchDto = articleService.fetch(hub,page,user);
             response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
             response.setStatus(200);
 

@@ -21,5 +21,6 @@ public class ArticleDto {
     private Timestamp created;
     private Integer hub;
     private UserDto userDto;
+    private Integer likeState;
 
 }

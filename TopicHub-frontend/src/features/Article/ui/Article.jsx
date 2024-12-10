@@ -175,11 +175,11 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
           </Box>
           <ReactionBox
             item={item}
-            handleLike={() => {}}
-            handleDislike={() => {}}
-            handleComment={() => {}}
+            // handleLike={() => {}}
+            // handleDislike={() => {}}
+            // handleComment={() => {}}
             showDanger={true}
-            handleDanger={() => {}}
+            // handleDanger={() => {}}
           
           />
         </Box>

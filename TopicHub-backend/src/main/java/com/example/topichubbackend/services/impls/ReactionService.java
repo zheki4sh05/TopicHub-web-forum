@@ -7,6 +7,8 @@ import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
 
+import java.util.*;
+
 public class ReactionService implements IReactionService {
     private final static ReactionService reactionService = new ReactionService();
     private ReactionService() { }
@@ -32,7 +34,45 @@ public class ReactionService implements IReactionService {
     }
 
     @Override
-    public void makeReaction(String type, String value, String email, String targetId) {
+    public void makeReaction(String type, Integer value, String userId, Long targetId) {
+
+        switch(type){
+            case "article":{
+                Article article = articleDao.findById(targetId).orElseThrow(EntityNotFoundException::new);
+                User user = authDao.findById(userId);
+                Optional<Likes> reaction = reactionDao.findById(article.getId(), user.getUuid());
+                reaction.ifPresentOrElse(
+                        (item)-> updateReaction(item, value),
+                        ()-> createNewReaction(article, user, value)
+                );
+                break;
+            }
+            case "comment":{
+                reactionDao.reactionComment(value,userId,targetId);
+                break;
+            }
+            default:{
+                throw new BadRequestException();
+            }
+        }
+    }
+
+    private void updateReaction(Likes item, Integer value) {
+
+        item.setState(value);
+        reactionDao.updateReaction(item);
+
+    }
+
+    private void createNewReaction(Article article, User user, Integer value) {
+
+
+        reactionDao.saveReaction(Likes.builder()
+                .uuid(UUID.randomUUID())
+                .state(value)
+                .article(article)
+                .user(user)
+                .build());
 
     }
 
@@ -57,6 +97,23 @@ public class ReactionService implements IReactionService {
             reactionDao.addBookmark(article,user);
         }else{
             reactionDao.removeBookmark(articleId,userId);
+        }
+    }
+
+    @Override
+    public void removeReaction(String type, String userId, Long articleId) {
+        switch(type){
+            case "article":{
+
+                reactionDao.removeArticleReaction(userId, articleId);
+                break;
+            }
+            case "comment":{
+                break;
+            }
+            default:{
+                throw new BadRequestException();
+            }
         }
     }
 }
