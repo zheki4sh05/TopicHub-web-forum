@@ -12,13 +12,14 @@ import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
 import { useEffect, useState } from "react";
 import { fetchFeed } from "../api/requests";
 import { getFeed, getFeedStatus } from "../model/feedSlice";
-import statusTypes from "./../../../app/util/statusTypes";
-import Article from "../../../features/Article/ui/Article";
 import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
+import { getUser, isAuth } from "../../Profile/model/userSlice";
+
 
 function Articles() {
   const hubs = useSelector(getHubsList);
-
+  const user = useSelector(getUser)
+  const auth = useSelector(isAuth)
   const dispatch = useDispatch();
   const feedStatus = useSelector(getFeedStatus);
   const feed = useSelector(getFeed);
@@ -29,12 +30,24 @@ function Articles() {
     setSelect(id);
   };
 
-  const makeRequest = (select, page) => {
-    dispatch(
-      fetchFeed({
+  const getRequestBody=(select, page)=>{
+    if(auth){
+      return {
         page: page,
         hub: select,
-      })
+        user:user.id
+      }
+    }else{
+      return {
+        page: page,
+        hub: select
+      }  
+    }
+  }
+
+  const makeRequest = (select, page) => {
+    dispatch(
+      fetchFeed(getRequestBody(select, page))
     );
   };
 
