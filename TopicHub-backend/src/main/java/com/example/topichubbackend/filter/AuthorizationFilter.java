@@ -24,6 +24,7 @@ public class AuthorizationFilter implements Filter {
         PUBLIC_PATH.add(UrlPath.REGISTRATION);
         PUBLIC_PATH.add(UrlPath.ARTICLE);
         PUBLIC_PATH.add(UrlPath.SEARCH);
+        PUBLIC_PATH.add(UrlPath.ANSWERS);
     }
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -35,7 +36,6 @@ public class AuthorizationFilter implements Filter {
             if(sessionService.isSessionActiveBy(cookie)){
                 User user = httpRequestHandler.findUserByCookie(cookie.get());
                 servletRequest.setAttribute("id", user.getUuid().toString());
-
                 filterChain.doFilter(servletRequest,servletResponse);
             }else {
                 ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED);

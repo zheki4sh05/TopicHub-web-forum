@@ -27,4 +27,8 @@ public class DaoFactory {
     public static ReactionDao createReactionDao(){
         return new ReactionDao(DaoFactory.configureManager());
     }
+
+    public static CommentDao createCommentDao(){
+        return new CommentDao(DaoFactory.configureManager());
+    }
 }

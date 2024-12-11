@@ -38,7 +38,13 @@ const api={
     },
     bookmark:{
         url:base.concat("bookmarks"),
-    }
+    },
+    comment:{
+        url:base.concat("comment"),
+    },
+    answers:{
+        url:base.concat("answers"),
+    },
     
    
    

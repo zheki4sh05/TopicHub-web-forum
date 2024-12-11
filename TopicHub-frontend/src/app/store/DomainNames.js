@@ -11,6 +11,8 @@ const DomainNames = {
     unsubscription:"unsubscription",
     bookMarks:"bookMarks",
     removeBookMarks:"removeBookMarks",
-    like:"like"
+    like:"like",
+    comment:"comment",
+    answers:"answers"
 }
 export default DomainNames;

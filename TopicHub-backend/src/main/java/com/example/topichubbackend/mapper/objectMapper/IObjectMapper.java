@@ -11,4 +11,7 @@ public interface IObjectMapper {
     ArticlePartDto mapFrom(ArticlePart item);
 
     UserDto mapFrom(User newUser, List<UserRole> userRole);
+
+    CommentDto mapFrom(Comment comment, Long aLong, Set<UUID> processedIds);
+
 }

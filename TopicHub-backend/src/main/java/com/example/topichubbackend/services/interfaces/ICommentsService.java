@@ -5,5 +5,11 @@ import com.example.topichubbackend.dto.*;
 import java.util.*;
 
 public interface ICommentsService {
-    List<CommentDto> fetch(String type, String article);
+    List<CommentDto> fetch(String article);
+
+    CommentDto create(CommentDto commentDto, String userId);
+
+    CommentDto update(CommentDto commentDto, String userId);
+
+    void delete(String commentId, String userId);
 }

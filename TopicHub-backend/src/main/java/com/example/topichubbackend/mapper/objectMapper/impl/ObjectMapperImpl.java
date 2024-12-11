@@ -4,7 +4,6 @@ import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
 
-import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -52,4 +51,43 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .roles(userRoles.stream().map(item->item.getRole().getName()).collect(Collectors.toList()))
                 .build();
     }
+
+    @Override
+    public CommentDto mapFrom(Comment comment, Long aLong, Set<UUID> processedIds) {
+
+        if (processedIds.contains(comment.getId())) {
+            return null;
+        }
+        processedIds.add(comment.getId());
+
+        CommentDto dto = CommentDto.builder()
+                .created(comment.getCreated())
+                .id(comment.getId().toString())
+                .value(comment.getMessage())
+                .articleId(aLong)
+                .authorDto(mapFrom(comment.getAuthor()))
+                .parentId(comment.getParentComment()!=null ? comment.getParentComment().getId().toString() : null)
+                .build();
+
+
+        if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
+            List<CommentDto> replyDtos = new ArrayList<>();
+            for (Comment reply : comment.getReplies()) {
+
+                replyDtos.add(mapFrom(reply, aLong, processedIds));
+            }
+            dto.setReplies(replyDtos);
+        }
+
+        return dto;
+    }
+
+    private AuthorDto mapFrom(User user){
+        return AuthorDto.builder()
+                .id(user.getUuid().toString())
+                .email(user.getEmail())
+                .login(user.getLogin())
+                .build();
+    }
+
 }
