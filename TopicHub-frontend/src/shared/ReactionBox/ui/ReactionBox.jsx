@@ -9,7 +9,7 @@ import { makeReaction, removeReaction } from "../api/request";
 import { useState } from "react";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-function ReactionBox({ item, handleDanger, showDanger = false }) {
+function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,showLikes=true}) {
 
   const dispatch = useDispatch();
   const user = useSelector(getUser);
@@ -71,12 +71,16 @@ function ReactionBox({ item, handleDanger, showDanger = false }) {
     }
   };
 
-  const handleComment = () => {};
+ 
 
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
       <Box sx={{ display: "flex", justifyContent: "start", marginTop: "10px" }}>
-        <IconButton onClick={handleLike}>
+
+        {
+            showLikes ? 
+            <>
+            <IconButton onClick={handleLike}>
           <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
             {likeCount}
           </Typography>
@@ -89,6 +93,13 @@ function ReactionBox({ item, handleDanger, showDanger = false }) {
           </Typography>
           {dislike && !like ? <ThumbDownIcon /> : <ThumbDownOffAltIcon />}
         </IconButton>
+            
+            </>
+            :
+            null
+
+        }
+        
         <IconButton onClick={handleComment}>
           <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
             0
@@ -96,6 +107,7 @@ function ReactionBox({ item, handleDanger, showDanger = false }) {
           <InsertCommentIcon />
         </IconButton>
       </Box>
+
 
       {showDanger ? (
         <Box>

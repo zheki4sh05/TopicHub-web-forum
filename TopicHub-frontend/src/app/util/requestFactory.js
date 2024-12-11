@@ -75,6 +75,16 @@ class ApiRequestCreator {
       return response.data;
     });
   }
+  createPutRequest(uri) {
+    return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
+      const response = await axios.put(
+        this.url.concat(uri),
+        initial,
+        getRequestConfig()
+      );
+      return response.data;
+    });
+  }
 }
 
 export default ApiRequestCreator;

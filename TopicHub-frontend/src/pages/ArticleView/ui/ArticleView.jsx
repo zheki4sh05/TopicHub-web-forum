@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import { PathConstants } from "../../../app/pathConstants";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getArticle,
@@ -34,20 +34,24 @@ import {
   controlUserStatus,
   getUser,
   getUserStatus,
+  isAuth,
 } from "../../Profile/model/userSlice";
 import statusTypes from "../../../app/util/statusTypes";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 
 function ArticleView() {
+
   const article = useSelector(getArticle);
   const user = useSelector(getUser);
   const status = useSelector(getArticleStatus);
-  const userStatus = useSelector(getUserStatus);
   const reaction = useSelector(getReactions);
+ 
 
   const subscribeStatus = useSelector(getSubscriptionStatus);
   const bookmarStatus = useSelector(getBookmarksStatus);
+
+
 
   const dispatch = useDispatch();
 
@@ -151,7 +155,7 @@ function ArticleView() {
           }}
         >
           <Article item={article} mode={"long"} />
-       
+
           <MenuWrapper>
             <Box
               sx={{
@@ -216,7 +220,7 @@ function ArticleView() {
           </MenuWrapper>
 
           <MenuWrapper>
-            <CommentsList article={{}} />
+            <CommentsList article={article} />
           </MenuWrapper>
         </Box>
       </Box>
