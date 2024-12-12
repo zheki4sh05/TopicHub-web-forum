@@ -4,38 +4,64 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   controlUserStatus,
+  getActiveUser,
   getUser,
   getUserArticles,
   getUserStatus,
+  isAuth,
 } from "../model/userSlice";
 import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
-import { fetchUserArticles } from "./../api/requests";
+import { fetchAuthorArticles, fetchUserArticles } from "./../api/requests";
 import statusTypes from "../../../app/util/statusTypes";
 
 function UserArticles({ edit }) {
-  const articles = edit ? useSelector(getUserArticles) : [];
-  console.log(edit)
-  console.log(articles)
-
+  const articles = useSelector(getUserArticles)
   const dispatch = useDispatch();
   const status = useSelector(getUserStatus);
+  const user = useSelector(getActiveUser);
+  const currentUser = useSelector(getUser)
+  const auth = useSelector(isAuth)
 
-  const makeRequest = (select, page) => {
-    dispatch(
-      fetchUserArticles({
-        page: page,
-        type: "articles",
-      })
-    );
+  const makeRequest = (page) => {
+
+    if(edit){
+      dispatch(
+        fetchUserArticles({
+          page: page,
+          type: "articles",
+        })
+      );
+    }else{
+
+      const body = auth ? {page: page,
+  type: "author",
+        otherUserId:user.id,
+        userId:auth ? currentUser.id : null
+      } :
+      {page: page,
+        type: "author",
+              otherUserId:user.id,
+           
+            }
+
+
+      dispatch(
+        fetchAuthorArticles(body)
+      );
+    }
+
+   
   };
 
   const handlePageChange = (event, page) => {
-    makeRequest(0, page);
+    makeRequest(page);
   };
 
   useEffect(() => {
-    if (articles.articleDtoList.length == 0) {
-      makeRequest(0, 1);
+    if (edit && articles.articleDtoList.length == 0) {
+      makeRequest(1);
+    }else if(!edit){
+      makeRequest(1);
     }
   }, []);
 

@@ -5,11 +5,16 @@ import axios from "axios";
 import getRequestConfig from "../../../app/util/requestConfig";
 import getRequestImageConfig from "./../../../app/util/requestImageConfig";
 import addParams from "../../../app/util/paramsConfig";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { PathConstants } from "../../../app/pathConstants";
+import { useDispatch } from "react-redux";
+import { setActiveUser } from "../../../pages/Profile/model/userSlice";
 
 function Author({ user, edit = false, size = 100 }) {
+  const navigate = useNavigate()
   const [imageData, setImageData] = useState(null);
   const [input, setInput] = useState(false);
+  const dispatch = useDispatch()
 
   const handleGetImage = async () => {
     try {
@@ -30,7 +35,6 @@ function Author({ user, edit = false, size = 100 }) {
 
   const handleLoadImage = async (event) => {
     event.preventDefault();
-    console.log("start");
     const formData = new FormData();
     formData.append("image", imageData);
 
@@ -55,15 +59,22 @@ function Author({ user, edit = false, size = 100 }) {
     }
   };
 
+  const setUser=(event)=>{
+   
+    dispatch(setActiveUser(user))
+    navigate(PathConstants.PROFILE)
+  }
+
   return (
     <>
-      <Link>
+      <Box onClick={setUser}>
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             gap: "10px",
             alignItems: "center",
+
           }}
         >
           {imageData ? (
@@ -81,9 +92,9 @@ function Author({ user, edit = false, size = 100 }) {
             <Skeleton variant="circular" width={size} height={size} />
           )}
 
-          <Typography variant="h6">{user.login}</Typography>
+          <Typography variant="h6" sx={{textDecoration:"underline"}} >{user.login}</Typography>
         </Box>
-      </Link>
+      </Box>
 
       {edit ? (
         <Box sx={{ marginLeft: "20px" }}>

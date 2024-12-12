@@ -19,14 +19,22 @@ public class ArticleServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try{
-            Integer hub = Integer.valueOf(request.getParameter("hub"));
-            Integer page = Integer.valueOf(request.getParameter("page"));
-            String user = request.getParameter("user");
 
-            ArticleBatchDto articleBatchDto = articleService.fetch(hub,page,user);
+            String userId = request.getParameter("userId");
+            Integer page = Integer.valueOf(request.getParameter("page"));
+            String type = request.getParameter("type");
+            ArticleBatchDto articleBatchDto;
+
+            if(type.equals("author")){
+                String otherUserId = request.getParameter("otherUserId");
+                 articleBatchDto = articleService.fetch(page,userId, otherUserId);
+            }else{
+                Integer hub = Integer.valueOf(request.getParameter("hub"));
+                 articleBatchDto = articleService.fetch(hub,page,userId);
+
+            }
             response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
             response.setStatus(200);
-
         }
         catch (EntityNotFoundException e){
             response.getWriter().write(e.getMessage());

@@ -33,12 +33,14 @@ function Articles() {
   const getRequestBody=(select, page)=>{
     if(auth){
       return {
+        type: "articles",
         page: page,
         hub: select,
         user:user.id
       }
     }else{
       return {
+        type: "articles",
         page: page,
         hub: select
       }  

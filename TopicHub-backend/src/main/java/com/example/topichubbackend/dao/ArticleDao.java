@@ -143,4 +143,14 @@ public class ArticleDao extends BaseDao{
     }
 
 
+    public Long calcTotalUserArticles(String userId) {
+
+        String countQ = "SELECT COUNT(a.id) FROM Article a where a.author.id= :id";
+
+        Query countQuery = this.em.createQuery(countQ, Long.class);
+        countQuery.setParameter("id",UUID.fromString(userId));
+        Long countResults =(Long) countQuery.getSingleResult();
+        return countResults;
+
+    }
 }

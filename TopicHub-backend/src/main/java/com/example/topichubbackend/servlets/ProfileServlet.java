@@ -36,7 +36,7 @@ public class ProfileServlet extends HttpServlet{
             switch(type){
                 case "articles":{
                     String userId =(String) request.getAttribute("id");
-                   ArticleBatchDto articleBatchDto = articleService.fetch(ArticlesSource.OWN.type(),page,userId);
+                   ArticleBatchDto articleBatchDto = articleService.fetch(page,userId);
                    result = JsonMapper.mapTo(articleBatchDto);
                 }
             }

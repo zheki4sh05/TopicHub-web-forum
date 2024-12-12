@@ -149,7 +149,11 @@ public class ReactionDao extends BaseDao{
             }catch (NoResultException e){
                 return 0;
             }
-        }return 0;
+        }else{
+            return 0;
+        }
+
+
 
 
     }

@@ -5,7 +5,6 @@ import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
-import com.example.topichubbackend.servlets.*;
 import com.example.topichubbackend.util.factories.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
 import com.example.topichubbackend.mapper.objectMapper.impl.*;
@@ -90,14 +89,12 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public ArticleBatchDto fetch(String type, Integer page,String userId) {
+    public ArticleBatchDto fetch(Integer page,String userId) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleDao.calcTotalEntitiesCount();
+        Long totalCount = articleDao.calcTotalUserArticles(userId);
         Integer pageCount = articleDao.getLastPageNumber(totalCount);
         articleBatchDto.setPageCount(pageCount);
-        if(type.equals(ArticlesSource.OWN.type())){
-            articleBatchDto.setArticleDtoList(getOwnArticles(page, userId,userId));
-        }
+        articleBatchDto.setArticleDtoList(getOwnArticles(page, userId));
         return articleBatchDto;
     }
 
@@ -142,6 +139,23 @@ public class ArticleService implements IArticleService {
         return articleBatchDto;
     }
 
+    @Override
+    public ArticleBatchDto fetch(Integer page, String userId, String otherUserId) {
+
+        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+        Long totalCount = articleDao.calcTotalUserArticles(otherUserId);
+        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        articleBatchDto.setPageCount(pageCount);
+        articleBatchDto.setArticleDtoList(gteOtherArticles(page, userId,otherUserId));
+        return articleBatchDto;
+    }
+
+    private List<ArticleDto> gteOtherArticles(Integer page, String userId, String otherUserId) {
+        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,otherUserId );
+        return doMapping(articles,userId);
+
+    }
+
     private List<ArticleDto> getBookmarks(Integer page, String userId) {
 
         List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.bookmarks, page,userId );
@@ -160,8 +174,8 @@ public class ArticleService implements IArticleService {
         return  doMapping(articles,userId);
     }
 
-    private List<ArticleDto> getOwnArticles(Integer page, String id,String userId){
-        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,id );
+    private List<ArticleDto> getOwnArticles(Integer page, String userId){
+        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,userId );
         return doMapping(articles,userId);
     }
 
