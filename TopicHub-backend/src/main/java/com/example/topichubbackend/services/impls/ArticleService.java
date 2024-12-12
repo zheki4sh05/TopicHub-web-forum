@@ -37,7 +37,7 @@ public class ArticleService implements IArticleService {
 
         List<Hub> hubList = hubDao.fetchAll();
 
-        User user = authDao.findById(id);
+        User user = authDao.findById(id).orElseThrow(EntityNotFoundException::new);
 
         final Article article = Article.builder()
                 .theme(articleDto.getTheme())
@@ -132,6 +132,23 @@ public class ArticleService implements IArticleService {
         return articleBatchDto;
     }
 
+    @Override
+    public ArticleBatchDto fetchBookMarks(String userId, Integer page) {
+        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+        Long totalCount = articleDao.calcTotalBookmarksCount(userId);
+        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        articleBatchDto.setPageCount(pageCount);
+        articleBatchDto.setArticleDtoList(getBookmarks(page, userId));
+        return articleBatchDto;
+    }
+
+    private List<ArticleDto> getBookmarks(Integer page, String userId) {
+
+        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.bookmarks, page,userId );
+        return doMapping(articles,userId);
+
+    }
+
 
     private List<ArticleDto> getArticleByType(Integer id, Integer page, String userId) {
         List<Article> articles;
@@ -155,7 +172,6 @@ public class ArticleService implements IArticleService {
     private List<ArticleDto> doMapping(List<Article> articles,String userId){
         List<ArticleDto> articleDtos = new ArrayList<>();
         articles.forEach(item->{
-           // ArticleDto articleDto = objectMapper.mapFrom(item, dilimiter);
             ArticleDto articleDto = getLikesAndDislikes(item, userId);
             articleDto.setList(getArticlePart(articleDto.getId()).stream().map(part->objectMapper.mapFrom(part)).collect(Collectors.toList()));
             articleDtos.add(articleDto);

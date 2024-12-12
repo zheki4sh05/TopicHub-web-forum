@@ -1,6 +1,7 @@
 package com.example.topichubbackend.util.factories;
 
 import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.util.*;
 import jakarta.persistence.*;
 
@@ -31,4 +32,9 @@ public class DaoFactory {
     public static CommentDao createCommentDao(){
         return new CommentDao(DaoFactory.configureManager());
     }
+
+    public static ImageDao createImageDao(){
+        return new ImageDao(DaoFactory.configureManager());
+    }
+
 }

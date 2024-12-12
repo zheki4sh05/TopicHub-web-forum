@@ -2,12 +2,13 @@ import { Button, IconButton, Popover, Typography } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { isAuth } from "../../../pages/Profile/model/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, isAuth, setActiveUser } from "../../../pages/Profile/model/userSlice";
 import { PathConstants } from './../../../app/pathConstants';
 
 function UserSettings() {
-
+  const dispatch = useDispatch()
+  const user = useSelector(getUser)
   const navigate = useNavigate()
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -18,6 +19,7 @@ function UserSettings() {
     if(!auth){
       setAnchorEl(event.currentTarget);
     }else{
+      dispatch(setActiveUser(user))
       navigate(PathConstants.PROFILE)
     }
    

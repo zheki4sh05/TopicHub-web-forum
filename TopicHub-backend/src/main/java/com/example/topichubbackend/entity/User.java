@@ -12,14 +12,13 @@ import java.util.*;
 @Data
 @Builder
 @Entity
-//@Indexed
 @Table(name="author")
 public class User {
     @Column(name = "id")
     @Id
     private UUID uuid;
-//
-//    @FullTextField
+
+
     @Column(name = "login")
     private String login;
 

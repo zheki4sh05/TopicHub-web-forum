@@ -76,13 +76,19 @@ class ApiRequestCreator {
     });
   }
   createPutRequest(uri) {
-    return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
-      const response = await axios.put(
-        this.url.concat(uri),
-        initial,
-        getRequestConfig()
-      );
-      return response.data;
+    return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
+
+      try{
+        const response = await axios.put(
+          this.url.concat(uri),
+          initial,
+          getRequestConfig()
+        );
+        return response.data;
+      }catch(error){
+       
+        return thunkAPI.rejectWithValue({ error:error.response.data  })
+      }
     });
   }
 }

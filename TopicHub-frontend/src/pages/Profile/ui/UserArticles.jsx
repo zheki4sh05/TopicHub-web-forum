@@ -14,6 +14,8 @@ import statusTypes from "../../../app/util/statusTypes";
 
 function UserArticles({ edit }) {
   const articles = edit ? useSelector(getUserArticles) : [];
+  console.log(edit)
+  console.log(articles)
 
   const dispatch = useDispatch();
   const status = useSelector(getUserStatus);

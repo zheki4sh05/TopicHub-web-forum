@@ -1,6 +1,7 @@
 package com.example.topichubbackend.servlets;
 
 import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.services.interfaces.*;
@@ -16,9 +17,16 @@ public class SandboxServlet extends HttpServlet{
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
-        String id = (String)request.getAttribute("id");
-        articleService.create(newArticle,id);
-        response.setStatus(201);
+        try{
+            ArticleDto newArticle =(ArticleDto) JsonMapper.mapFrom(request, ArticleDto.class).orElseThrow(RuntimeException::new);
+            String id = (String)request.getAttribute("id");
+            articleService.create(newArticle,id);
+            response.setStatus(201);
+
+        }catch (EntityNotFoundException e){
+
+            response.setStatus(404);
+        }
+
     }
 }

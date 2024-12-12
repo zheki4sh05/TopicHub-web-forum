@@ -3,11 +3,14 @@ package com.example.topichubbackend.services.impls;
 import com.example.topichubbackend.dao.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
+import com.example.topichubbackend.exceptions.*;
+import com.example.topichubbackend.exceptions.EntityNotFoundException;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
 import com.example.topichubbackend.util.factories.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
 import com.example.topichubbackend.mapper.objectMapper.impl.*;
+import jakarta.persistence.*;
 
 import java.util.*;
 
@@ -39,6 +42,26 @@ public class AuthService implements IAuthService {
     @Override
     public List<UserRole> getUserRole(UUID id){
         return  authDao.findUserRole(id);
+    }
+
+    @Override
+    public void updateUser(UserDto userDto, String userId) {
+        try{
+            User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
+            user.setEmail(userDto.getEmail());
+            user.setLogin(userDto.getLogin());
+            authDao.merge(user);
+        }catch (RollbackException e){
+            throw new BadRequestException();
+        }
+
+    }
+
+    @Override
+    public void delete(String id, String userId) {
+            User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
+            authDao.merge(user);
+            authDao.delete(user);
     }
 
     private User prepareNewUser(UserDto userDto){

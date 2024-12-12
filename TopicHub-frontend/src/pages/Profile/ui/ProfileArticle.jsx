@@ -96,22 +96,12 @@ function ProfileArticle() {
               <Box sx={{maxWidth:"820px", display:"flex", flexDirection:"column", margin:"0 auto",gap:"10px"}} >
                   <Article item={article} mode={"long"} edit={true} handleEdit={handleEdit} handleDelete={handleDelete}/>
   
-                  <MenuWrapper>
-                      <Box sx={{display:"flex", justifyContent:"space-between",alignItems:"center",width:"100%"}}>
-                          <Box   sx={{display:"flex", flexDirection:"row", gap:"10px"}}>
-  
-                          <img alt="лого" />
-                          <Typography>Имя автора</Typography>
-  
-                          </Box>
-                      <Button variant="outlined" color="success">Подписаться</Button>
-                      </Box>
-                  </MenuWrapper>
+                 
                   
                   <MenuWrapper>
                      <CommentsList
                      
-                     article={{}}
+                     article={article}
                      
                      />
                   </MenuWrapper>

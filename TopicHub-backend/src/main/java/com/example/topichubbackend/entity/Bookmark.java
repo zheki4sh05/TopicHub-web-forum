@@ -16,7 +16,7 @@ public class Bookmark {
     @Column(name = "id")
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")
     private User author;
 

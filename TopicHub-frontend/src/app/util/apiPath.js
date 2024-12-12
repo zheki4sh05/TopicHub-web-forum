@@ -45,6 +45,9 @@ const api={
     answers:{
         url:base.concat("answers"),
     },
+    image:{
+        url:base.concat("image"),
+    }
     
    
    

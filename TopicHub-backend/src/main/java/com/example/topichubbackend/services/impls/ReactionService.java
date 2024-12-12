@@ -4,10 +4,13 @@ import com.example.topichubbackend.dao.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
+import com.example.topichubbackend.mapper.objectMapper.*;
+import com.example.topichubbackend.mapper.objectMapper.impl.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 public class ReactionService implements IReactionService {
     private final static ReactionService reactionService = new ReactionService();
@@ -20,6 +23,8 @@ public class ReactionService implements IReactionService {
 
     private final AuthDao authDao = DaoFactory.createAuthDao();
     private final ArticleDao articleDao = DaoFactory.createArticleDao();
+
+    private final IObjectMapper objectMapper = new ObjectMapperImpl();
     @Override
     public ReactionDto check(String articleId, String authorId, String userId) {
 
@@ -39,7 +44,7 @@ public class ReactionService implements IReactionService {
         switch(type){
             case "article":{
                 Article article = articleDao.findById(targetId).orElseThrow(EntityNotFoundException::new);
-                User user = authDao.findById(userId);
+                User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
                 Optional<Likes> reaction = reactionDao.findById(article.getId(), user.getUuid());
                 reaction.ifPresentOrElse(
                         (item)-> updateReaction(item, value),
@@ -80,8 +85,8 @@ public class ReactionService implements IReactionService {
     public void manageSubscription(Integer value, String authorId, String userId) {
 
        if(value==1){
-           User user  = authDao.findById(userId);
-           User author = authDao.findById(authorId);
+           User user  = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
+           User author = authDao.findById(authorId).orElseThrow(EntityNotFoundException::new);
            reactionDao.subscribe(author,user);
        }else{
            reactionDao.unsubscribe(authorId,userId);
@@ -92,7 +97,7 @@ public class ReactionService implements IReactionService {
     @Override
     public void manageBookmarks(Integer value, String articleId, String userId) {
         if(value==1){
-            User user  = authDao.findById(userId);
+            User user  = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
             Article article = articleDao.findById(Long.valueOf(articleId)).orElseThrow(EntityNotFoundException::new);
             reactionDao.addBookmark(article,user);
         }else{
@@ -115,5 +120,28 @@ public class ReactionService implements IReactionService {
                 throw new BadRequestException();
             }
         }
+    }
+
+    @Override
+    public List<AuthorDto> fetchAllSubscribes(String id) {
+
+        List<Subscription> subscriptions = authDao.findSubscribesById(id);
+
+        return subscriptions.stream().map(item->AuthorDto.builder()
+                .login(item.getAuthor().getLogin())
+                .email(item.getAuthor().getEmail())
+                .id(item.getAuthor().getUuid().toString())
+                .build()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AuthorDto> fetchAllFollowers(String id) {
+        List<Subscription> userList = authDao.findFollowersById(id);
+
+        return userList.stream().map(item->AuthorDto.builder()
+                .login(item.getAuthor().getLogin())
+                .email(item.getAuthor().getEmail())
+                .id(item.getAuthor().getUuid().toString())
+                .build()).collect(Collectors.toList());
     }
 }

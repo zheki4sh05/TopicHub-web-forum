@@ -54,7 +54,6 @@ public class LoginServlet extends HttpServlet{
         UUID uuid = sessionService.createByUser(user);
 
         Cookie cookie = new Cookie(HttpRequestHandler.COOKIE_NAME, uuid.toString());
-//        cookie.setDomain("localhost");
         cookie.setPath("/");
         cookie.setSecure(false);
         cookie.setHttpOnly(true);

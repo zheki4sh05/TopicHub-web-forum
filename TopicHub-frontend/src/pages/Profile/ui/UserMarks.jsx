@@ -1,9 +1,82 @@
-import { Box } from "@mui/material";
+import {
+  Box,
+  LinearProgress,
+  Pagination,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserBookmarks, getUserStatus } from "../model/userSlice";
+import ArticlesList from "./../../../widgets/articlesList/ui/ArticlesList";
+import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
+import statusTypes from "../../../app/util/statusTypes";
+import { fetchUserBookmarks } from "../api/requests";
+import { useEffect } from "react";
 
 function UserMarks() {
-    return ( <Box>
+  const articles = useSelector(getUserBookmarks);
+  const status = useSelector(getUserStatus);
+  const dispatch = useDispatch()
 
-    </Box> );
+
+ 
+
+  const makeRequest = (page) => {
+    dispatch(fetchUserBookmarks(
+            {
+                page:page
+            }
+    ))
+  };
+
+  useEffect(() => {
+    makeRequest(1);
+  }, []);
+  const handlePageChange = (event, page) => {
+    makeRequest(page);
+  };
+ 
+
+  return (
+    <>
+      {articles.articleDtoList.length > 0 ? (
+        <Stack direction={"column"}>
+          <ArticlesList
+            status={status}
+            batch={articles}
+            makeRequest={makeRequest}
+            select={0}
+            edit={false}
+          />
+
+          <MenuWrapper>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Pagination
+                count={
+                  articles.articleDtoList.length != 0 ? articles.pageCount : 0
+                }
+                variant="outlined"
+                color="primary"
+                onChange={handlePageChange}
+              />
+            </Box>
+          </MenuWrapper>
+        </Stack>
+      ) : status == statusTypes.loading ? (
+        <LinearProgress />
+      ) : (
+        <>
+          <Typography>Список закладок пуст.</Typography>
+        </>
+      )}
+    </>
+  );
 }
 
 export default UserMarks;

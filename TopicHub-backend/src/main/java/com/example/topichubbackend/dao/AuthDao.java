@@ -10,22 +10,6 @@ public class AuthDao extends BaseDao{
     public AuthDao(EntityManager entityManager) {
         this.em = entityManager;
     }
-
-    public User findByEmail(String email){
-
-        String hql = "FROM User u WHERE u.email = :email";
-
-        try {
-            return this.em.createQuery(hql, User.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-
-
-    }
-
     public Role findRoleByType(String type){
         String hql = "FROM Role r WHERE r.name = :name";
         try {
@@ -71,17 +55,38 @@ public class AuthDao extends BaseDao{
         }
     }
 
-    public User findById(String id) {
+    public Optional<User> findById(String id) {
         String hql = "FROM User u WHERE u.uuid = :id";
         UUID uuid = UUID.fromString(id);
         try {
-            return this.em.createQuery(hql, User.class)
+            return Optional.of(this.em.createQuery(hql, User.class)
                     .setParameter("id", uuid)
-                    .getSingleResult();
+                    .getSingleResult());
         } catch (NoResultException e) {
-            throw new RuntimeException();
+            return Optional.empty();
         }
+    }
 
+    public List<Subscription> findSubscribesById(String id) {
 
+        String hql = "FROM Subscription s where s.follower.id = :id";
+        try {
+            return this.em.createQuery(hql, Subscription.class)
+                    .setParameter("id", UUID.fromString(id))
+                    .getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Subscription> findFollowersById(String id) {
+        String hql = "FROM Subscription s where s.author.id = :id";
+        try {
+            return this.em.createQuery(hql, Subscription.class)
+                    .setParameter("id", UUID.fromString(id))
+                    .getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        }
     }
 }

@@ -25,6 +25,7 @@ public class AuthorizationFilter implements Filter {
         PUBLIC_PATH.add(UrlPath.ARTICLE);
         PUBLIC_PATH.add(UrlPath.SEARCH);
         PUBLIC_PATH.add(UrlPath.ANSWERS);
+        PUBLIC_PATH.add(UrlPath.IMAGE);
     }
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -43,17 +44,6 @@ public class AuthorizationFilter implements Filter {
 
         }
     }
-//    private boolean isUserLoggedIn(ServletRequest servletRequest) { Object user  =((HttpServletRequest) servletRequest).getSession().getAttribute("user");
-//        return user!=null;
-//    }
-
-//    private boolean isSessionActive(ServletRequest servletRequest) {
-//
-//        Optional<Cookie> cookie = HttpRequestHandler.getSessionCookie((HttpServletRequest) servletRequest);
-//        return sessionService.isSessionActiveBy(cookie);
-//
-//
-//    }
     private boolean isPublicPath(String uri) {
         return PUBLIC_PATH.stream().anyMatch(uri::startsWith);
     }

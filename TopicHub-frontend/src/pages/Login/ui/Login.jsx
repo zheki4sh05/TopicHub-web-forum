@@ -3,9 +3,11 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   controlUserStatus,
+  getUser,
   getUserError,
   getUserStatus,
   isAuth,
+  setActiveUser,
 } from "../../Profile/model/userSlice";
 import { useEffect, useState } from "react";
 import {
@@ -29,6 +31,7 @@ function Login() {
   const [open, setOpen] = useState({ state: false, message: "" });
   const status = useSelector(getUserStatus);
   const error = useSelector(getUserError);
+  const user = useSelector(getUser)
 
   const navigate = useNavigate();
   const auth = useSelector(isAuth);
@@ -53,6 +56,7 @@ function Login() {
           type: "success",
         });
       } else {
+        dispatch(setActiveUser(user))
         navigate(PathConstants.PROFILE);
       }
       dispatch(controlUserStatus(statusTypes.idle));

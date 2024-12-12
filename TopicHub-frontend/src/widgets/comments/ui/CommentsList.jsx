@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  IconButton,
   LinearProgress,
   Stack,
   TextField,
@@ -13,14 +14,13 @@ import { createComment, fetchComments } from "../api/requests";
 import { useDispatch, useSelector } from "react-redux";
 import { getComments, getStatusComments } from "../model/commentSlice";
 import statusTypes from "../../../app/util/statusTypes";
-
+import CachedIcon from '@mui/icons-material/Cached';
 function CommentsList({ article }) {
   const [comment, setComment] = useState({ value: "" });
   const [create, setCreate] = useState(false);
   const [parentId,setParentId] = useState(null)
 
-
-  useEffect(()=>{
+  const makeRequest=()=>{
     dispatch(fetchComments(
 
       {
@@ -28,6 +28,10 @@ function CommentsList({ article }) {
       }
 
     ))
+  }
+
+  useEffect(()=>{
+    makeRequest()
   },[])
 
   const comments = useSelector(getComments);
@@ -59,6 +63,10 @@ function CommentsList({ article }) {
     setCreate(false)
     setParentId(null)
   };
+
+  const handleReload=()=>{
+    makeRequest()
+  }
 
   return (
     <>
@@ -119,11 +127,16 @@ function CommentsList({ article }) {
               />
             ))}
           </Box>
+          <Box sx={{width:"100%"}} >
+      <IconButton sx={{margin:"5px auto 0 auto"}} >
+        <CachedIcon onClick={handleReload} />
+      </IconButton>
+    </Box>
         </Box>
       ) : commentsStatus == statusTypes.loading ? (
         <LinearProgress />
       ) : 
-      
+      <>
       <Box
       sx={{
         display: "flex",
@@ -138,7 +151,8 @@ function CommentsList({ article }) {
         Не удалось загрузить
       </Typography>
     </Box>
-      
+  
+       </>
       }
     </>
   );

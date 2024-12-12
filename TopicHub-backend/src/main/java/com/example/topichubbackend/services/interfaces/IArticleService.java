@@ -12,4 +12,6 @@ public interface IArticleService {
     void delete(String id, String userId);
 
     ArticleBatchDto search(String author, String theme, String keywords,String userId);
+
+    ArticleBatchDto fetchBookMarks(String userId, Integer page);
 }

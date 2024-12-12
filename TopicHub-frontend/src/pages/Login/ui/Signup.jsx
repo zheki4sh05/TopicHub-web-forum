@@ -32,12 +32,7 @@ function Signup({ onTogglePage }) {
         email:data.email,
         password:data.password
       }))
-    }
-
-
-    
-
-   
+    }   
   };
   return (
     <form

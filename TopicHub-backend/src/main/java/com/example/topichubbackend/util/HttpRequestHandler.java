@@ -12,6 +12,7 @@ public class HttpRequestHandler {
     public static String COOKIE_NAME="topichub";
 
     private final SessionDao sessionDao = DaoFactory.createSessionDao();
+    private final AuthDao authDao = DaoFactory.createAuthDao();
     public static Optional<Cookie> getSessionCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
@@ -25,10 +26,15 @@ public class HttpRequestHandler {
 
     public User findUserByCookie(Cookie sessionCookie) {
         UUID uuid = UUID.fromString(sessionCookie.getValue());
-
+        Session session = sessionDao.findById(uuid).orElseThrow(BadRequestException::new);
+        return session.getUser();
+    }
+    public List<UserRole> findUserRoleByCookie(Cookie sessionCookie) {
+        UUID uuid = UUID.fromString(sessionCookie.getValue());
         Session session = sessionDao.findById(uuid).orElseThrow(BadRequestException::new);
 
-        return session.getUser();
+        List<UserRole> userRoles =  authDao.findUserRole(session.getUser().getUuid());
 
+        return userRoles;
     }
 }

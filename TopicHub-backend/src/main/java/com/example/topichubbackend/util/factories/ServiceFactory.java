@@ -18,4 +18,6 @@ public class ServiceFactory {
     public static ReactionService getReactionService(){
         return ReactionService.getInstance();
     }
+
+    public static ImageService createImageService(){return  ImageService.getInstance(); }
 }

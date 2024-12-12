@@ -21,6 +21,7 @@ public class ArticleDao extends BaseDao{
     public final static String hubArticles = "FROM Article a WHERE a.hub.id = :id ORDER BY a.created DESC";
 
     public final static String authorArticles = "FROM Article a WHERE a.author.id = :id ORDER BY a.created DESC";
+    public final static String bookmarks = "FROM Article a JOIN Bookmark b ON a.id = b.article.id and b.author.id = :id";
 
     private final SearchSession searchSession;
     public ArticleDao(EntityManager entityManager) {
@@ -131,4 +132,15 @@ public class ArticleDao extends BaseDao{
         return results;
 
     }
+
+    public Long calcTotalBookmarksCount(String userId) {
+        String countQ = "SELECT COUNT(b.id) FROM Bookmark b where b.author.id= :id";
+
+        Query countQuery = this.em.createQuery(countQ, Long.class);
+        countQuery.setParameter("id",UUID.fromString(userId));
+        Long countResults =(Long) countQuery.getSingleResult();
+        return countResults;
+    }
+
+
 }

@@ -17,7 +17,6 @@ import {
   getReactions,
   getSubscriptionStatus,
   manageBookmarkStatus,
-  manageSubscription,
   manageSubscriptionStatus,
 } from "../../../features/Article/model/articleSlice";
 import Article from "../../../features/Article/ui/Article";
@@ -32,26 +31,25 @@ import {
 } from "../api/requests";
 import {
   controlUserStatus,
+  deleteBookmark,
   getUser,
   getUserStatus,
   isAuth,
+  pushBookmark,
 } from "../../Profile/model/userSlice";
 import statusTypes from "../../../app/util/statusTypes";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
+import Author from "../../../widgets/author/ui/Author";
 
 function ArticleView() {
-
   const article = useSelector(getArticle);
   const user = useSelector(getUser);
   const status = useSelector(getArticleStatus);
   const reaction = useSelector(getReactions);
- 
 
   const subscribeStatus = useSelector(getSubscriptionStatus);
   const bookmarStatus = useSelector(getBookmarksStatus);
-
-
 
   const dispatch = useDispatch();
 
@@ -108,6 +106,7 @@ function ArticleView() {
         article: article.id,
       })
     );
+    dispatch(deleteBookmark(article.id));
   };
 
   const handleAddBookMark = () => {
@@ -116,6 +115,7 @@ function ArticleView() {
         article: article.id,
       })
     );
+    dispatch(pushBookmark(article));
   };
 
   return (
@@ -167,35 +167,41 @@ function ArticleView() {
             >
               <Stack direction="row" sx={{ alignItems: "center", gap: "20px" }}>
                 <Box
-                  sx={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "10px",
+                    textDecoration: "none",
+                  }}
                 >
-                  <img alt="лого" />
-                  <Typography>{article.userDto.login}</Typography>
+                  <Author user={article.userDto} size={50} edit={false} />
                 </Box>
 
-                {status == statusTypes.failed ? (
-                  <Button variant="outlined" color="success" disabled={true}>
-                    Ошибка
-                  </Button>
-                ) : status == statusTypes.loading ? (
-                  <CircularProgress />
-                ) : !reaction.isSubscribe ? (
-                  <Button
-                    variant="outlined"
-                    color="success"
-                    onClick={() => handleSubscribe(1)}
-                  >
-                    Подписаться
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outlined"
-                    color="success"
-                    onClick={() => handleSubscribe(-1)}
-                  >
-                    Отписаться
-                  </Button>
-                )}
+                {user.id != article.userDto.id ? (
+                  status == statusTypes.failed ? (
+                    <Button variant="outlined" color="success" disabled={true}>
+                      Ошибка
+                    </Button>
+                  ) : status == statusTypes.loading ? (
+                    <CircularProgress />
+                  ) : !reaction.isSubscribe ? (
+                    <Button
+                      variant="outlined"
+                      color="success"
+                      onClick={() => handleSubscribe(1)}
+                    >
+                      Подписаться
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      color="success"
+                      onClick={() => handleSubscribe(-1)}
+                    >
+                      Отписаться
+                    </Button>
+                  )
+                ) : null}
               </Stack>
               <Box
                 sx={{

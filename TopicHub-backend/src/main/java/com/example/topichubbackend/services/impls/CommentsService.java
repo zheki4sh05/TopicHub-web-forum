@@ -37,7 +37,7 @@ public class CommentsService implements ICommentsService {
     public CommentDto create(CommentDto commentDto, String userId) {
 
         Article article = articleDao.findById(commentDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
-        User author = authDao.findById(userId);
+        User author = authDao.findById(userId).orElseThrow(EntityExistsException::new);
         Comment comment = Comment.builder()
                 .id(UUID.randomUUID())
                 .message(commentDto.getValue())

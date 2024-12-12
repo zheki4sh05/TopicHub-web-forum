@@ -1,8 +1,16 @@
-import { Box, Button, Pagination, Stack, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Pagination,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import { useNavigate } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
-import { getUser } from "../model/userSlice";
+import { getActiveUser, getUser } from "../model/userSlice";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import UserArticles from "./UserArticles";
@@ -14,6 +22,7 @@ import CustomTabPanel from "../../../shared/Tabs/ui/CustomTabPanel";
 
 function Profile() {
   const user = useSelector(getUser);
+  const activeUser = useSelector(getActiveUser);
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -27,35 +36,42 @@ function Profile() {
     };
   }
 
-
-
   const tabsList = [
     {
       name: "публикации",
       number: 0,
-      component: <UserArticles edit={true}/>
+      component: <UserArticles edit={user.id == activeUser.id} />,
     },
     {
       name: "Профиль",
       number: 1,
-      component: <UserProfile edit={true}/>
+      component: <UserProfile edit={user.id == activeUser.id} />,
     },
     {
       name: "закладки",
       number: 2,
-      component: <UserMarks/>
+      component: <UserMarks />,
     },
     {
       name: "подписчики",
       number: 3,
-      component: <UserSubscribers edit={true}/>
+      component: <UserFollowers edit={user.id == activeUser.id} />,
     },
     {
       name: "подписки",
       number: 4,
-      component: <UserFollowers edit={true}/>
+      component: <UserSubscribers edit={user.id == activeUser.id} />,
+     
     },
   ];
+
+  const tabslListByUser = () => {
+    if (user.id == activeUser.id) {
+      return tabsList;
+    } else {
+      return tabsList.filter((item) => item.number != 2);
+    }
+  };
 
   return (
     <Box
@@ -76,10 +92,10 @@ function Profile() {
               width: "100%",
             }}
           >
-            <Stack direction={"row"} spacing={2}>
+            {/* <Stack direction={"row"} spacing={2}>
               <img alt="logo" />
               <Typography variant="subtitle1">{user.login}</Typography>
-            </Stack>
+            </Stack> */}
           </Box>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -87,7 +103,7 @@ function Profile() {
               onChange={handleChange}
               aria-label="basic tabs example"
             >
-              {tabsList.map((item, index) => (
+              {tabslListByUser().map((item, index) => (
                 <Tab
                   key={index}
                   label={item.name}
@@ -98,20 +114,11 @@ function Profile() {
           </Box>
         </Stack>
       </MenuWrapper>
-      {/* <CustomTabPanel value={value} index={0}>
-            Item One
-     </CustomTabPanel> */}
-     {
-        tabsList.map((item,index)=>(
-            <CustomTabPanel key={index} value={value} index={0}>
-                {item.component}
-            </CustomTabPanel>
-        ))
-
-     }
-   
-
-      
+      {tabslListByUser().map((item, index) => (
+        <CustomTabPanel key={index} value={value} index={item.number}>
+          {item.component}
+        </CustomTabPanel>
+      ))}
     </Box>
   );
 }

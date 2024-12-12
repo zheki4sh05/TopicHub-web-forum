@@ -11,4 +11,8 @@ public interface IAuthService {
     Optional<User> login(AuthDto userDto);
 
     List<UserRole> getUserRole(UUID id);
+
+    void updateUser(UserDto userDto, String userId);
+
+    void delete(String id, String userId);
 }

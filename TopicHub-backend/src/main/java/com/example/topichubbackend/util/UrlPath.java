@@ -9,6 +9,7 @@ public class UrlPath {
     public static final String SEARCH = "/search";
 
     public static final String ANSWERS = "/answers";
+    public static final String IMAGE = "/image";
     public static final String ARTICLE_CREATE = ARTICLE+"/create";
 
 }

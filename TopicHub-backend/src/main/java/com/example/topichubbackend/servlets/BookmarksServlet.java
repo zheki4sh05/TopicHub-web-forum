@@ -3,6 +3,7 @@ package com.example.topichubbackend.servlets;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
+import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
 import com.example.topichubbackend.util.factories.*;
@@ -14,8 +15,26 @@ import java.io.*;
 @WebServlet(urlPatterns = {"/bookmarks"})
 public class BookmarksServlet extends HttpServlet {
     private final IReactionService reactionService = ServiceFactory.getReactionService();
+    private final IArticleService articleService= ArticleService.getInstance();
 
     private final CustomValidator customValidator =new CustomValidator();
+
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try{
+            String userId =(String) request.getAttribute("id");
+            Integer page = Integer.valueOf(request.getParameter("page"));
+             ArticleBatchDto articleBatchDto = articleService.fetchBookMarks(userId, page);
+             response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
+            response.setStatus(200);
+        }catch (NumberFormatException e){
+            response.setStatus(400);
+        }
+
+    }
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try{

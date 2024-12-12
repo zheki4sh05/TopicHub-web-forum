@@ -1,15 +1,17 @@
 package com.example.topichubbackend.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.*;
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "subscription")
-@Builder
-public class Subscription {
 
+import java.util.*;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@Entity
+@Table(name="image")
+public class Image {
     @Id
     @Column(name = "id")
     private UUID id;
@@ -18,8 +20,8 @@ public class Subscription {
     @JoinColumn(name = "author")
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower")
-    private User follower;
+    @Lob
+    @Column(name = "img")
+    private byte[] imageData;
 
 }
