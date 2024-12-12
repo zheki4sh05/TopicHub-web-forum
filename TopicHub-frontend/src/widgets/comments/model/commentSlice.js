@@ -167,6 +167,6 @@ const initialState = {
     return state[DomainNames.comment].status;
   }
 
-  export const { setArticle,manageSubscription,manageBookmarkStatus,manageSubscriptionStatus } = commentsSlice.actions;
+  export const { manageCommentStatus} = commentsSlice.actions;
   
   export default commentsSlice.reducer;

@@ -13,6 +13,7 @@ const DomainNames = {
     removeBookMarks:"removeBookMarks",
     like:"like",
     comment:"comment",
-    answers:"answers"
+    answers:"answers",
+    followers:"followers",
 }
 export default DomainNames;

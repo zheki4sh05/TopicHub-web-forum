@@ -134,6 +134,6 @@ export function getBookmarksStatus(state) {
 export function getReactions(state) {
   return state[DomainNames.article].reaction;
 }
-export const { setArticle,manageSubscription,manageBookmarkStatus,manageSubscriptionStatus } = articleSlice.actions;
+export const { setArticle,manageBookmarkStatus,manageSubscriptionStatus } = articleSlice.actions;
 
 export default articleSlice.reducer;
