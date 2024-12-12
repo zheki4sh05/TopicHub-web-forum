@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import { signin, signup } from "../../Login/api/requests";
-import { delUserArticle, fetchUserArticles, fetchUserBookmarks, fetchUserFollowers, fetchUserSubscriptions, updateUserData } from "../api/requests";
+import { delUserArticle, fetchAuthorArticles, fetchUserArticles, fetchUserBookmarks, fetchUserFollowers, fetchUserSubscriptions, updateUserData } from "../api/requests";
 
 
 //----state---
@@ -15,8 +15,20 @@ const initialState = {
   //   password:null
   // },
 
-  user:{},
-  activeUser:{},
+  user:{
+    roles:[],
+    id:0,
+    login:"",
+    email:"",
+
+  },
+  activeUser:{
+    roles:[],
+    id:0,
+    login:"",
+    email:"",
+
+  },
   articles:{
     articleDtoList:[],
     pageCount:0
@@ -200,6 +212,19 @@ const userSlice = createSlice({
             state.status = "failed";
             state.error = action.error;
           })
+            //---статьи другого пользователя-------------
+            .addCase(fetchAuthorArticles.pending, (state, action) => {
+              state.status = "loading";
+            })
+            .addCase(fetchAuthorArticles.fulfilled, (state, action) => {
+              state.status = "succeeded";
+              state.articles = action.payload
+              state.error=null
+            })
+            .addCase(fetchAuthorArticles.rejected, (state, action) => {
+              state.status = "failed";
+              state.error = action.error;
+            })
    
  
 

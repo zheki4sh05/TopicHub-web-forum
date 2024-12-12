@@ -25,3 +25,6 @@ export const fetchUserSubscriptions = apiFactor6.createGetRequest("",true);
 
 const apiFactor7= new ApiRequestCreator(DomainNames.followers+"/list", api.subscription.url);
 export const fetchUserFollowers = apiFactor7.createGetRequest("",true);
+
+const apiFactory8 = new ApiRequestCreator(DomainNames.article, api.article.url);
+export const fetchAuthorArticles = apiFactory8.createGetRequest("",true);
