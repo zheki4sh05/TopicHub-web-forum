@@ -47,6 +47,9 @@ const api={
     },
     image:{
         url:base.concat("image"),
+    },
+    authors:{
+        url:base.concat("authors"),
     }
     
    

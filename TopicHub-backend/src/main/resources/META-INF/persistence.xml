@@ -16,6 +16,7 @@
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/web_forum" />
             <property name="jakarta.persistence.jdbc.user" value="postgres" />
             <property name="jakarta.persistence.jdbc.password" value="lhs22LI=D=" />
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver" />
 
             <!-- Automatically export the schema -->
             <!--            <property name="jakarta.persistence.schema-generation.database.action" value="" />-->

@@ -18,7 +18,6 @@ public class User {
     @Id
     private UUID uuid;
 
-
     @Column(name = "login")
     private String login;
 
@@ -27,5 +26,11 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "state")
+    private Boolean state;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    private List<UserRole> userRoles;
 
 }

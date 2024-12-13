@@ -13,6 +13,7 @@ import com.example.topichubbackend.mapper.objectMapper.impl.*;
 import jakarta.persistence.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 public class AuthService implements IAuthService {
 
@@ -58,10 +59,32 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void delete(String id, String userId) {
-            User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
-            authDao.merge(user);
+    public void delete(String userId) {
+        User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
+            List<UserRole> userRoles = user.getUserRoles();
+            userRoles.forEach(authDao::delete);
             authDao.delete(user);
+    }
+
+    @Override
+    public List<UserDto> findAll(String id) {
+        List<User> userList = authDao.findAll(id);
+        return userList.stream()
+                .map(item->objectMapper.mapFrom(item, item.getUserRoles()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void manageBlock(String authorId) {
+        User user = authDao.findById(authorId).orElseThrow(EntityNotFoundException::new);
+        if(user.getState()){
+            user.setState(false);
+        }else{
+            user.setState(true);
+        }
+        authDao.merge(user);
+
+
     }
 
     private User prepareNewUser(UserDto userDto){
@@ -77,7 +100,6 @@ public class AuthService implements IAuthService {
     private List<UserRole> prepareUserRole(User user){
 
         Role role = authDao.findRoleByType(RoleDto.USER.type());
-
         return List.of(UserRole.builder()
                 .role(role)
                 .user(user)

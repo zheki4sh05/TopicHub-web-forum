@@ -20,4 +20,10 @@ public class ServiceFactory {
     }
 
     public static ImageService createImageService(){return  ImageService.getInstance(); }
+
+    public static ComplaintService createComplaintService(){return  ComplaintService.getInstance(); }
+
+    public static HubService createHubService(){
+        return HubService.getInstance();
+    }
 }

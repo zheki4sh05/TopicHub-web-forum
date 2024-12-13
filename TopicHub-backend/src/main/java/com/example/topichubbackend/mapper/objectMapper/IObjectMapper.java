@@ -2,6 +2,7 @@ package com.example.topichubbackend.mapper.objectMapper;
 
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
+import com.example.topichubbackend.entity.complaints.*;
 
 import java.util.*;
 
@@ -14,4 +15,7 @@ public interface IObjectMapper {
 
     CommentDto mapFrom(Comment comment, Long aLong, Set<UUID> processedIds);
 
+    ComplaintDto mapFrom(ArticleComplaint item);
+
+    ComplaintDto mapFrom(CommentComplaint commentComplaint);
 }

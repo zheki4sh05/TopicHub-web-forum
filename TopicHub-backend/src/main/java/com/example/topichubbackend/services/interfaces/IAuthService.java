@@ -14,5 +14,9 @@ public interface IAuthService {
 
     void updateUser(UserDto userDto, String userId);
 
-    void delete(String id, String userId);
+    void delete(String userId);
+
+    List<UserDto> findAll(String id);
+
+    void manageBlock(String authorId);
 }

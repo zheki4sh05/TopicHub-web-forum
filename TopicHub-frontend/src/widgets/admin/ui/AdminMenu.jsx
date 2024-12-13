@@ -12,9 +12,9 @@ function AdminMenu() {
                 <Link to={PathConstants.MANAGE_USER} sx={{textDecoration:"none"}}>
                     <Typography variant="body1" sx={{color:"white"}} >Пользователи</Typography>
                 </Link>
-                <Link to={PathConstants.MANAGE_COMMENTS} sx={{textDecoration:"none"}}>
+                {/* <Link to={PathConstants.MANAGE_COMMENTS} sx={{textDecoration:"none"}}>
                     <Typography variant="body1" sx={{color:"white"}} >Комментарии</Typography>
-                </Link>
+                </Link> */}
                 <Link to={PathConstants.MANAGE_HUBS} sx={{textDecoration:"none"}}>
                     <Typography variant="body1" sx={{color:"white"}} >Хабы</Typography>
                 </Link>

@@ -23,4 +23,6 @@ public class UserDto {
     private String password;
 
     private List<String> roles;
+
+    private Boolean status;
 }

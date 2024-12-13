@@ -10,6 +10,9 @@ import ManageArticle from "../pages/ManagerArticle/ui/ManageArticle";
 import Login from "../pages/Login/ui/Login";
 import ProfileArticle from "../pages/Profile/ui/ProfileArticle";
 import SearchPage from "../pages/SearchPage/ui/SearchPage";
+import ManageAuthor from "../pages/ManageAuthor/ui/ManageAuthor";
+import ManageComments from './../pages/ManageComments/api/ManageComments';
+import ManageHubs from "../pages/ManageHubs/ui/ManageHubs";
 
 
 
@@ -42,6 +45,18 @@ function App() {
         {
           path: PathConstants.MANAGE_ARTICLES,
           element: <ManageArticle />,
+        },
+        {
+          path: PathConstants.MANAGE_USER,
+          element: <ManageAuthor />,
+        },
+        {
+          path: PathConstants.MANAGE_COMMENTS,
+          element: <ManageComments />,
+        },
+        {
+          path: PathConstants.MANAGE_HUBS,
+          element: <ManageHubs />,
         },
         {
           path:PathConstants.LOGIN,

@@ -14,10 +14,22 @@ public class HubDao extends BaseDao{
 
     public List<Hub> fetchAll() {
 
-        String hql = "FROM Hub";
+        String hql = "FROM Hub h";
 
         Query query = this.em.createQuery(hql, Hub.class);
         List<Hub> hubList = query.getResultList();
         return hubList;
+    }
+
+    public Optional<Hub> findById(Integer hubId) {
+
+        String hql = "FROM Hub h WHERE h.id = :id";
+        try {
+            return Optional.of(this.em.createQuery(hql, Hub.class)
+                    .setParameter("id", hubId)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

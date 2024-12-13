@@ -2,6 +2,7 @@ package com.example.topichubbackend.mapper.objectMapper.impl;
 
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
+import com.example.topichubbackend.entity.complaints.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
 
 import java.util.*;
@@ -48,7 +49,10 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .id(newUser.getUuid().toString())
                 .email(newUser.getEmail())
                 .login(newUser.getLogin())
-                .roles(userRoles.stream().map(item->item.getRole().getName()).collect(Collectors.toList()))
+                .status(newUser.getState())
+                .roles(userRoles.stream()
+                        .map(item->item.getRole().getName())
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -80,6 +84,26 @@ public class ObjectMapperImpl implements IObjectMapper {
         }
 
         return dto;
+    }
+
+    @Override
+    public ComplaintDto mapFrom(ArticleComplaint item) {
+        return ComplaintDto.builder()
+                .id(item.getId().toString())
+                .title(item.getTitle())
+                .body(item.getBody())
+                .targetId(item.getArticle().getId().toString())
+                .build();
+    }
+
+    @Override
+    public ComplaintDto mapFrom(CommentComplaint item) {
+        return ComplaintDto.builder()
+                .id(item.getId().toString())
+                .title(item.getTitle())
+                .body(item.getBody())
+                .targetId(item.getComment().getId().toString())
+                .build();
     }
 
     private AuthorDto mapFrom(User user){

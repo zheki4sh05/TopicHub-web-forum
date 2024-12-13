@@ -37,4 +37,7 @@ public class DaoFactory {
         return new ImageDao(DaoFactory.configureManager());
     }
 
+    public static ComplaintDao createComplaintDao(){
+        return new ComplaintDao(DaoFactory.configureManager());
+    }
 }

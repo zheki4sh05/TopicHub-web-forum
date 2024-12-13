@@ -14,7 +14,6 @@ import { Link, useLocation } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
 import { setArticle } from "../model/articleSlice";
 import ReactionBox from "../../../shared/ReactionBox/ui/ReactionBox";
-import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
@@ -121,7 +120,7 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
               alignItems: "center",
             }}
           >
-            <img src="" alt="logo" />
+           
             <Typography sx={{ marginLeft: "15px" }} variant="subtitle1">
               {item.userDto.login}
             </Typography>

@@ -81,6 +81,7 @@
           </exclusions>
       </dependency>
 
+
       <dependency>
           <groupId>org.hibernate.search</groupId>
           <artifactId>hibernate-search-backend-lucene</artifactId>
@@ -98,13 +99,15 @@
           <artifactId>jboss-logging</artifactId>
           <version>3.6.1.Final</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+      <dependency>
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-core</artifactId>
+          <version>11.0.1</version>
+      </dependency>
 
-      <!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
-<!--      <dependency>-->
-<!--          <groupId>jakarta.persistence</groupId>-->
-<!--          <artifactId>jakarta.persistence-api</artifactId>-->
-<!--          <version>3.2.0</version>-->
-<!--      </dependency>-->
+
+
 
 
 

@@ -7,6 +7,7 @@ import articleSlice from './../../features/Article/model/articleSlice';
 import userSlice from './../../pages/Profile/model/userSlice';
 import searchSlice from "../../features/Search/model/searchSlice";
 import commentSlice from "../../widgets/comments/model/commentSlice";
+import adminSlice from "../../widgets/admin/model/adminSlice"
 
 export default configureStore({
     reducer:{
@@ -16,7 +17,8 @@ export default configureStore({
         [DomainNames.article]:articleSlice,
         [DomainNames.user]:userSlice,
         [DomainNames.search]:searchSlice,
-        [DomainNames.comment]:commentSlice
+        [DomainNames.comment]:commentSlice,
+        [DomainNames.authors]:adminSlice
     },
    
 })

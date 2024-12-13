@@ -89,4 +89,15 @@ public class AuthDao extends BaseDao{
             return new ArrayList<>();
         }
     }
+
+    public List<User> findAll(String id) {
+        String hql = "FROM User u where u.id != :id";
+        try {
+            return this.em.createQuery(hql, User.class)
+                    .setParameter("id", UUID.fromString(id))
+                    .getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        }
+    }
 }
