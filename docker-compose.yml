@@ -1,0 +1,40 @@
+
+services:
+  react-app:
+    build:
+      context: ./TopicHub-frontend
+      dockerfile: Dockerfile
+    ports:
+      - '5000:5000'
+    depends_on:
+      - javaee-app
+
+  javaee-app:
+    build:
+      context: ./TopicHub-backend
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres-db
+    environment:
+      DB_NAME: web_forum
+      DB_USERNAME: postgres
+      DB_PASSWORD: lhs22LI=D=
+      DB_URL: jdbc:postgresql://postgres-db:5432/web_forum
+      DB_DRIVER: org.postgresql.Driver
+
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: web_forum
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: lhs22LI=D=
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data: null
+
+    
