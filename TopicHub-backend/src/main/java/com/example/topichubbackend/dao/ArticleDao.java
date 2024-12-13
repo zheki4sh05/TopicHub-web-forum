@@ -128,8 +128,7 @@ public class ArticleDao extends BaseDao{
         Query query = this.em.createQuery("FROM Article a WHERE a.author.login = :login ORDER BY a.created ASC", Article.class);
         query.setParameter("login", author);
         query.setMaxResults(batchSize);
-        List<Article> results = query.getResultList();
-        return results;
+        return (List<Article>) query.getResultList();
 
     }
 
@@ -138,8 +137,7 @@ public class ArticleDao extends BaseDao{
 
         Query countQuery = this.em.createQuery(countQ, Long.class);
         countQuery.setParameter("id",UUID.fromString(userId));
-        Long countResults =(Long) countQuery.getSingleResult();
-        return countResults;
+        return (Long) countQuery.getSingleResult();
     }
 
 
@@ -149,8 +147,34 @@ public class ArticleDao extends BaseDao{
 
         Query countQuery = this.em.createQuery(countQ, Long.class);
         countQuery.setParameter("id",UUID.fromString(userId));
-        Long countResults =(Long) countQuery.getSingleResult();
-        return countResults;
+        return (Long) countQuery.getSingleResult();
+
+    }
+
+    public Long calcTotalEntitiesCountByHub(Integer param) {
+
+        String countQ = "SELECT COUNT(a.id) FROM Article a where a.hub.id= :id";
+
+        Query countQuery = this.em.createQuery(countQ, Long.class);
+        countQuery.setParameter("id",param);
+        return (Long) countQuery.getSingleResult();
+
+    }
+
+    public Long calcTotalSubscribeEntitiesCount(String userId) {
+        String countQ = "SELECT COUNT(a.id) FROM Article a JOIN Subscription s ON s.follower.id = :id and a.author.id = s.author.id";
+        Query countQuery = this.em.createQuery(countQ, Long.class);
+        countQuery.setParameter("id",UUID.fromString(userId));
+        return (Long) countQuery.getSingleResult();
+    }
+
+    public List<Article> getSubscribeArticles(Integer page, String userId) {
+
+        Query query = this.em.createQuery(" FROM Article a JOIN Subscription s ON s.follower.id = :id and a.author.id = s.author.id", Article.class);
+        query.setFirstResult((page - 1) * batchSize);
+        query.setMaxResults(batchSize);
+        List<Article> results = query.getResultList();
+        return results;
 
     }
 }

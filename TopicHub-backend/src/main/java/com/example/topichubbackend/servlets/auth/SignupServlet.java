@@ -15,7 +15,6 @@ import java.io.*;
 @WebServlet("/auth/signup")
 public class SignupServlet extends HttpServlet{
     private final IAuthService authService = ServiceFactory.getAuthService();
-
     private final CustomValidator customValidator = new CustomValidator();
 
     @Override

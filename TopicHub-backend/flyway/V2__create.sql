@@ -1,6 +1,3 @@
-create sequence "articlePart_article_seq"
-    as integer;
-
 create table if not exists hub
 (
     name varchar,
@@ -19,7 +16,8 @@ create table if not exists author
     email    varchar not null
     constraint email_uniq
     unique,
-    password varchar not null
+    password varchar not null,
+    state    boolean
 );
 
 create table if not exists article
@@ -33,7 +31,8 @@ create table if not exists article
     created   timestamp,
     hub       serial
     constraint hub_fk
-    references hub,
+    references hub
+    on update set null on delete set null,
     status    varchar,
     author_id uuid
     constraint author_fk
@@ -54,8 +53,6 @@ create table if not exists articlepart
     uuid    uuid                                                           not null
     primary key
     );
-
-alter sequence "articlePart_article_seq" owned by articlepart.article;
 
 create table if not exists role
 (
@@ -161,7 +158,48 @@ create table if not exists image
     constraint image_pk2
     unique
     constraint image_author_id_fk
-    references author,
+    references author
+    on update cascade on delete cascade,
     img    oid
 );
 
+create table if not exists complaint_article
+(
+    id      uuid    not null
+    constraint complaint_article_pk
+    primary key,
+    title   varchar,
+    body    varchar,
+    author  uuid
+    constraint author___fk
+    references author
+    on update cascade on delete cascade,
+    article integer not null
+    constraint article___fk
+    references article
+);
+
+create table if not exists complaint_comment
+(
+    id      uuid not null
+    constraint complaint_comment_pk
+    primary key,
+    title   varchar,
+    body    varchar,
+    author  uuid
+    constraint author___fk
+    references author
+    on update cascade on delete cascade,
+    comment uuid not null
+    constraint comment___fk
+    references comment
+);
+
+insert into author (id, login, email, password,state)
+values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','j8H6ZRy0j0wQZ+GUNmagU6lMlh0Dr9C+CVtEXubJ+L4=',false)
+
+insert into user_role (id, userid, role)
+values ('5a34fa56-e294-4602-8e7f-24e7a7832c2c', 'a904e8b8-9da8-4535-b402-9be0b78b2981',2)
+
+insert into user_role (id, userid, role)
+values ('c5086606-b949-4426-a340-2626f19f5ef2', 'a904e8b8-9da8-4535-b402-9be0b78b2981',1)

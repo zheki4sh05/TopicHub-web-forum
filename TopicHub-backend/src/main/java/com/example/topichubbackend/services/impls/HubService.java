@@ -55,7 +55,7 @@ public class HubService implements IHubService {
     @Override
     public HubDto update(HubDto hubDto) {
         Hub hub = hubDao.findById(Integer.valueOf(hubDto.getId())).orElseThrow(EntityNotFoundException::new);
-        hub.setName(hub.getName());
+        hub.setName(hubDto.getName());
         hubDao.merge(hub);
         return hubDto;
     }

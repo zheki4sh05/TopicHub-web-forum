@@ -24,7 +24,7 @@ public class ObjectMapperImpl implements IObjectMapper {
                                         .name(RoleDto.USER.name())
                                         .build())
                         .build())))
-                .keyWords(Arrays.stream(item.getKeyWords().split(delimiter)).collect(Collectors.toList()))
+                .keyWords(Arrays.asList(item.getKeyWords().split("\\|")))
                 .build();
     }
 

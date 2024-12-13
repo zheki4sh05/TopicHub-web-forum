@@ -66,26 +66,72 @@ public class ArticleService implements IArticleService {
 
     @Override
     public ArticleBatchDto fetch(Integer param, Integer page, String userId) {
+        switch (param){
+            case 0:{
+                return fetchFeed(page,userId);
+            } case -1:{
+                return fetchFromUserSubscribes(page, userId);
+            } default:{
+                return fetchFromHubs(param,page, userId);
+            }
+        }
+    }
+
+    private ArticleBatchDto fetchFromHubs(Integer param, Integer page, String userId) {
 
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-
         List<Hub> hubList = hubDao.fetchAll();
-
         Optional<Hub> result = hubList.stream().filter(item->item.getId().equals(param)).findFirst();
-
         result.ifPresentOrElse(
                 (item)->{
-                    Long totalCount = articleDao.calcTotalEntitiesCount();
+                    Long totalCount = articleDao.calcTotalEntitiesCountByHub(param);
                     Integer pageCount = articleDao.getLastPageNumber(totalCount);
-
                     articleBatchDto.setPageCount(pageCount);
                     articleBatchDto.setArticleDtoList(getArticleByType(result.get().getId(),page,userId));
 
-                    },
+                },
                 ()->{ throw new EntityNotFoundException("No hub with such name!");
                 });
 
         return articleBatchDto;
+
+    }
+
+    private ArticleBatchDto fetchFromUserSubscribes(Integer page, String userId) {
+        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+        if(userId==null){
+            articleBatchDto.setPageCount(0);
+            articleBatchDto.setArticleDtoList(new ArrayList<>());
+            return articleBatchDto;
+        }else{
+            Long totalCount = articleDao.calcTotalSubscribeEntitiesCount(userId);
+            Integer pageCount = articleDao.getLastPageNumber(totalCount);
+            articleBatchDto.setPageCount(pageCount);
+            articleBatchDto.setArticleDtoList(getSubscribesArticles(page,userId));
+            return articleBatchDto;
+        }
+
+    }
+
+    private List<ArticleDto> getSubscribesArticles(Integer page, String userId) {
+
+        List<Article> articles = articleDao.getSubscribeArticles(page,userId);
+        return doMapping(articles,userId);
+
+    }
+
+    private ArticleBatchDto fetchFeed(Integer page, String userId) {
+        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+        Long totalCount = articleDao.calcTotalEntitiesCount();
+        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        articleBatchDto.setPageCount(pageCount);
+        articleBatchDto.setArticleDtoList(getFeed(page,userId));
+        return articleBatchDto;
+    }
+
+    private List<ArticleDto> getFeed(Integer page, String userId) {
+       List<Article> articles = articleDao.getSortedAndPaginated(page);
+        return doMapping(articles,userId);
     }
 
     @Override
@@ -165,12 +211,7 @@ public class ArticleService implements IArticleService {
 
 
     private List<ArticleDto> getArticleByType(Integer id, Integer page, String userId) {
-        List<Article> articles;
-        if(id.equals(0)){
-            articles = articleDao.getSortedAndPaginated(page);
-        }else{
-            articles = articleDao.getSortedAndPaginated(page,id);
-        }
+        List<Article> articles = articleDao.getSortedAndPaginated(page,id);
         return  doMapping(articles,userId);
     }
 

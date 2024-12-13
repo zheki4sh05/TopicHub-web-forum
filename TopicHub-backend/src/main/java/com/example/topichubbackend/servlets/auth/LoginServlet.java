@@ -40,12 +40,26 @@ public class LoginServlet extends HttpServlet{
             resp.addCookie(createCookie(user));
             resp.setStatus(200);
         } catch (UserNotFoundException e) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            resp.getWriter().write(JsonMapper.mapTo(
+                    ErrorDto
+                            .builder()
+                            .message("Неверный логин или пароль")
+                            .code(401)
+                            .build()));
         } catch (InternalServerErrorException e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }catch (BadRequestException e){
             resp.getWriter().write(e.getMessage());
             resp.setStatus(400);
+        }catch (UserBlockException e){
+            resp.getWriter().write(JsonMapper.mapTo(
+                    ErrorDto
+                            .builder()
+                    .message(e.getMessage())
+                            .code(401)
+                    .build()));
+            resp.setStatus(401);
+
         }
 
     }

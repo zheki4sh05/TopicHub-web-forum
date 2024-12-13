@@ -1,30 +1,38 @@
 
 services:
-  react-app:
-    build:
-      context: ./TopicHub-frontend
-      dockerfile: Dockerfile
-    ports:
-      - '5000:5000'
-    depends_on:
-      - javaee-app
+  # react-app:
+  #   build:
+  #     context: ./TopicHub-frontend
+  #     dockerfile: Dockerfile
+  #   container_name: frontend-prod
+  #   restart: always 
+  #   ports:
+  #     - '3000:3000'
+  #   # depends_on:
+  #   #   - javaee-app
+  #   networks:
+  #     - app-network
 
   javaee-app:
     build:
       context: ./TopicHub-backend
       dockerfile: Dockerfile
+    container_name: backend-prod
+    restart: always 
     ports:
       - '8080:8080'
     depends_on:
-      - postgres-db
+      - postgres
     environment:
       DB_NAME: web_forum
       DB_USERNAME: postgres
       DB_PASSWORD: lhs22LI=D=
-      DB_URL: jdbc:postgresql://postgres-db:5432/web_forum
+      DB_URL: jdbc:postgresql://postgres:5432/web_forum
       DB_DRIVER: org.postgresql.Driver
+    networks:
+      - app-network
 
-  postgres-db:
+  postgres:
     image: postgres:latest
     environment:
       POSTGRES_DB: web_forum
@@ -32,9 +40,29 @@ services:
       POSTGRES_PASSWORD: lhs22LI=D=
     ports:
       - '5432:5432'
+    networks:
+      - app-network
     volumes:
       - db-data:/var/lib/postgresql/data
+    command: /bin/bash -c "curl -sSL https://github.com/vishnubob/wait-for-it/raw/master/wait-for-it.sh postgres:5432 -- ./flyway migrate"
+
+  migrations:
+    image: redgate/flyway
+    volumes:
+      - ./TopicHub-backend/flyway:/flyway/sql
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/web_forum
+      - FLYWAY_USER=example_user
+      - FLYWAY_PASSWORD=example_password
+      - FLYWAY_VALIDATE_MIGRATION_NAMING=true
+    command: migrate
+    depends_on:
+      - postgres
 volumes:
   db-data: null
+
+networks:
+  app-network:
+    driver: bridge
 
     

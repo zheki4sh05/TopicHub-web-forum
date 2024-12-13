@@ -41,7 +41,7 @@ public class ManageHubsServlet extends HttpServlet{
     @Override
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userId = (String) request.getAttribute("id");
-        String hubId = (String) request.getAttribute("hubId");
+        String hubId = request.getParameter("hubId");
         if(hubId!=null){
             try{
                 List<UserRole> userRoles =authService.getUserRole(UUID.fromString(userId));

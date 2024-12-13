@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
 
 import { useEffect, useState } from "react";
-import { fetchFeed } from "../api/requests";
+import { fetchFeed, fetchHubs } from "../api/requests";
 import { getFeed, getFeedStatus } from "../model/feedSlice";
 import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
 import { getUser, isAuth } from "../../Profile/model/userSlice";
@@ -24,11 +24,16 @@ function Articles() {
   const feedStatus = useSelector(getFeedStatus);
   const feed = useSelector(getFeed);
 
+
   const [select, setSelect] = useState(0);
 
   const handleClick = (id) => {
     setSelect(id);
   };
+
+  useEffect(()=>{
+    makeRequest(select, 1);
+  },[select])
 
   const getRequestBody=(select, page)=>{
     if(auth){
@@ -58,8 +63,17 @@ function Articles() {
   }, []);
 
   const handlePageChange = (event, page) => {
+    
     makeRequest(select, page);
   };
+
+    useEffect(()=>{
+  
+      if(hubs.length==0){
+        dispatch(fetchHubs())
+      }
+       
+    },[])
 
   return (
     <Box
@@ -88,10 +102,10 @@ function Articles() {
             </Typography>
           </Button>
 
-          <Button variant="text" onClick={() => handleClick(0)}>
+          <Button variant="text" onClick={() => handleClick(-1)}>
             <Typography
               variant="body1"
-              style={{ textDecoration: select == 1 ? "none" : "underline" }}
+              style={{ textDecoration: select == -1 ? "none" : "underline" }}
             >
               Моя лента
             </Typography>

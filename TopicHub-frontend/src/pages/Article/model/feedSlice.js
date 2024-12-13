@@ -17,8 +17,10 @@ const initialState = {
     },
     {
     id:1,
-    name:"hub1",
-  }],
+    name:"Путешествия",
+  }
+
+],
   status: "idle",
   error: null,
 };
@@ -49,20 +51,20 @@ const feedSlice = createSlice({
         state.error = action.error.message;
       })
     //----------------------------------------
-    //---запрос хабов-------------
-    .addCase(fetchHubs.pending, (state, action) => {
-      state.status = "loading";
-    })
-    .addCase(fetchHubs.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.hubs = action.payload
-      state.error=null
-    })
-    .addCase(fetchHubs.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.error.message;
-    });
-  //----------------------------------------
+  //   //---запрос хабов-------------
+  //   .addCase(fetchHubs.pending, (state, action) => {
+  //     state.status = "loading";
+  //   })
+  //   .addCase(fetchHubs.fulfilled, (state, action) => {
+  //     state.status = "succeeded";
+  //     state.hubs = action.payload
+  //     state.error=null
+  //   })
+  //   .addCase(fetchHubs.rejected, (state, action) => {
+  //     state.status = "failed";
+  //     state.error = action.error.message;
+  //   });
+  // //----------------------------------------
   },
 });
 

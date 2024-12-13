@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   IconButton,
   Paper,
   Typography,
@@ -16,8 +17,18 @@ import { setArticle } from "../model/articleSlice";
 import ReactionBox from "../../../shared/ReactionBox/ui/ReactionBox";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
+import { useEffect } from "react";
+import { fetchHubs } from "../../../entities/hubs/api/request";
 function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
-  const hubs = useSelector(getHubs);
+  const hubs = useSelector(getHubsList);
+     useEffect(()=>{
+    
+        if(hubs.length==0){
+          dispatch(fetchHubs())
+        }
+         
+      },[])
   const dispatch = useDispatch();
   const getArticlePart = (item, index) => {
     switch (item.type) {
@@ -132,8 +143,16 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
             <Typography
               variant="body1"
               sx={{ color: "#6495ED", textDecoration: "underline" }}
+              
             >
-              {hubs.find((hub) => hub.id == item.hub).name}
+              {
+                hubs.length == 0 ?
+                <CircularProgress/>
+                :
+                hubs.find((hub) => hub.id == item.hub).name
+              }
+
+              
             </Typography>
           </Box>
         </Box>

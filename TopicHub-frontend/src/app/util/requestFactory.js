@@ -22,7 +22,7 @@ class ApiRequestCreator {
       });
     } else {
       return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
-        const response = await axios.get(fullUrl, initial);
+        const response = await axios.get(fullUrl,  getRequestConfig());
         return response.data;
       });
     }
@@ -39,7 +39,7 @@ class ApiRequestCreator {
         );
         return response.data;
       }catch(error){
-       
+      
         return thunkAPI.rejectWithValue({ error:error.response.data  })
       }
    

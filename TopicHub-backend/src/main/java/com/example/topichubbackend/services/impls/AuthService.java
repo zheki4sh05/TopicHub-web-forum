@@ -93,6 +93,7 @@ public class AuthService implements IAuthService {
 
         return  User.builder()
                 .uuid(uuid)
+                .state(false)
                 .email(userDto.getEmail())
                 .login(userDto.getLogin())
                 .password(PasswordEncoder.getHash(userDto.getPassword(), uuid.toString())).build();
@@ -107,12 +108,16 @@ public class AuthService implements IAuthService {
                 .build());
     }
     private Optional<User> checkUser(User isExist, AuthDto userDto) {
-
-        if(isExist.getPassword().equals(PasswordEncoder.getHash(userDto.getPassword(), isExist.getUuid().toString()))){
-            return Optional.of(isExist);
+        if(isExist.getState()){
+            throw new UserBlockException("Учетная запись заблокирована");
         }else{
-            return Optional.empty();
+            if(isExist.getPassword().equals(PasswordEncoder.getHash(userDto.getPassword(), isExist.getUuid().toString()))){
+                return Optional.of(isExist);
+            }else{
+                return Optional.empty();
+            }
         }
+
 
     }
 }

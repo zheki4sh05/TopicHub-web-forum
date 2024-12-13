@@ -1,24 +1,59 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import AdminMenu from "../../../widgets/admin/ui/AdminMenu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getHubs } from "../../Article/model/feedSlice";
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createHubs, doDeleteHubs, doUpdateHubs } from "../../../entities/hubs/api/request";
+import { fetchHubs } from "../../Article/api/requests";
+import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
 
 function ManageHubs() {
-  const hubs = useSelector(getHubs);
+  const hubs = useSelector(getHubsList);
+  const dispatch = useDispatch()
 
   const [create, setCreate] = useState(false);
+  const [edit,setEdit] = useState(false)
   const [value, setValue] = useState("");
+  const [id,setId]=useState("")
 
-  const handleDelHub = (id) => {};
+  useEffect(()=>{
 
-  const handleEditHub = (id) => {};
+    if(hubs.length==0){
+      dispatch(fetchHubs())
+    }
+     
+  },[])
+
+  const handleDelHub = (id) => {
+    dispatch(doDeleteHubs(
+      {
+        hubId:id
+      }
+    ))
+  };
+
+  const handleEditHub = (id) => {
+    console.log(id)
+    dispatch(doUpdateHubs(
+      {
+        id:id,
+        name:value
+      }
+    ))
+    setId("")
+    setEdit(false)
+    setValue("")
+  };
 
   const handleAddHub = () => {
-
-    
-
+      dispatch(
+        createHubs({
+          name:value
+        })
+      )
+      setCreate(false)
+      setValue("")
   };
 
   return (
@@ -34,12 +69,13 @@ function ManageHubs() {
             }}
           >
             <Typography>Всего: {hubs.length}</Typography>
-            {create ? (
+            {create || edit ? (
               <Button
                 variant="outlined"
                 color="success"
                 onClick={() => {
                   setCreate(false);
+                  setEdit(false);
                   setValue("");
                 }}
               >
@@ -57,7 +93,7 @@ function ManageHubs() {
           </Box>
         </MenuWrapper>
 
-        {create ? (
+        {create || edit ? (
           <Box sx={{ marginTop: "20px", marginBottom: "20px" }}>
             <MenuWrapper>
               <Box
@@ -75,13 +111,29 @@ function ManageHubs() {
                 />
 
                 <Stack direction={"row"} gap={2}>
-                  <Button
+                  {
+                      create ?
+                      <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleAddHub}
+                    >
+                      Сохранить
+                    </Button>
+                    : edit ? 
+                    <Button
                     variant="outlined"
                     color="primary"
-                    onClick={handleAddHub}
+                    onClick={()=>handleEditHub(id)}
                   >
                     Сохранить
                   </Button>
+                  :
+                  null
+
+
+                  }
+                 
                 </Stack>
               </Box>
             </MenuWrapper>
@@ -109,7 +161,7 @@ function ManageHubs() {
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => handleEditHub(item.id)}
+                    onClick={() => {setId(item.id); setEdit(true); setValue(item.name)}}
                   >
                     Изменить
                   </Button>
