@@ -1,9 +1,27 @@
+create sequence article_id_seq
+    as integer
+    start with 1;
+
+create sequence "articlePart_article_seq"
+    as integer;
+
+create sequence hub_id_seq
+    as integer
+    start with 1;
+
+create sequence article_hub_seq
+    as integer
+    start with 1;
+
 create table if not exists hub
 (
     name varchar,
-    id   serial
+    id   integer default nextval('hub_id_seq'::regclass) not null
+    constraint hub_pkey
     primary key
-);
+    );
+
+alter sequence hub_id_seq owned by hub.id;
 
 create table if not exists author
 (
@@ -22,14 +40,15 @@ create table if not exists author
 
 create table if not exists article
 (
-    id        serial
+    id        integer default nextval('article_id_seq'::regclass) not null
+    constraint article_pkey
     primary key,
-    theme     varchar not null,
-    likes     bigint  not null,
-    dislikes  bigint  not null,
+    theme     varchar                                             not null,
+    likes     bigint                                              not null,
+    dislikes  bigint                                              not null,
     keywords  varchar,
     created   timestamp,
-    hub       serial
+    hub       integer default nextval('article_hub_seq'::regclass)
     constraint hub_fk
     references hub
     on update set null on delete set null,
@@ -38,7 +57,11 @@ create table if not exists article
     constraint author_fk
     references author
     on update cascade on delete cascade
-);
+    );
+
+alter sequence article_id_seq owned by article.id;
+
+alter sequence article_hub_seq owned by article.hub;
 
 create table if not exists articlepart
 (
@@ -51,8 +74,11 @@ create table if not exists articlepart
     name    varchar,
     id      integer,
     uuid    uuid                                                           not null
+    constraint articlepart_pkey
     primary key
     );
+
+alter sequence "articlePart_article_seq" owned by articlepart.article;
 
 create table if not exists role
 (
@@ -65,6 +91,7 @@ create table if not exists role
 create table if not exists user_role
 (
     id     uuid    not null
+    constraint user_role_pkey
     primary key,
     userid uuid    not null
     constraint user_fk
@@ -78,6 +105,7 @@ create table if not exists user_role
 create table if not exists likes
 (
     id         uuid    not null
+    constraint likes_pkey
     primary key,
     user_id    uuid    not null,
     article_id serial,
@@ -87,6 +115,7 @@ create table if not exists likes
 create table if not exists sessions
 (
     id        uuid not null
+    constraint sessions_pkey
     primary key,
     user_id   uuid not null
     constraint user_fk
@@ -195,11 +224,3 @@ create table if not exists complaint_comment
     references comment
 );
 
-insert into author (id, login, email, password,state)
-values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','j8H6ZRy0j0wQZ+GUNmagU6lMlh0Dr9C+CVtEXubJ+L4=',false)
-
-insert into user_role (id, userid, role)
-values ('5a34fa56-e294-4602-8e7f-24e7a7832c2c', 'a904e8b8-9da8-4535-b402-9be0b78b2981',2)
-
-insert into user_role (id, userid, role)
-values ('c5086606-b949-4426-a340-2626f19f5ef2', 'a904e8b8-9da8-4535-b402-9be0b78b2981',1)
