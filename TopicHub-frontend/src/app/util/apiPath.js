@@ -1,5 +1,5 @@
 const BACKEND_HOST = import.meta.env.VITE_APP_BACKEND_ADDRESS
-const  base="http://"+BACKEND_HOST+":8080/";
+const  base="http://"+BACKEND_HOST+"/";
 const api={
     article:{
         url:base.concat("article"),

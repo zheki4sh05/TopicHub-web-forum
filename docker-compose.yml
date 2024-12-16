@@ -5,7 +5,7 @@ services:
       context: ./TopicHub-frontend
       dockerfile: Dockerfile
       args:
-       - VITE_APP_BACKEND_ADDRESS=javaee-app
+       - VITE_APP_BACKEND_ADDRESS=localhost:8080
     container_name: frontend-prod
     restart: always 
     
@@ -13,8 +13,7 @@ services:
       - '3000:3000'
     depends_on:
       - javaee-app
-    networks:
-      - topichub
+
 
   javaee-app:
     build:
@@ -32,11 +31,9 @@ services:
       DB_PASSWORD: lhs22LI=D=
       DB_URL: jdbc:postgresql://db:5432/web_forum
       DB_DRIVER: org.postgresql.Driver
-      FRONT: react-app
-    networks:
-      - topichub
-    # entrypoint: >
-    #   /bin/sh -c "curl -sSL https://github.com/vishnubob/wait-for-it/raw/master/wait-for-it.sh db:5432 -- java -jar /usr/local/tomcat/webapps/TopicHub-backend-1.0-SNAPSHOT.war
+      FRONT: localhost
+
+    
 
   db:
     image: postgres:latest
@@ -47,8 +44,6 @@ services:
       POSTGRES_PASSWORD: lhs22LI=D=
     ports:
       - '5432:5432'
-    networks:
-      - topichub
     volumes:
       - db-data:/var/lib/postgresql/data
     
@@ -64,13 +59,10 @@ services:
     command: migrate
     depends_on:
       - db
-    networks:
-      - topichub
+
 volumes:
   db-data: null
 
-networks:
-  topichub:
-    driver: bridge
+
 
     
