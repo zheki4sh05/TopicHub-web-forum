@@ -6,6 +6,9 @@
 
 Данные для входа в роли модератора: логин: admin, пароль: 123456
 
+## ⚠️ Внимание!
+По возникшим вопросам работы приложения писать сюда: e.shostak05@gmail.com
+
 ### Ссылка на дизайн-макет: https://www.figma.com/design/Szq83WYwWAIKwiNt6Kqsof/Material-UI-for-Figma-(and-MUI-X)-(Community)?node-id=8603-1335&node-type=canvas&t=0eJi3HXT8wThqRar-0
 
 ## Функциональные требования: 
