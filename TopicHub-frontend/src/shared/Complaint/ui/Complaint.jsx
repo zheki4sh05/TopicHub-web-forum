@@ -1,19 +1,26 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
+import { useState } from "react";
+import Article from './../../../features/Article/ui/Article';
 
 function Complaint({
+  id,
   type,
   name,
   body,
   date,
   handleReject,
-  handleOpen,
   handleDelete,
+  article
 }) {
+
+  const [open,setOpen]  = useState(false)
+
   return (
-    <MenuWrapper>
+    <>
+      <MenuWrapper>
       <Stack direction={"column"} sx={{width:"100%"}}>
-        <Stack direction={"row"}>
+        <Stack direction={"row"} sx={{justifyContent:"space-between", alignItems:"center"}}>
           <Typography variant="h6">{name}</Typography>
           <Typography variant="body2" style={{ textTransform: "uppercase" }}>
             {type}
@@ -34,19 +41,56 @@ function Complaint({
               flex: 1,
             }}
           >
-            <Button variant="contained" color="error" onClick={handleReject}>
+            <Button variant="contained" color="error" onClick={()=>handleReject(id)}>
               Отклонить
             </Button>
-            <Button variant="outlined" onClick={handleOpen}>
-              Открыть
+
+            {
+
+              open ? 
+
+              <Button variant="outlined" onClick={()=>{setOpen(false)}}>
+              Закрыть
             </Button>
-            <Button variant="contained" color="warning" onClick={handleDelete}>
+            :
+            <Button variant="outlined" onClick={()=>{setOpen(true)}}>
+          Открыть
+          </Button>
+          
+
+            }
+    
+            <Button variant="contained" color="warning" onClick={()=>handleDelete(article.id)}>
               Удалить
             </Button>
           </Box>
         </Box>
       </Stack>
     </MenuWrapper>
+   
+    {
+
+          open ? 
+        <Box sx={{marginTop:"5px", marginBottom:"10px"}}>
+ <Article
+         item={article}
+         mode={"short"}
+         edit={false}
+         handleDelete={()=>{}}
+         handleEdit={()=>{}}
+
+         
+         />
+        </Box>
+        
+          :
+        null
+
+
+          }
+              
+    </>
+  
   );
 }
 

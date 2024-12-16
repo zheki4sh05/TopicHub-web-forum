@@ -30,7 +30,7 @@ public class User {
     @Column(name = "state")
     private Boolean state;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user")
+    @OneToMany(mappedBy = "user")
     private List<UserRole> userRoles;
 
 }

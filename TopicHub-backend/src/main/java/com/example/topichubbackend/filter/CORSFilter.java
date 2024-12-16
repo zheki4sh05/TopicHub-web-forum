@@ -9,6 +9,10 @@ import java.io.*;
 
 @WebFilter("/*")
 public class CORSFilter implements Filter {
+    private String front;
+    {
+         front = System.getenv("FRONT");
+    }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
@@ -17,7 +21,7 @@ public class CORSFilter implements Filter {
 
         System.out.println("CORSFilter HTTP Request: " + request.getMethod());
 
-        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Origin", "http://"+front+":3000");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Max-Age", "3600");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "OPTIONS, GET,HEAD, PUT, POST, DELETE");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");

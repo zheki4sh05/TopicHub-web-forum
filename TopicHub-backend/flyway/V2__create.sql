@@ -206,6 +206,7 @@ create table if not exists complaint_article
     article integer not null
     constraint article___fk
     references article
+    on update cascade on delete cascade
 );
 
 create table if not exists complaint_comment

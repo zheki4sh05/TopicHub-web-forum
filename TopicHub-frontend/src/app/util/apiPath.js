@@ -51,7 +51,15 @@ const api={
     },
     authors:{
         url:base.concat("authors"),
-    }
+    },
+    complaint:{
+        url:base.concat("complaint"),
+    },
+    articles:{
+        url:base.concat("admin"),
+    },
+
+
     
    
    

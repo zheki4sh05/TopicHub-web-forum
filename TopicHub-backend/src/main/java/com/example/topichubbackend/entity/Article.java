@@ -1,6 +1,7 @@
 package com.example.topichubbackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -9,6 +10,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 
 import java.sql.*;
+import java.util.*;
 
 
 @AllArgsConstructor
@@ -44,11 +46,13 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-//    @IndexedEmbedded(includePaths = "login")
     private User author;
 
     @Column(name = "created")
     private Timestamp created;
+
+    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
+    private List<ArticlePart> articlePartList;
 
 
 }

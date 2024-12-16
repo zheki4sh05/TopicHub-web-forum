@@ -71,6 +71,7 @@ public class ComplaintServlet extends HttpServlet {
             if(complaintId!=null && type!=null) {
                 try{
                     complaintControl.deleteById(complaintId,type);
+                    response.getWriter().write(complaintId);
                     response.setStatus(200);
                 }catch (EntityNotFoundException e){
                     response.setStatus(404);

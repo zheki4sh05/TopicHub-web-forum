@@ -22,4 +22,6 @@ public class ComplaintDto {
     @NotEmpty
     private String body;
 
+    private ArticleDto articleDto;
+
 }

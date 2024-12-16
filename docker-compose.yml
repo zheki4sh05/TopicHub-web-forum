@@ -11,10 +11,10 @@ services:
     
     ports:
       - '3000:3000'
-    # depends_on:
-    #   - javaee-app
+    depends_on:
+      - javaee-app
     networks:
-      - app-network
+      - topichub
 
   javaee-app:
     build:
@@ -32,8 +32,9 @@ services:
       DB_PASSWORD: lhs22LI=D=
       DB_URL: jdbc:postgresql://db:5432/web_forum
       DB_DRIVER: org.postgresql.Driver
+      FRONT: react-app
     networks:
-      - app-network
+      - topichub
     # entrypoint: >
     #   /bin/sh -c "curl -sSL https://github.com/vishnubob/wait-for-it/raw/master/wait-for-it.sh db:5432 -- java -jar /usr/local/tomcat/webapps/TopicHub-backend-1.0-SNAPSHOT.war
 
@@ -47,7 +48,7 @@ services:
     ports:
       - '5432:5432'
     networks:
-      - app-network
+      - topichub
     volumes:
       - db-data:/var/lib/postgresql/data
     
@@ -64,12 +65,12 @@ services:
     depends_on:
       - db
     networks:
-      - app-network
+      - topichub
 volumes:
   db-data: null
 
 networks:
-  app-network:
+  topichub:
     driver: bridge
 
     

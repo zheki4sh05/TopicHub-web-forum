@@ -18,7 +18,7 @@ export default configureStore({
         [DomainNames.user]:userSlice,
         [DomainNames.search]:searchSlice,
         [DomainNames.comment]:commentSlice,
-        [DomainNames.authors]:adminSlice
+        [DomainNames.admin]:adminSlice
     },
    
 })

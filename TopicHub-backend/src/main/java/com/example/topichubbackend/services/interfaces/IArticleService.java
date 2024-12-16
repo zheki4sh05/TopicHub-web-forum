@@ -16,4 +16,6 @@ public interface IArticleService {
     ArticleBatchDto fetchBookMarks(String userId, Integer page);
 
     ArticleBatchDto fetch(Integer page, String userId, String otherUserId);
+
+    void deleteAdmin(String targetId);
 }

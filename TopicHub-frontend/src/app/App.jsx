@@ -24,7 +24,7 @@ function App() {
       children: [
         {
           path: PathConstants.HOME,
-          element: <Login />,
+          element: <Articles />,
         },
         {
           path: PathConstants.ARTICLE,

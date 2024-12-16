@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import { blockAuthors, delAuthors, fetchAuthors } from "../../../pages/ManageAuthor/api/requests";
+import { delComplaint, fetchComplaints, rejectComplaint } from "../api/requests";
 // {
 //     id:"1",
 //     login:"login",
@@ -77,13 +78,58 @@ const adminSlice = createSlice({
         state.error = action.error.message;
       })
     //----------------------------------------
+     //---запрос жалоб-------------
+     .addCase(fetchComplaints.pending, (state, action) => {
+      state.status = "loading";
+    })
+    .addCase(fetchComplaints.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.articleComplaints = action.payload
+      state.error=null
+    })
+    .addCase(fetchComplaints.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+    })
+  //----------------------------------------
+       //---запрос жалоб-------------
+       .addCase(rejectComplaint.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(rejectComplaint.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.articleComplaints = state.articleComplaints.filter(item=>item.id!=action.payload)
+        state.error=null
+      })
+      .addCase(rejectComplaint.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+    //----------------------------------------
+          //---запрос жалоб-------------
+          .addCase(delComplaint.pending, (state, action) => {
+            state.status = "loading";
+          })
+          .addCase(delComplaint.fulfilled, (state, action) => {
+            state.status = "succeeded";
+            state.articleComplaints = state.articleComplaints.filter(item=>item.articleDto.id!=action.payload)
+            state.error=null
+          })
+          .addCase(delComplaint.rejected, (state, action) => {
+            state.status = "failed";
+            state.error = action.error.message;
+          })
+        //----------------------------------------
     
       
   },
 });
 
 export function getAuthors(state) {
-    return state[DomainNames.authors].authors;
+    return state[DomainNames.admin].authors;
+  }
+  export function getArticleComplaints(state) {
+    return state[DomainNames.admin].articleComplaints;
   }
   
 

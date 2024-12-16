@@ -19,6 +19,10 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .likes(item.getLikes())
                 .dislikes(item.getDislikes())
                 .hub(item.getHub().getId())
+                .list(item.getArticlePartList().stream()
+                        .map(this::mapFrom)
+                        .collect(Collectors.toList())
+                )
                 .userDto(mapFrom(item.getAuthor(),List.of(UserRole.builder()
                                 .role(Role.builder()
                                         .name(RoleDto.USER.name())
@@ -92,6 +96,8 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .id(item.getId().toString())
                 .title(item.getTitle())
                 .body(item.getBody())
+                .type("article")
+                .articleDto(mapFrom(item.getArticle(), "\\|"))
                 .targetId(item.getArticle().getId().toString())
                 .build();
     }

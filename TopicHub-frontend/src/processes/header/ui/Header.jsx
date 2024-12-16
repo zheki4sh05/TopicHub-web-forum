@@ -14,124 +14,6 @@ function Header() {
 
   const auth = useSelector(isAuth)
 
-  const getLinkByPath = (path) => {
-    switch (path) {
-      case PathConstants.ARTICLE: {
-        return (
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{ pathname: PathConstants.CREATE_ARTICLE }}
-          >
-            <Typography
-              variant="subtitle1"
-              style={{ color: "white", textDecoration: "underline" }}
-            >
-              Создать статью
-            </Typography>
-          </Link>
-        );
-      }
-      case PathConstants.CREATE_ARTICLE: {
-        return (
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{ pathname: PathConstants.ARTICLE }}
-          >
-            <Typography
-              variant="subtitle1"
-              style={{ color: "white", textDecoration: "underline" }}
-            >
-              Лента
-            </Typography>
-          </Link>
-        );
-      }
-      case PathConstants.MANAGE_ARTICLES: {
-        return (
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{ pathname: PathConstants.ARTICLE }}
-          >
-            <Typography
-              variant="subtitle1"
-              style={{ color: "white", textDecoration: "underline" }}
-            >
-              Лента
-            </Typography>
-          </Link>
-        );
-      }
-      case PathConstants.PROFILE: {
-        return (
-          <Box sx={{display:"flex",flexDirection:"row",gap:"15px"}}>
-           <Link
-            style={{ textDecoration: "none" }}
-            to={{ pathname: PathConstants.CREATE_ARTICLE }}
-          >
-            <Typography
-              variant="subtitle1"
-              style={{ color: "white", textDecoration: "underline" }}
-            >
-              Создать тему
-            </Typography>
-          </Link>
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{ pathname: PathConstants.ARTICLE }}
-          >
-            <Typography
-              variant="subtitle1"
-              style={{ color: "white", textDecoration: "underline" }}
-            >
-              Лента
-            </Typography>
-          </Link>
-          </Box>
-         
-        );
-      }
-      case PathConstants.LOGIN: {
-        return (
-          
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{ pathname: PathConstants.ARTICLE }}
-          >
-            <Typography
-              variant="subtitle1"
-              style={{ color: "white", textDecoration: "underline" }}
-            >
-              Лента
-            </Typography>
-          </Link>
-          
-         
-        );
-      }
-      case PathConstants.SEARCH: {
-        return (
-          
-          <Link
-            style={{ textDecoration: "none" }}
-            to={{ pathname: PathConstants.ARTICLE }}
-          >
-            <Typography
-              variant="subtitle1"
-              style={{ color: "white", textDecoration: "underline" }}
-            >
-              Лента
-            </Typography>
-          </Link>
-          
-         
-        );
-      }
-   
-    }
-
-    return "";
-  };
-
   const showSearchBox=(path)=>{
 
     const names=[PathConstants.ARTICLE, PathConstants.PROFILE, PathConstants.SEARCH]
@@ -219,11 +101,36 @@ function Header() {
                       Админ панель
                     </Typography>
                   </Link>
+               
+          
                 </Box>
               ) : null}
 
-              <Box sx={{ marginRight: "20px" }}>
-                {getLinkByPath(location.pathname)}
+              <Box sx={{display:"flex",flexDirection:"row",gap:"15px", marginRight: "20px" }}>
+      
+              <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.CREATE_ARTICLE }}
+          >
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Создать тему
+            </Typography>
+          </Link>
+                
+                <Link
+            style={{ textDecoration: "none" }}
+            to={{ pathname: PathConstants.ARTICLE }}
+          >
+            <Typography
+              variant="subtitle1"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Лента
+            </Typography>
+          </Link>
               </Box>
               <UserSettings />
             </Box>

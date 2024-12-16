@@ -16,6 +16,7 @@ const DomainNames = {
     answers:"answers",
     followers:"followers",
     authors:"authors",
-    admin:"admin"
+    admin:"admin",
+    complaint:"complaint"
 }
 export default DomainNames;

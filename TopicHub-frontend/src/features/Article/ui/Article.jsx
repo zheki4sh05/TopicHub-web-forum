@@ -1,25 +1,28 @@
 import {
+  Alert,
   Box,
   Button,
   Chip,
   CircularProgress,
   IconButton,
   Paper,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import statusTypes from "../../../app/util/statusTypes";
 import { formatDateFromTimestamp } from "../../../app/util/date";
 import { useDispatch, useSelector } from "react-redux";
-import { getHubs } from "../../../pages/Article/model/feedSlice";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
-import { setArticle } from "../model/articleSlice";
+import { controlArticleStatus, getArticleStatus, getComplaintStatus, manageComplaintStatus, setArticle } from "../model/articleSlice";
 import ReactionBox from "../../../shared/ReactionBox/ui/ReactionBox";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchHubs } from "../../../entities/hubs/api/request";
+import MainModal from "../../../shared/ConfirmModal/ui/Modal";
+import ModalCreation from './../../../shared/Complaint/ui/ModalCreation';
 function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
   const hubs = useSelector(getHubsList);
      useEffect(()=>{
@@ -29,6 +32,9 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
         }
          
       },[])
+
+      const status = useSelector(getComplaintStatus)
+    
   const dispatch = useDispatch();
   const getArticlePart = (item, index) => {
     switch (item.type) {
@@ -98,8 +104,28 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
     dispatch(setArticle(item));
   };
 
+  const initialSnackBarState={state:false,severity:"", text:"" }
+
+  const [open,setOpen] = useState(false)
+  const [scackBar,setSnacknar] = useState(initialSnackBarState)
+
+
+  useEffect(()=>{
+    if(status==statusTypes.succeeded){
+      setSnacknar({state:true,severity:"success", text:"Жалоба отправлена" })
+    }else if(status==statusTypes.failed){
+      setSnacknar({state:true,severity:"error", text:"Не удалось отправить"})
+    }
+    dispatch(manageComplaintStatus(statusTypes.idle))
+  },[status])
+
+  const handleCloseSnackBar=()=>{
+    setSnacknar(initialSnackBarState)
+  }
+
   return (
-    <Paper elevation={1}>
+    <>
+     <Paper elevation={1}>
       <Box
         sx={{
           width: "100%",
@@ -195,12 +221,29 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
             item={item}
 
             showDanger={true}
-            // handleDanger={() => {}}
+            handleDanger={() => {setOpen(true)}}
           
           />
         </Box>
       </Box>
     </Paper>
+    <MainModal open={open} handleClose={()=>setOpen(false)}>
+          <ModalCreation item={item} handleClose={()=>setOpen(false)} />
+    </MainModal>
+
+   <Snackbar open={scackBar.state} autoHideDuration={6000} onClose={handleCloseSnackBar}>
+        <Alert
+          onClose={handleCloseSnackBar}
+          severity={scackBar.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {scackBar.text}
+        </Alert>
+      </Snackbar>
+
+    </>
+   
   );
 }
 

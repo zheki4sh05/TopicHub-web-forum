@@ -4,7 +4,7 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "./../../../pages/Profile/model/userSlice";
+import { getUser, isAuth } from "./../../../pages/Profile/model/userSlice";
 import { makeReaction, removeReaction } from "../api/request";
 import { useState } from "react";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
@@ -12,11 +12,10 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,showLikes=true}) {
 
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
 
+  const auth = useSelector(isAuth)
   const [like, setLike] = useState(item.likeState == 1);
   const [dislike, setDislike] = useState(item.likeState == -1);
-
   const [likeCount, setLikeCount] = useState(item.likes);
   const [dislikeCount, setDisLikeCount] = useState(item.dislikes);
 
@@ -109,16 +108,36 @@ function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,sho
       </Box>
 
 
-      {showDanger ? (
+      {showDanger ? 
+      
+      auth ?
+      
+      (
         <Box>
-          <IconButton onClick={handleLike}>
+          <IconButton onClick={handleDanger}>
             <Typography variant="caption" sx={{ marginRight: "5px" }}>
               Пожаловаться
             </Typography>
             <DangerousIcon />
           </IconButton>
         </Box>
-      ) : null}
+      ) : 
+      <Box sx={{display:"flex",flexDirection:"column"}}>
+          <IconButton disabled={true}>
+            <Typography variant="caption" sx={{ marginRight: "5px" }}>
+              Пожаловаться
+            </Typography>
+            <DangerousIcon />
+          </IconButton>
+          <Typography variant="caption" >Требуется авторизация</Typography>
+        </Box>
+     
+
+      :
+      null
+    
+    
+    }
     </Box>
   );
 }

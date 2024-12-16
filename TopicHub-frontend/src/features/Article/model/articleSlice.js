@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import { addBookmark, checkReactions, removeBookmark, subscribe, unsubscribe } from "../../../pages/ArticleView/api/requests";
+import { complaintArticle } from "../../../shared/Complaint/api/requests";
 
 
 //----state---
@@ -10,6 +11,7 @@ const initialState = {
   status: "idle",
   subscriptionStatus:'idle',
   bookmarkStatus:'idle',
+  complaintStatus:'idle',
   error: null,
 };
 //-------------
@@ -32,6 +34,9 @@ const articleSlice = createSlice({
       },
       manageBookmarkStatus(state,action){
         state.bookmarkStatus = action.payload
+      },
+      manageComplaintStatus(state,action){
+        state.complaintStatus = action.payload
       },
    
   },
@@ -109,8 +114,22 @@ const articleSlice = createSlice({
     .addCase(removeBookmark.rejected, (state, action) => {
       state.bookmarkStatus = "failed";
       state.error = action.error.message;
+    })
+  // //----------------------------------------
+    //--создать жалобу-------------
+    .addCase(complaintArticle.pending, (state, action) => {
+      state.complaintStatus = "loading";
+    })
+    .addCase(complaintArticle.fulfilled, (state, action) => {
+      state.complaintStatus = "succeeded";
+      state.error = null
+    })
+    .addCase(complaintArticle.rejected, (state, action) => {
+      state.complaintStatus = "failed";
+      state.error = action.error.message;
     });
   // //----------------------------------------
+
     
    
   },
@@ -125,15 +144,19 @@ export function getArticleStatus(state) {
   return state[DomainNames.article].status;
 }
 
+
 export function getSubscriptionStatus(state) {
   return state[DomainNames.article].subscriptionStatus;
 }
 export function getBookmarksStatus(state) {
   return state[DomainNames.article].bookmarkStatus;
 }
+export function getComplaintStatus(state) {
+  return state[DomainNames.article].complaintStatus;
+}
 export function getReactions(state) {
   return state[DomainNames.article].reaction;
 }
-export const { setArticle,manageBookmarkStatus,manageSubscriptionStatus } = articleSlice.actions;
+export const { setArticle,manageBookmarkStatus,manageSubscriptionStatus,controlArticleStatus,manageComplaintStatus } = articleSlice.actions;
 
 export default articleSlice.reducer;

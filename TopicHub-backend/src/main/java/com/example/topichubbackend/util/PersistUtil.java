@@ -24,7 +24,7 @@ public class PersistUtil {
         properties.put("hibernate.connection.password", dbPassword);
         properties.put("hibernate.connection.driver_class", dbDriver);
         EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa",properties);
-//        EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+
     }
 
     public static EntityManager getEntityManager() {

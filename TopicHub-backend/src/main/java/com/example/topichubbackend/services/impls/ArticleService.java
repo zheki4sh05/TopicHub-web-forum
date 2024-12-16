@@ -196,6 +196,12 @@ public class ArticleService implements IArticleService {
         return articleBatchDto;
     }
 
+    @Override
+    public void deleteAdmin(String targetId) {
+        Article article = articleDao.findById(Long.parseLong(targetId)).orElseThrow(EntityNotFoundException::new);
+        articleDao.delete(article);
+    }
+
     private List<ArticleDto> gteOtherArticles(Integer page, String userId, String otherUserId) {
         List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,otherUserId );
         return doMapping(articles,userId);

@@ -1,6 +1,7 @@
 package com.example.topichubbackend.util.factories;
 
 import com.example.topichubbackend.services.impls.*;
+import com.example.topichubbackend.services.interfaces.*;
 
 public class ServiceFactory {
     public static AuthService getAuthService(){
@@ -25,5 +26,9 @@ public class ServiceFactory {
 
     public static HubService createHubService(){
         return HubService.getInstance();
+    }
+
+    public static ArticleService getArticleService() {
+        return ArticleService.getInstance();
     }
 }
