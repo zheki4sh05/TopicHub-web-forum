@@ -28,3 +28,6 @@ export const fetchUserFollowers = apiFactor7.createGetRequest("",true);
 
 const apiFactory8 = new ApiRequestCreator(DomainNames.article, api.article.url);
 export const fetchAuthorArticles = apiFactory8.createGetRequest("",true);
+
+const apiFactor9= new ApiRequestCreator(DomainNames.user, api.auth.url);
+export const logoutUser = apiFactor9.createPostRequest(api.auth.logout);

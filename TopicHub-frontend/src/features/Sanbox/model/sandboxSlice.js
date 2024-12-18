@@ -24,12 +24,12 @@ const initialState = {
       value:""
      
     },
-    {
-      id: 2,
-      name: "Cписок",
-      type: "list",
-      value:[]
-    },
+    // {
+    //   id: 2,
+    //   name: "Cписок",
+    //   type: "list",
+    //   value:[]
+    // },
     {
       id: 3,
       name: "Заголовок",

@@ -1,13 +1,14 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { cleareUserData, controlResetError, getActiveUser, getUser, getUserError } from "../model/userSlice";
+import { cleareUserData, controlResetError, getActiveUser, getUser, getUserError, getUserStatusLogout } from "../model/userSlice";
 import { Controller, useForm } from "react-hook-form";
-import { deleteUser, updateUserData } from "../api/requests";
+import { deleteUser, logoutUser, updateUserData } from "../api/requests";
 import ConfirmModal from "../../../shared/ConfirmModal/ui/ConfirmModal";
 import { useNavigate } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
 import Author from "../../../widgets/author/ui/Author";
+import statusTypes from "../../../app/util/statusTypes";
 
 function UserProfile({ edit }) {
     const navigate = useNavigate()
@@ -15,6 +16,7 @@ function UserProfile({ edit }) {
   const user = edit ? useSelector(getUser) : useSelector(getActiveUser);
   const error = useSelector(getUserError)
   const [show,setShow]= useState(false)
+  const logoutStatus = useSelector(getUserStatusLogout)
 
   const [message,setMessage] = useState(error ? error.message : "")
   const { handleSubmit, control, reset } = useForm({
@@ -60,12 +62,24 @@ function UserProfile({ edit }) {
   }
 
 
+  const handleLogout=()=>{
+    dispatch(logoutUser())
+  }
+
+  useEffect(()=>{
+
+      if(logoutStatus==statusTypes.succeeded){
+        window.location.href = PathConstants.HOME
+      }
+
+  },[logoutStatus])
+
   return (
     <>
     <Stack direction={"column"} >
       <Stack direction={"row"} >
         <Stack direction={"row"} >
-          {/* <img alt="logo" /> */}
+      
           <Author
           user={user}
           edit={edit}
@@ -170,6 +184,7 @@ function UserProfile({ edit }) {
         <Box sx={{display:"flex",justifyContent:"flex-start"}} >
         <Box>
         <Button color="error" onClick={()=>setShow(true)} sx={{marginLeft:"80px"}}>Удалить аккаунт</Button>
+        <Button color="error" onClick={handleLogout} sx={{marginLeft:"80px"}}>Выйти</Button>
         </Box>
         
       </Box>

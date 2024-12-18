@@ -15,6 +15,7 @@ const api={
         url:base.concat("auth"),
         signup:"/signup",
         signin:"/signin",
+        logout:"/logout"
     },
     profile:{
         url:base.concat("profile"),

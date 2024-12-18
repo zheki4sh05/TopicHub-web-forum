@@ -1,20 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import { signin, signup } from "../../Login/api/requests";
-import { delUserArticle, fetchAuthorArticles, fetchUserArticles, fetchUserBookmarks, fetchUserFollowers, fetchUserSubscriptions, updateUserData } from "../api/requests";
-
+import { delUserArticle, fetchAuthorArticles, fetchUserArticles, fetchUserBookmarks, fetchUserFollowers, fetchUserSubscriptions, logoutUser, updateUserData } from "../api/requests";
 
 //----state---
 const initialState = {
-  // user:{
-
-  //   roles:["USER", "ADMIN"],
-  //   id:"y8ofh234v9b34[v3",
-  //   login:"evgeniy",
-  //   email:"evgeniy.shostak.04@mail.ru",
-  //   password:null
-  // },
-
   user:{
     roles:[],
     id:0,
@@ -39,17 +29,9 @@ const initialState = {
   },
   subscribes:[],
   followers:[],
-  // activeUser:{
-
-  //   roles:["USER", "ADMIN"],
-  //   id:"y8ofh234v9b34[v3",
-  //   login:"evgeniy",
-  //   email:"evgeniy.shostak.04@mail.ru",
-  //   password:null
-  // },
   others:{},
   status: "idle",
-
+  statusLogout:"idle",
   auth:false,
   error: null,
 };
@@ -117,6 +99,19 @@ const userSlice = createSlice({
     })
     .addCase(signin.rejected, (state, action) => {
       state.status = "failed";
+      state.error = action.payload.error;
+    })
+  //----------------------------------------
+    //---выход-------------
+    .addCase(logoutUser.pending, (state, action) => {
+      state.statusLogout = "loading";
+    })
+    .addCase(logoutUser.fulfilled, (state, action) => {
+      state.statusLogout = "succeeded";
+      state.error=null
+    })
+    .addCase(logoutUser.rejected, (state, action) => {
+      state.statusLogout = "failed";
       state.error = action.payload.error;
     })
   //----------------------------------------
@@ -250,6 +245,9 @@ export function isAuth(state) {
 }
 export function getUserStatus(state){
   return state[DomainNames.user].status;
+}
+export function getUserStatusLogout(state){
+  return state[DomainNames.user].statusLogout;
 }
 export function getUserError(state){
   return state[DomainNames.user].error;
