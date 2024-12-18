@@ -10,7 +10,7 @@ import jakarta.servlet.http.*;
 
 import java.io.*;
 
-@WebServlet(urlPatterns = {"/article"})
+@WebServlet("/article")
 public class ArticleServlet extends HttpServlet {
 
     private final IArticleService articleService  = ArticleService.getInstance();

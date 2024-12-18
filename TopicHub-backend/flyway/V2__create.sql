@@ -225,6 +225,10 @@ create table if not exists complaint_comment
     constraint comment___fk
     references comment
 );
+insert into role (id, name)
+values (1, 'ADMIN');
+insert into role (id, name)
+values (2, 'USER');
 insert into author (id, login, email, password,state)
 values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','j8H6ZRy0j0wQZ+GUNmagU6lMlh0Dr9C+CVtEXubJ+L4=',false);
 insert into user_role (id, userid, role)

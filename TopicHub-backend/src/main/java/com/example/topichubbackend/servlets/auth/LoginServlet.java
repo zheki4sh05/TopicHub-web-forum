@@ -46,6 +46,7 @@ public class LoginServlet extends HttpServlet{
                             .message("Неверный логин или пароль")
                             .code(401)
                             .build()));
+            resp.setStatus(401);
         } catch (InternalServerErrorException e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }catch (BadRequestException e){
@@ -59,7 +60,6 @@ public class LoginServlet extends HttpServlet{
                             .code(401)
                     .build()));
             resp.setStatus(401);
-
         }
 
     }
