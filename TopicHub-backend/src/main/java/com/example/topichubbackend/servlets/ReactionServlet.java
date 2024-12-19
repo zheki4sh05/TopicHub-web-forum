@@ -13,7 +13,7 @@ import java.io.*;
 
 @WebServlet(urlPatterns = {"/reaction"})
 public class ReactionServlet extends HttpServlet{
-    private IReactionService reactionService = ServiceFactory.getReactionService();
+    private final IReactionService reactionService = ServiceFactory.getReactionService();
     private final CustomValidator customValidator = new CustomValidator();
 
     @Override
