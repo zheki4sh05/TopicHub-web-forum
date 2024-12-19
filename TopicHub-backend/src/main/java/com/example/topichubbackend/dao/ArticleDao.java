@@ -15,11 +15,6 @@ import java.util.*;
 public class ArticleDao extends BaseDao{
 
     private final Integer batchSize  = 15;
-
-    public final static String feedArticles = "FROM Article a ORDER BY a.created DESC";
-
-    public final static String hubArticles = "FROM Article a WHERE a.hub.id = :id ORDER BY a.created DESC";
-
     public final static String authorArticles = "FROM Article a WHERE a.author.id = :id ORDER BY a.created DESC";
     public final static String bookmarks = "FROM Article a JOIN Bookmark b ON a.id = b.article.id and b.author.id = :id";
 
@@ -171,6 +166,7 @@ public class ArticleDao extends BaseDao{
     public List<Article> getSubscribeArticles(Integer page, String userId) {
 
         Query query = this.em.createQuery(" FROM Article a JOIN Subscription s ON s.follower.id = :id and a.author.id = s.author.id", Article.class);
+        query.setParameter("id", UUID.fromString(userId));
         query.setFirstResult((page - 1) * batchSize);
         query.setMaxResults(batchSize);
         List<Article> results = query.getResultList();

@@ -25,6 +25,7 @@ public class ReactionServlet extends HttpServlet{
                 LikeRequestDto reactionDto = (LikeRequestDto) JsonMapper.mapFrom(request, LikeRequestDto.class).orElseThrow(RuntimeException::new);
                 customValidator.validate(reactionDto);
                 reactionService.makeReaction(reactionDto.getType(), Integer.valueOf(reactionDto.getValue()), userId,Long.valueOf(reactionDto.getTargetId()));
+                response.getWriter().write(JsonMapper.mapTo(reactionDto));
                 response.setStatus(200);
             }catch (BadRequestException | NumberFormatException e){
                 response.setStatus(400);
@@ -37,8 +38,7 @@ public class ReactionServlet extends HttpServlet{
 
     @Override
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        String type = request.getParameter("type"); // article, comment
+        String type = request.getParameter("type");
         String targetId = request.getParameter("targetId");
         String userId = (String) request.getAttribute("id");
 
@@ -48,6 +48,7 @@ public class ReactionServlet extends HttpServlet{
             try{
 
                 reactionService.removeReaction(type,userId,Long.valueOf(targetId));
+                response.getWriter().write(targetId);
                 response.setStatus(200);
             }catch (BadRequestException e){
                 response.setStatus(400);

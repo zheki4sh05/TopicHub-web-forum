@@ -28,7 +28,9 @@ public class ArticleService implements IArticleService {
 
     private final ReactionDao reactionDao = DaoFactory.createReactionDao();
 
-    private IObjectMapper objectMapper = new ObjectMapperImpl();
+    private final IObjectMapper objectMapper = new ObjectMapperImpl();
+
+    private final CommentDao commentDao = DaoFactory.createCommentDao();
 
     public static final String dilimiter = "|";
     @Override
@@ -165,7 +167,9 @@ public class ArticleService implements IArticleService {
             articleBatchDto.setArticleDtoList(doMapping(articles,userId));
         }else if(!author.isEmpty()){
             articles.addAll(articleDao.search(theme,  keywords));
-            var filtered = articles.stream().filter(item->item.getAuthor().getLogin().startsWith(author));
+            var filtered = articles.stream()
+                    .filter(item->item.getAuthor().getLogin()
+                            .startsWith(author));
 
             articleBatchDto.setArticleDtoList(doMapping(filtered.collect(Collectors.toList()),userId));
         }else{
@@ -231,13 +235,21 @@ public class ArticleService implements IArticleService {
     }
 
     private List<ArticleDto> doMapping(List<Article> articles,String userId){
+
         List<ArticleDto> articleDtos = new ArrayList<>();
         articles.forEach(item->{
             ArticleDto articleDto = getLikesAndDislikes(item, userId);
-            articleDto.setList(getArticlePart(articleDto.getId()).stream().map(part->objectMapper.mapFrom(part)).collect(Collectors.toList()));
+            articleDto.setCommentsCount(getCommentsCount(item.getId()));
+            articleDto.setList(getArticlePart(articleDto.getId()).stream()
+                    .map(objectMapper::mapFrom)
+                    .collect(Collectors.toList()));
             articleDtos.add(articleDto);
         });
         return articleDtos;
+    }
+
+    private Long getCommentsCount(Long id) {
+        return commentDao.calcArticleCommentsCount(id);
     }
 
     private ArticleDto getLikesAndDislikes(Article item, String userId){
@@ -246,6 +258,7 @@ public class ArticleService implements IArticleService {
         dto.setLikes(list[0]);
         dto.setDislikes(list[1]);
         dto.setLikeState(reactionDao.userLikeState(userId, item.getId()));
+        System.out.println(dto.getLikeState());
         return dto;
     }
 

@@ -29,6 +29,7 @@ public class ArticleServlet extends HttpServlet {
                 String otherUserId = request.getParameter("otherUserId");
                  articleBatchDto = articleService.fetch(page,userId, otherUserId);
             }else{
+                System.out.println("userId "+userId);
                 Integer hub = Integer.valueOf(request.getParameter("hub"));
                  articleBatchDto = articleService.fetch(hub,page,userId);
 

@@ -138,14 +138,14 @@ public class ReactionDao extends BaseDao{
     public Integer userLikeState(String userId, Long id) {
 
         if(userId!=null){
-            String query = "FROM Likes l " +
+            String query = "SELECT l.state FROM Likes l " +
                     "WHERE l.article.id = :articleId AND l.user.id = :userId";
             try{
-                Query q = em.createQuery(query, Likes.class);
+                Query q = em.createQuery(query, Integer.class);
                 q.setParameter("articleId", id);
                 q.setParameter("userId", UUID.fromString(userId));
-                Likes likes =(Likes) q.getSingleResult();
-                return likes.getState();
+                return(Integer) q.getSingleResult();
+
             }catch (NoResultException e){
                 return 0;
             }

@@ -22,5 +22,6 @@ public class ArticleDto {
     private Integer hub;
     private UserDto userDto;
     private Integer likeState;
+    private Long commentsCount;
 
 }

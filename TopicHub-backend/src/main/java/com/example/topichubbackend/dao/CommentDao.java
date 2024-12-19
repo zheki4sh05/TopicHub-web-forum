@@ -57,4 +57,12 @@ public class CommentDao extends BaseDao{
         }
 
     }
+
+    public Long calcArticleCommentsCount(Long id) {
+        String countQ = "SELECT COUNT(c.id) FROM Comment c WHERE c.article.id= :id";
+        Query countQuery = this.em.createQuery(countQ, Long.class);
+        countQuery.setParameter("id", id);
+        return (Long) countQuery.getSingleResult();
+
+    }
 }

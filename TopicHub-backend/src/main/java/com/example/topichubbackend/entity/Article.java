@@ -51,7 +51,7 @@ public class Article {
     @Column(name = "created")
     private Timestamp created;
 
-    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<ArticlePart> articlePartList;
 
 
