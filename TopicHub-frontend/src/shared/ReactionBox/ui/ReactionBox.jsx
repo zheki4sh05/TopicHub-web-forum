@@ -79,14 +79,14 @@ function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,sho
         {
             showLikes ? 
             <>
-            <IconButton onClick={handleLike}>
+            <IconButton onClick={handleLike} disabled={!auth}>
           <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
             {likeCount}
           </Typography>
 
           {like && !dislike ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
         </IconButton>
-        <IconButton onClick={handleDislike}>
+        <IconButton onClick={handleDislike} disabled={!auth}>
           <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
             {dislikeCount}
           </Typography>
@@ -99,9 +99,9 @@ function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,sho
 
         }
         
-        <IconButton onClick={handleComment}>
+        <IconButton onClick={handleComment} disabled={!auth}>
           <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
-            0
+            {item.commentsCount}
           </Typography>
           <InsertCommentIcon />
         </IconButton>

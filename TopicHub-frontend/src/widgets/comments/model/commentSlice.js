@@ -122,12 +122,7 @@ const initialState = {
 
            let updatedComment = action.payload
 
-          //  state.list.forEach(item => {
-          //     if(item.id==updatedComment.id){
-          //       item.value = updatedComment.value;
-          //       return
-          //     }
-          //  });
+  
           updateCommentFn(state.list, updatedComment.id, updatedComment.value)
 
 

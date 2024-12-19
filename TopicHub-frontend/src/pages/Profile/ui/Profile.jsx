@@ -38,7 +38,7 @@ function Profile() {
 
   const tabsList = [
     {
-      name: "публикации",
+      name: "Публикации",
       number: 0,
       component: <UserArticles edit={user.id == activeUser.id} />,
     },

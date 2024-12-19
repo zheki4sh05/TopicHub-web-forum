@@ -4,7 +4,8 @@ import ApiRequestCreator from "../../../app/util/requestFactory";
 
 
 
-const apiFactory = new ApiRequestCreator(DomainNames.like, api.reactions.url);
+const apiFactory = new ApiRequestCreator(DomainNames.like+"/add", api.reactions.url);
 export const makeReaction = apiFactory.createPostRequest(api.reactions.reaction);
-export const removeReaction = apiFactory.createDeleteRequest(api.reactions.reaction,true);
+const apiFactory2 = new ApiRequestCreator(DomainNames.like+"/remove", api.reactions.url);
+export const removeReaction = apiFactory2.createDeleteRequest(api.reactions.reaction,true);
 

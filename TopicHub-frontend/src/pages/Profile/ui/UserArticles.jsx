@@ -1,56 +1,51 @@
-import { Box, LinearProgress, Pagination, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  LinearProgress,
+  Pagination,
+  Stack,
+  Typography,
+} from "@mui/material";
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  controlUserStatus,
   getActiveUser,
   getUser,
-  getUserArticles,
-  getUserStatus,
   isAuth,
 } from "../model/userSlice";
 import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
 import { fetchAuthorArticles, fetchUserArticles } from "./../api/requests";
 import statusTypes from "../../../app/util/statusTypes";
+import { getFeed, getFeedStatus } from "../../Article/model/feedSlice";
 
 function UserArticles({ edit }) {
-  const articles = useSelector(getUserArticles)
+  const articles = useSelector(getFeed);
   const dispatch = useDispatch();
-  const status = useSelector(getUserStatus);
+  const status = useSelector(getFeedStatus);
   const user = useSelector(getActiveUser);
-  const currentUser = useSelector(getUser)
-  const auth = useSelector(isAuth)
+  const currentUser = useSelector(getUser);
+  const auth = useSelector(isAuth);
 
   const makeRequest = (page) => {
-
-    if(edit){
+    if (edit) {
       dispatch(
         fetchUserArticles({
           page: page,
           type: "articles",
         })
       );
-    }else{
+    } else {
+      const body = auth
+        ? {
+            page: page,
+            type: "author",
+            otherUserId: user.id,
+            userId: auth ? currentUser.id : null,
+          }
+        : { page: page, type: "author", otherUserId: user.id };
 
-      const body = auth ? {page: page,
-  type: "author",
-        otherUserId:user.id,
-        userId:auth ? currentUser.id : null
-      } :
-      {page: page,
-        type: "author",
-              otherUserId:user.id,
-           
-            }
-
-
-      dispatch(
-        fetchAuthorArticles(body)
-      );
+      dispatch(fetchAuthorArticles(body));
     }
-
-   
   };
 
   const handlePageChange = (event, page) => {
@@ -60,21 +55,19 @@ function UserArticles({ edit }) {
   useEffect(() => {
     if (edit && articles.articleDtoList.length == 0) {
       makeRequest(1);
-    }else if(!edit){
+    } else if (!edit) {
       makeRequest(1);
     }
   }, []);
 
-  useEffect(() => {
-    if (status == statusTypes.succeeded) {
-      dispatch(controlUserStatus(statusTypes.idle));
-    }
-  }, [status]);
+  // useEffect(() => {
+  //   if (status == statusTypes.succeeded) {
+  //     dispatch(controlUserStatus(statusTypes.idle));
+  //   }
+  // }, [status]);
 
   return (
     <>
-
-    
       {articles.articleDtoList.length > 0 ? (
         <Stack direction={"column"}>
           <ArticlesList
@@ -104,22 +97,16 @@ function UserArticles({ edit }) {
             </Box>
           </MenuWrapper>
         </Stack>
-      ) : status==statusTypes.loading ? (
-        
-          <LinearProgress/>
-          
-       
-      ):
-
-     <>
+      ) : status == statusTypes.loading ? (
+        <LinearProgress />
+      ) : (
+        <>
           <Typography>
             У Вас нет публикаий. Перейдите в раздел создания темы
           </Typography>
         </>
-    
-    }
+      )}
     </>
-
   );
 }
 

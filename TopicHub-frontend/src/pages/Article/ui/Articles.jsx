@@ -41,7 +41,7 @@ function Articles() {
         type: "articles",
         page: page,
         hub: select,
-        user:user.id
+        userId:user.id
       }
     }else{
       return {

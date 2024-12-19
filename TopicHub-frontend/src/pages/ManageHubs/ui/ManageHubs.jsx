@@ -1,7 +1,6 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import AdminMenu from "../../../widgets/admin/ui/AdminMenu";
 import { useDispatch, useSelector } from "react-redux";
-import { getHubs } from "../../Article/model/feedSlice";
 import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import { useEffect, useState } from "react";
 import { createHubs, doDeleteHubs, doUpdateHubs } from "../../../entities/hubs/api/request";

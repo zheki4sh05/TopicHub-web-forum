@@ -12,14 +12,13 @@ import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import statusTypes from "../../../app/util/statusTypes";
 import { fetchUserBookmarks } from "../api/requests";
 import { useEffect } from "react";
+import { getFeed, getFeedStatus } from "../../Article/model/feedSlice";
 
 function UserMarks() {
-  const articles = useSelector(getUserBookmarks);
-  const status = useSelector(getUserStatus);
+  const articles = useSelector(getFeed);
+  const status = useSelector(getFeedStatus);
   const dispatch = useDispatch()
 
-
- 
 
   const makeRequest = (page) => {
     dispatch(fetchUserBookmarks(

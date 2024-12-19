@@ -114,21 +114,6 @@ const userSlice = createSlice({
       state.statusLogout = "failed";
       state.error = action.payload.error;
     })
-  //----------------------------------------
-    //---Пользовательские статьи-------------
-    .addCase(fetchUserArticles.pending, (state, action) => {
-      state.status = "loading";
-    })
-    .addCase(fetchUserArticles.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.articles = action.payload
-      state.error=null
-    })
-    .addCase(fetchUserArticles.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.error;
-    })
-  //----------------------------------------
     //---Удаление пользовательской статьи-------------
     .addCase(delUserArticle.pending, (state, action) => {
       state.status = "loading";
@@ -166,21 +151,7 @@ const userSlice = createSlice({
         state.status = "failed";
         state.error = action.payload.error;
       })
-       //---закладки пользователя-------------
-       .addCase(fetchUserBookmarks.pending, (state, action) => {
-        state.status = "loading";
-      })
-      .addCase(fetchUserBookmarks.fulfilled, (state, action) => {
-        state.status = "succeeded";
-       
-        state.bookMarksList = action.payload
-  
-        state.error=null
-      })
-      .addCase(fetchUserBookmarks.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error;
-      })
+
         //---подписки пользователя-------------
         .addCase(fetchUserSubscriptions.pending, (state, action) => {
           state.status = "loading";

@@ -8,6 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import { deleteComment, updateComment } from "../../../widgets/comments/api/requests";
 import DeleteIcon from '@mui/icons-material/Delete';
+import Author from "../../../widgets/author/ui/Author";
 function Comment({ item, handleComment, level=0 }) {
     const dispatch = useDispatch()
   const [update, setUpdate] = useState(false);
@@ -57,8 +58,12 @@ function Comment({ item, handleComment, level=0 }) {
     <>
      <Box sx={{ display: "flex", flexDirection: "column", marginLeft:level*10+"px" }}>
       <Stack direction="row" spacing={1}>
-        <img alt="logo" />
-        <Typography variant="subtitle2">{item.authorDto.login}</Typography>
+        <Author
+        
+        user={item.authorDto}
+        size={50}
+        />
+        
       </Stack>
 
       {auth && user.id == item.authorDto.id ? (
@@ -109,7 +114,7 @@ function Comment({ item, handleComment, level=0 }) {
         </Box>
       )}
 
-      <ReactionBox
+      {/* <ReactionBox
         item={c}
         handleLike={() => {}}
         handleDislike={() => {}}
@@ -117,7 +122,8 @@ function Comment({ item, handleComment, level=0 }) {
         showDanger={true}
         showEdit={true}
         showLikes={false}
-      />
+        showComment={false}
+      /> */}
     </Box>
       {
 
