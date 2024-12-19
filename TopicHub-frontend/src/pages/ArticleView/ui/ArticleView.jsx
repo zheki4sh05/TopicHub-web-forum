@@ -63,14 +63,6 @@ function ArticleView() {
     );
   }, []);
 
-  //     useEffect(()=>{
-
-  //      if(userStatus==statusTypes.succeeded){
-  //       dispatch(manageSubscription(!reaction.isSubscribe))
-  //       dispatch(controlUserStatus(statusTypes.idle))
-  //      }
-
-  // },[userStatus])
 
   useEffect(() => {
     if (subscribeStatus == statusTypes.succeeded) {

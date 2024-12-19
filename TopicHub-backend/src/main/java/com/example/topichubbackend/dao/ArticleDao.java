@@ -14,8 +14,8 @@ import java.util.*;
 
 public class ArticleDao extends BaseDao{
 
-    private final Integer batchSize  = 15;
-    public final static String authorArticles = "FROM Article a WHERE a.author.id = :id ORDER BY a.created DESC";
+    private final Integer BATCH_SIZE  = 15;
+    public final static String authorArticles = "FROM Article a JOIN FETCH a.author WHERE a.author.id = :id ORDER BY a.created DESC";
     public final static String bookmarks = "FROM Article a JOIN Bookmark b ON a.id = b.article.id and b.author.id = :id";
 
     private final SearchSession searchSession;
@@ -25,36 +25,36 @@ public class ArticleDao extends BaseDao{
         searchSession= Search.session( entityManager );
     }
 
-
-
-
     public List<Article> getSortedAndPaginated(String sql, Integer pageNumber, String id){
 
         Query query = this.em.createQuery(sql, Article.class);
         query.setParameter("id", UUID.fromString(id));
-        query.setFirstResult((pageNumber - 1) * batchSize);
-        query.setMaxResults(batchSize);
+        query.setFirstResult((pageNumber - 1) * BATCH_SIZE);
+        query.setMaxResults(BATCH_SIZE);
         List<Article> results = query.getResultList();
         return results;
     }
 
     public List<Article> getSortedAndPaginated(Integer pageNumber, Integer id){
 
-        Query query = this.em.createQuery("FROM Article a WHERE a.hub.id = :id ORDER BY a.created DESC", Article.class);
+        Query query = this.em.createQuery("FROM Article a JOIN FETCH a.author WHERE a.hub.id = :id ORDER BY a.created DESC", Article.class);
         query.setParameter("id", id);
-        query.setFirstResult((pageNumber - 1) * batchSize);
-        query.setMaxResults(batchSize);
+        query.setFirstResult((pageNumber - 1) * BATCH_SIZE);
+        query.setMaxResults(BATCH_SIZE);
         List<Article> results = query.getResultList();
         return results;
 
     }
 
     public List<Article> getSortedAndPaginated(Integer page) {
-        Query query = this.em.createQuery("FROM Article a ORDER BY a.created DESC", Article.class);
-        query.setFirstResult((page - 1) * batchSize);
-        query.setMaxResults(batchSize);
-        List<Article> results = query.getResultList();
-        return results;
+
+        EntityGraph<Article> entityGraph = this.em.createEntityGraph(Article.class);
+        String sql = "FROM Article a JOIN FETCH a.author ORDER BY a.created DESC";
+        TypedQuery<Article> query = this.em.createQuery(sql, Article.class);
+        query.setFirstResult((page - 1) * BATCH_SIZE);
+        query.setMaxResults(BATCH_SIZE);
+        query.setHint("jakarta.persistence.fetchgraph", entityGraph);
+        return query.getResultList();
     }
 
     public Long calcTotalEntitiesCount(){
@@ -70,7 +70,7 @@ public class ArticleDao extends BaseDao{
 
     public Integer getLastPageNumber(Long count){
 
-        return getPageNumber(count, batchSize);
+        return getPageNumber(count, BATCH_SIZE);
 
     }
 
@@ -107,13 +107,12 @@ public class ArticleDao extends BaseDao{
 
 
     public List<Article> search(String theme, String keywords) {
-        var query = searchSession.search(Article.class)
-                .where(f -> f.bool(b -> {
-                    if (theme != null && !theme.isEmpty()) {
-                        b.should(f.match().field("theme").matching(theme)); }
-                    if (keywords != null && !keywords.isEmpty()) {
-                        b.should(f.match().field("keyWords").matching(keywords));
-                    } }));
+
+        var query = searchSession.search(Article.class).where(f -> f.bool()
+                .should(f.match().field("theme").matching(theme+"*"))
+                .should(f.match().field("keyWords").matching(keywords+"*"))
+        );
+
         return query.fetchAllHits();
 
         }
@@ -122,7 +121,7 @@ public class ArticleDao extends BaseDao{
     public List<Article> search(String author) {
         Query query = this.em.createQuery("FROM Article a WHERE a.author.login = :login ORDER BY a.created ASC", Article.class);
         query.setParameter("login", author);
-        query.setMaxResults(batchSize);
+        query.setMaxResults(BATCH_SIZE);
         return (List<Article>) query.getResultList();
 
     }
@@ -167,8 +166,8 @@ public class ArticleDao extends BaseDao{
 
         Query query = this.em.createQuery(" FROM Article a JOIN Subscription s ON s.follower.id = :id and a.author.id = s.author.id", Article.class);
         query.setParameter("id", UUID.fromString(userId));
-        query.setFirstResult((page - 1) * batchSize);
-        query.setMaxResults(batchSize);
+        query.setFirstResult((page - 1) * BATCH_SIZE);
+        query.setMaxResults(BATCH_SIZE);
         List<Article> results = query.getResultList();
         return results;
 

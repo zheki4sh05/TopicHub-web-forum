@@ -3,12 +3,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { cleareSearch, getSearchOptions, getSearchState, setSearchOptions } from '../../../features/Search/model/searchSlice';
+import { getUser, isAuth } from '../../../pages/Profile/model/userSlice';
 
 const SearchFormBody = ({ onSearch }) => {
 
     const options = useSelector(getSearchOptions)
     const dispatch = useDispatch()
     const empty= useSelector(getSearchState)
+   
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues:{
@@ -19,12 +21,13 @@ const SearchFormBody = ({ onSearch }) => {
   });
 
   const onSubmit = (data) => {
-    onSearch(data);
     dispatch(setSearchOptions({
-        theme: data.theme,
-        author: data.author,
-        keywords: data.keywords
-    }))
+      theme: data.theme,
+      author: data.author,
+      keywords: data.keywords
+  }))
+    onSearch(data);
+    
   };
 
   const handleReset=()=>{

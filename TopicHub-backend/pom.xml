@@ -68,7 +68,6 @@
           <artifactId>hibernate-validator</artifactId>
           <version>8.0.0.Final</version>
       </dependency>
-
       <dependency>
           <groupId>org.hibernate.search</groupId>
           <artifactId>hibernate-search-mapper-orm</artifactId>
@@ -99,24 +98,8 @@
           <artifactId>jboss-logging</artifactId>
           <version>3.6.1.Final</version>
       </dependency>
-      <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
-      <dependency>
-          <groupId>org.flywaydb</groupId>
-          <artifactId>flyway-core</artifactId>
-          <version>11.0.1</version>
-      </dependency>
-
-
-
-
-
-
-
-
-
-
-
   </dependencies>
+
 
   <build>
         <plugins>

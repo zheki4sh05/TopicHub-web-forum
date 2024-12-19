@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import { fetchFeed, fetchHubs } from "../api/requests";
 import { makeReaction, removeReaction } from "../../../shared/ReactionBox/api/request";
-import { fetchUserArticles, fetchUserBookmarks } from "../../Profile/api/requests";
+import { fetchAuthorArticles, fetchUserArticles, fetchUserBookmarks } from "../../Profile/api/requests";
 
 //----state---
 const initialState = {
@@ -90,6 +90,7 @@ const feedSlice = createSlice({
           })
           .addCase(fetchUserArticles.rejected, (state, action) => {
             state.status = "failed";
+            state.list.articleDtoList=[]
             state.error = action.error;
           })
         //----------------------------------------
@@ -106,9 +107,23 @@ const feedSlice = createSlice({
       })
       .addCase(fetchUserBookmarks.rejected, (state, action) => {
         state.status = "failed";
+        state.list.articleDtoList=[]
         state.error = action.error;
       })
-  
+        //---статьи другого пользователя-------------
+        .addCase(fetchAuthorArticles.pending, (state, action) => {
+          state.status = "loading";
+        })
+        .addCase(fetchAuthorArticles.fulfilled, (state, action) => {
+          state.status = "succeeded";
+          state.list = action.payload
+          state.error=null
+        })
+        .addCase(fetchAuthorArticles.rejected, (state, action) => {
+          state.status = "failed";
+          state.error = action.error;
+        })
+
 
 
 

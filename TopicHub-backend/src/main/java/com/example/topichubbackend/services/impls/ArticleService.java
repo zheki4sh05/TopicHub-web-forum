@@ -175,6 +175,7 @@ public class ArticleService implements IArticleService {
         }else{
             articles.addAll(articleDao.search(theme,  keywords));
             articleBatchDto.setArticleDtoList(doMapping(articles,userId));
+
         }
         return articleBatchDto;
     }
@@ -235,14 +236,11 @@ public class ArticleService implements IArticleService {
     }
 
     private List<ArticleDto> doMapping(List<Article> articles,String userId){
-
         List<ArticleDto> articleDtos = new ArrayList<>();
         articles.forEach(item->{
+            item.setArticlePartList(getArticlePart(item.getId()));
             ArticleDto articleDto = getLikesAndDislikes(item, userId);
             articleDto.setCommentsCount(getCommentsCount(item.getId()));
-            articleDto.setList(getArticlePart(articleDto.getId()).stream()
-                    .map(objectMapper::mapFrom)
-                    .collect(Collectors.toList()));
             articleDtos.add(articleDto);
         });
         return articleDtos;
@@ -258,7 +256,6 @@ public class ArticleService implements IArticleService {
         dto.setLikes(list[0]);
         dto.setDislikes(list[1]);
         dto.setLikeState(reactionDao.userLikeState(userId, item.getId()));
-        System.out.println(dto.getLikeState());
         return dto;
     }
 

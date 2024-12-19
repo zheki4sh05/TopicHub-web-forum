@@ -120,9 +120,6 @@ const userSlice = createSlice({
     })
     .addCase(delUserArticle.fulfilled, (state, action) => {
       state.status = "succeeded";
-      let articles = state.articles.articleDtoList
-
-      state.articles.articleDtoList = articles.filter(item=>item.id!=action.payload)
 
       state.error=null
     })
@@ -178,19 +175,19 @@ const userSlice = createSlice({
             state.status = "failed";
             state.error = action.error;
           })
-            //---статьи другого пользователя-------------
-            .addCase(fetchAuthorArticles.pending, (state, action) => {
-              state.status = "loading";
-            })
-            .addCase(fetchAuthorArticles.fulfilled, (state, action) => {
-              state.status = "succeeded";
-              state.articles = action.payload
-              state.error=null
-            })
-            .addCase(fetchAuthorArticles.rejected, (state, action) => {
-              state.status = "failed";
-              state.error = action.error;
-            })
+            // //---статьи другого пользователя-------------
+            // .addCase(fetchAuthorArticles.pending, (state, action) => {
+            //   state.status = "loading";
+            // })
+            // .addCase(fetchAuthorArticles.fulfilled, (state, action) => {
+            //   state.status = "succeeded";
+            //   state.articles = action.payload
+            //   state.error=null
+            // })
+            // .addCase(fetchAuthorArticles.rejected, (state, action) => {
+            //   state.status = "failed";
+            //   state.error = action.error;
+            // })
    
  
 

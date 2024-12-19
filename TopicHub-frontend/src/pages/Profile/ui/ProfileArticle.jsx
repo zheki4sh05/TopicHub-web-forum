@@ -14,11 +14,10 @@ import { controlUserStatus, getUserStatus } from "../model/userSlice";
 import statusTypes from "../../../app/util/statusTypes";
 
 function ProfileArticle() {
-    const navigation = useNavigate()
+  const navigate=  useNavigate()
     const article = useSelector(getArticle)
     const [open,setOpen] = useState(false)
     const dispatch = useDispatch()
-    const status = useSelector(getUserStatus)
 
     const handleDelete=()=>{
         setOpen(true)
@@ -38,20 +37,12 @@ function ProfileArticle() {
 
         ))
         setOpen(false)
+        navigate(PathConstants.PROFILE)
     }
 
     const handlerDisagree=()=>{
         setOpen(false)
     }
-
-    // useEffect(()=>{
-
-    //     if(status==statusTypes.succeeded){
-    //         navigation(PathConstants.PROFILE)
-    //         dispatch(controlUserStatus(statusTypes.idle))
-    //     }
-
-    // },[status])
 
     return (
 

@@ -20,6 +20,8 @@ import java.util.*;
 @Entity
 @Indexed
 @Table(name="article")
+@NamedEntityGraph( name = "article.articlePartList",
+        attributeNodes = @NamedAttributeNode("articlePartList") )
 public class Article {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,8 +53,6 @@ public class Article {
     @Column(name = "created")
     private Timestamp created;
 
-    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticlePart> articlePartList;
-
-
 }

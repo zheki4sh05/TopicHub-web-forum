@@ -10,28 +10,29 @@ import { getSearchOptions, getSearchState, setSearchOptions } from "../model/sea
 import { searchRequest } from "./../api/request";
 import { useNavigate } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
+import { getUser, isAuth } from "../../../pages/Profile/model/userSlice";
 
 function SearchBox() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false);
   const options = useSelector(getSearchOptions);
   const dispatch = useDispatch();
+  const user = useSelector(getUser)
+  const auth = useSelector(isAuth)
 
   const empty = useSelector(getSearchState)
 
-
-  const onClick = () => {
-    navigate(PathConstants.SEARCH)
-    dispatch(searchRequest({ ...options }));
-  };
-
-  const handleSearch = () => {
-
+  const makeRequest=(data)=>{
     if(!empty){
-      dispatch(searchRequest({ ...options }));
+      dispatch(searchRequest( auth ? { ...data,user:user.id} : {...data} ));
       handleClose()
       navigate(PathConstants.SEARCH)
     }
+  }
+
+  const handleSearch = (event) => {
+    event.preventDefault()
+    makeRequest(options)
    
   };
 
@@ -72,13 +73,13 @@ function SearchBox() {
           value={options.theme}
           onChange={(event) => dispatch(setSearchOptions({...options, theme:event.target.value }))}
         />
-        <IconButton onClick={onClick} sx={{ p: "5px" }} aria-label="search">
+        <IconButton type="submit"  sx={{ p: "5px" }} aria-label="search">
           <SearchIcon />
         </IconButton>
       </Paper>
 
       <MainModal open={open} handleClose={handleClose}>
-        <SearchFormBody onSearch={handleSearch} />
+        <SearchFormBody onSearch={makeRequest} />
       </MainModal>
     </>
   );

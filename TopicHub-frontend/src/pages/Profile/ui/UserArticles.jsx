@@ -53,11 +53,8 @@ function UserArticles({ edit }) {
   };
 
   useEffect(() => {
-    if (edit && articles.articleDtoList.length == 0) {
-      makeRequest(1);
-    } else if (!edit) {
-      makeRequest(1);
-    }
+
+    makeRequest(1);
   }, []);
 
   // useEffect(() => {
