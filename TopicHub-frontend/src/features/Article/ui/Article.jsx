@@ -44,7 +44,7 @@ function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
       case "img": {
         return (
           <Box key={index}>
-            <img src={item.value} alt="Не удалось загрузить изображение!" />
+            <img src={item.value} alt="Не удалось загрузить изображение!" style={{width:"100%"}}/>
             <Typography variant="body2" gutterBottom sx={{ width: "100%" }}>
               {item.value}
             </Typography>
