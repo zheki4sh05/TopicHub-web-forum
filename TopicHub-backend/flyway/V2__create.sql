@@ -45,8 +45,6 @@ create table if not exists article
     constraint article_pkey
     primary key,
     theme     varchar                                             not null,
-    likes     bigint                                              not null,
-    dislikes  bigint                                              not null,
     keywords  varchar,
     created   timestamp,
     hub       integer default nextval('article_hub_seq'::regclass)
@@ -101,6 +99,7 @@ create table if not exists user_role
     role   integer not null
     constraint role_fk
     references role
+    on update cascade on delete cascade
 );
 
 create table if not exists likes
@@ -225,6 +224,8 @@ create table if not exists complaint_comment
     constraint comment___fk
     references comment
 );
+
+
 insert into role (id, name)
 values (1, 'ADMIN');
 insert into role (id, name)
@@ -241,3 +242,133 @@ values ('Наука');
 insert into hub (name)
 values ('Спорт');
 
+insert into article (theme, keywords, created, hub, status, author_id)
+values (
+        'Влияние искусственного интеллекта на общество: возможности и вызовы',
+        'ИИ|Умный город',
+        '2024-12-19 11:36:45.321343',
+        1,
+        null,
+        'a904e8b8-9da8-4535-b402-9be0b78b2981'
+);
+
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+        'Введение',
+    1,
+    'chapter',
+    'Заголовок',
+    3,
+    uuid_generate_v4()
+    );
+
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Краткий обзор развития искусственного интеллекта (ИИ). Основные области применения ИИ в современном мире.',
+    1,
+    'paragraph',
+    'Aбзац',
+    1,
+    uuid_generate_v4()
+    );
+
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Основная часть:',
+    1,
+    'chapter',
+    'Заголовок',
+    3,
+    uuid_generate_v4()
+    );
+
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Преимущества ИИ:',
+    1,
+    'chapter',
+    'Заголовок',
+    3,
+    uuid_generate_v4()
+    );
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Повышение эффективности и продуктивности в различных секторах (медицина, транспорт, производство).
+Новые возможности для научных исследований и технологических инноваций.
+Улучшение качества жизни за счет умных технологий (умные дома, персональные ассистенты).',
+    1,
+    'paragraph',
+    'Aбзац',
+    1,
+    uuid_generate_v4()
+    );
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'https://content.timeweb.com/assets/2ee2c8e4-93ec-4e4e-a9c3-dc74e12e63c3?width=860&height=573',
+    1,
+    'img',
+    'Изображение',
+    4,
+    uuid_generate_v4()
+    );
+
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Вызовы и риски:',
+    1,
+    'chapter',
+    'Заголовок',
+    3,
+    uuid_generate_v4()
+    );
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Вопросы безопасности и конфиденциальности данных.
+Потеря рабочих мест из-за автоматизации.
+Этические и правовые аспекты использования ИИ.',
+    1,
+    'paragraph',
+    'Aбзац',
+    1,
+    uuid_generate_v4()
+    );
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Социальное влияние:',
+    1,
+    'chapter',
+    'Заголовок',
+    3,
+    uuid_generate_v4()
+    );
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Изменения в социальной структуре и образе жизни людей.
+Влияние на образование и требования к профессиональным навыкам.
+Вопросы неравенства и доступности технологий.',
+    1,
+    'paragraph',
+    'Aбзац',
+    1,
+    uuid_generate_v4()
+    );
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Заключение:',
+    1,
+    'chapter',
+    'Заголовок',
+    3,
+    uuid_generate_v4()
+    );
+insert into articlepart (value, article, type, name, id, uuid)
+values (
+    'Перспективы развития ИИ в будущем.
+Необходимость балансировки между преимуществами и рисками использования ИИ.
+Роль общества и правительства в формировании безопасного и справедливого использования ИИ.',
+    1,
+    'paragraph',
+    'Aбзац',
+    1,
+    uuid_generate_v4()
+    );

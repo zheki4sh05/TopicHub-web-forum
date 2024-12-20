@@ -12,7 +12,7 @@ import java.io.*;
 
 @WebServlet(urlPatterns = {"/sandbox"})
 public class SandboxServlet extends HttpServlet{
-    private IArticleService articleService  = ArticleService.getInstance();
+    private final IArticleService articleService  = ArticleService.getInstance();
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

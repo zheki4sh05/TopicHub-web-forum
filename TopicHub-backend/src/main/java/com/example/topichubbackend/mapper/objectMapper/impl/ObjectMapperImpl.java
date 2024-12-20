@@ -16,8 +16,6 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .created(item.getCreated())
                 .id(item.getId())
                 .theme(item.getTheme())
-                .likes(item.getLikes())
-                .dislikes(item.getDislikes())
                 .hub(item.getHub().getId())
                 .list(item.getArticlePartList().stream()
                         .map(this::mapFrom)

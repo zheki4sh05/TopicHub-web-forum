@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.*;
-import org.hibernate.search.engine.backend.types.*;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 
@@ -35,12 +33,6 @@ public class Article {
     @FullTextField
     @Column(name = "keywords")
     private String keyWords;
-
-    @Column(name = "likes")
-    private Long likes;
-
-    @Column(name = "dislikes")
-    private Long dislikes;
 
     @ManyToOne
     @JoinColumn(name = "hub")

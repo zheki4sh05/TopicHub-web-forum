@@ -43,9 +43,7 @@ public class ArticleService implements IArticleService {
         final Article article = Article.builder()
                 .theme(articleDto.getTheme())
                 .keyWords(String.join(dilimiter, articleDto.getKeyWords()))
-                .likes(0L)
                 .created(Timestamp.valueOf(LocalDateTime.now()))
-                .dislikes(0l)
                 .author(user)
                 .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
                 .build();
