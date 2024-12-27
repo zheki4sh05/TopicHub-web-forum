@@ -13,8 +13,6 @@ public class PersistUtil {
         String dbUsername = System.getenv("DB_USERNAME");
         String dbPassword = System.getenv("DB_PASSWORD");
         String dbDriver = System.getenv("DB_DRIVER");
-        System.out.println("dbDriver: "+ dbDriver);
-
         if (dbUrl == null || dbUsername == null || dbPassword == null || dbDriver == null) {
             throw new IllegalStateException("Environment variables for database connection are missing");
         }

@@ -10,46 +10,31 @@ import MenuWrapper from "./../../../widgets/menu/ui/MenuWrapper";
 import ComplaintsList from "../../../widgets/admin/ui/Article/ComplaintsList";
 
 import { getArticleComplaints } from "../../../widgets/admin/model/adminSlice";
+import { fetchComplaints } from "../../../widgets/admin/api/requests";
 
 function ManageArticle() {
   const navigate = useNavigate();
-  const complaints = useSelector(getArticleComplaints)
+  const complaints = useSelector(getArticleComplaints);
   const user = useSelector(getUser);
-  const auth = useSelector(isAuth)
+  const auth = useSelector(isAuth);
   const [choice, setCoice] = useState(1);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!auth || !user.roles.includes(statusTypes.admin)) {
       navigate(PathConstants.ARTICLE);
     }
   }, []);
+  useEffect(() => {
+    dispatch(
+      fetchComplaints({
+        type: "article",
+      })
+    );
+  }, []);
 
   const handleClick = (value) => {
     setCoice(value);
   };
-
-  const getContentByType=(value)=>{
-
-      switch(value){
-        case 1:{
-          return (
-            <ComplaintsList
-            
-            list={complaints}
-
-            />
-          )
-        }
-        case 2:{
-          return (
-          <>
-          
-          </>
-          )
-        }
-      }
-
-  }
 
   return (
     <Box>
@@ -72,21 +57,10 @@ function ManageArticle() {
                 Жалобы
               </Typography>
             </Button>
-
-            {/* <Button variant="text" onClick={() => handleClick(2)}>
-              <Typography
-                variant="body1"
-                style={{ textDecoration: choice == 2 ? "none" : "underline" }}
-              >
-                Все
-              </Typography>
-            </Button> */}
           </Box>
         </MenuWrapper>
 
-        {getContentByType(choice)}
-
-       
+        {complaints.length > 0 ? <ComplaintsList list={complaints} /> : null}
       </Box>
     </Box>
   );

@@ -19,4 +19,6 @@ public interface IAuthService {
     List<UserDto> findAll(String id);
 
     void manageBlock(String authorId);
+
+    UserDto findById(String userId);
 }

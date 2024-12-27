@@ -47,20 +47,23 @@ function ArticleView() {
   const user = useSelector(getUser);
   const status = useSelector(getArticleStatus);
   const reaction = useSelector(getReactions);
-
+  const auth = useSelector(isAuth)
   const subscribeStatus = useSelector(getSubscriptionStatus);
   const bookmarStatus = useSelector(getBookmarksStatus);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      checkReactions({
-        article: article.id,
-        author: article.userDto.id,
-        user: user.id,
-      })
-    );
+    if(auth){
+      dispatch(
+        checkReactions({
+          article: article.id,
+          author: article.userDto.id,
+          user: user.id,
+        })
+      );
+    }
+    
   }, []);
 
 
@@ -172,7 +175,7 @@ function ArticleView() {
                 {user.id != article.userDto.id ? (
                   status == statusTypes.failed ? (
                     <Button variant="outlined" color="success" disabled={true}>
-                      Ошибка
+                       Авторизация
                     </Button>
                   ) : status == statusTypes.loading ? (
                     <CircularProgress />
@@ -205,11 +208,11 @@ function ArticleView() {
                 <Typography>Закладки</Typography>
 
                 {reaction.isMarked ? (
-                  <IconButton onClick={handleRemoveBookMark}>
+                  <IconButton onClick={handleRemoveBookMark} disabled={!auth}>
                     <BookmarkAddedIcon />
                   </IconButton>
                 ) : (
-                  <IconButton onClick={handleAddBookMark}>
+                  <IconButton onClick={handleAddBookMark} disabled={!auth}>
                     <BookmarkIcon />
                   </IconButton>
                 )}

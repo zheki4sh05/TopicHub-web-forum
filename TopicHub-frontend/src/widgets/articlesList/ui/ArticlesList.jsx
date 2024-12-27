@@ -2,7 +2,15 @@ import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import statusTypes from "../../../app/util/statusTypes";
 import Article from "../../../features/Article/ui/Article";
 
-function ArticlesList({status, batch ,makeRequest,select, edit=false}) {
+function ArticlesList({status, batch ,makeRequest, edit=false}) {
+  console.log("articles list")
+
+  const handleEdit=(article)=>{
+
+  }
+  const handleDelete=(id)=>{
+    
+  }
 
     return ( 
 
@@ -15,9 +23,9 @@ function ArticlesList({status, batch ,makeRequest,select, edit=false}) {
         ) : status == statusTypes.succeeded || batch.articleDtoList.length>0 ? (
           <>
             <Box sx={{ maxWidth: "820px", margin: "0 auto" }}>
-              {batch.articleDtoList.map((item, index) => (
-                <Box key={index} sx={{marginBottom:"10px"}}>
-                  <Article  item={item} mode={statusTypes.short} edit={edit}/>
+              {batch.articleDtoList.map((item) => (
+                <Box key={item.id} sx={{marginBottom:"10px"}}>
+                  <Article key={item.id}  item={item} mode={statusTypes.short} edit={edit} />
                 </Box>
               ))}
             </Box>
@@ -30,7 +38,7 @@ function ArticlesList({status, batch ,makeRequest,select, edit=false}) {
             <Button
               sx={{ marginLeft: "15px" }}
               variant="outlined"
-              onClick={() => makeRequest(select, 1)}
+              onClick={() => makeRequest(1)}
             >
               Попробовать еще раз
             </Button>

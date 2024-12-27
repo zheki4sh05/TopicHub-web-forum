@@ -87,6 +87,12 @@ public class AuthService implements IAuthService {
 
     }
 
+    @Override
+    public UserDto findById(String userId) {
+        User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
+        return objectMapper.mapFrom(user, user.getUserRoles());
+    }
+
     private User prepareNewUser(UserDto userDto){
 
         UUID uuid = UUID.randomUUID();

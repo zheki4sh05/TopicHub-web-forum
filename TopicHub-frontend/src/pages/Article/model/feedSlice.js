@@ -3,6 +3,7 @@ import DomainNames from "../../../app/store/DomainNames";
 import { fetchFeed, fetchHubs } from "../api/requests";
 import { makeReaction, removeReaction } from "../../../shared/ReactionBox/api/request";
 import { fetchAuthorArticles, fetchUserArticles, fetchUserBookmarks } from "../../Profile/api/requests";
+import statusTypes from "../../../app/util/statusTypes";
 
 //----state---
 const initialState = {
@@ -41,6 +42,7 @@ const feedSlice = createSlice({
       .addCase(fetchFeed.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+    
       })
       //---оставить реакцию-------------
       .addCase(makeReaction.fulfilled, (state, action) => {

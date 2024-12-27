@@ -19,6 +19,8 @@ public class LogoutServlet extends HttpServlet {
 
         Optional<Cookie> authCookie = HttpRequestHandler.getSessionCookie(request);
         authCookie.ifPresent(cookie -> sessionService.delete(cookie.getValue()));
+        var cookies = HttpRequestHandler.getSessionCookie(request);
+        cookies.ifPresent(cookie -> cookie.setMaxAge(0));
 
     }
 

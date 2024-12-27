@@ -29,15 +29,19 @@ public class ProfileServlet extends HttpServlet{
                 response.setStatus(400);
                 return;
             }
-            Integer page = Integer.valueOf(request.getParameter("page"));
-
             String result="";
-
+            String userId =(String) request.getAttribute("id");
             switch(type){
                 case "articles":{
-                    String userId =(String) request.getAttribute("id");
+                    Integer page = Integer.valueOf(request.getParameter("page"));
                    ArticleBatchDto articleBatchDto = articleService.fetch(page,userId);
                    result = JsonMapper.mapTo(articleBatchDto);
+                   break;
+                }
+                case "profile":{
+                    UserDto userDto = authService.findById(userId);
+                    result = JsonMapper.mapTo(userDto);
+                    break;
                 }
             }
 
@@ -142,7 +146,7 @@ public class ProfileServlet extends HttpServlet{
         }
     }
     private Boolean isValid(String type){
-        return type.equals("articles");
+        return type.equals("articles") || type.equals("profile");
     }
 
 

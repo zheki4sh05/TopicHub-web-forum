@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 import { fetchHubs } from "../../../entities/hubs/api/request";
 import MainModal from "../../../shared/ConfirmModal/ui/Modal";
 import ModalCreation from './../../../shared/Complaint/ui/ModalCreation';
-function Article({ item = {}, mode, edit = false, handleEdit, handleDelete }) {
+function Article({ item = {}, mode, edit = false, handleDelete }) {
   const hubs = useSelector(getHubsList);
      useEffect(()=>{
     

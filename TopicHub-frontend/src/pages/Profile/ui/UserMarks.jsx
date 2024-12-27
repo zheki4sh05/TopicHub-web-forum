@@ -44,7 +44,6 @@ function UserMarks() {
             status={status}
             batch={articles}
             makeRequest={makeRequest}
-            select={0}
             edit={false}
           />
 

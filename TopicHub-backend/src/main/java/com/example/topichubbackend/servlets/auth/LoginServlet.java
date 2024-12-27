@@ -64,6 +64,14 @@ public class LoginServlet extends HttpServlet{
 
     }
 
+    public void doGet(HttpServletRequest request, HttpServletResponse resp) throws IOException {
+        var cookies = HttpRequestHandler.getSessionCookie(request);
+        if(cookies.isEmpty()){
+            resp.getWriter().write(String.valueOf( 0));
+        }else{
+            resp.getWriter().write(String.valueOf( 1));
+        }
+    }
     private Cookie createCookie(User user){
         UUID uuid = sessionService.createByUser(user);
 

@@ -53,15 +53,8 @@ function UserArticles({ edit }) {
   };
 
   useEffect(() => {
-
     makeRequest(1);
   }, []);
-
-  // useEffect(() => {
-  //   if (status == statusTypes.succeeded) {
-  //     dispatch(controlUserStatus(statusTypes.idle));
-  //   }
-  // }, [status]);
 
   return (
     <>
@@ -71,7 +64,6 @@ function UserArticles({ edit }) {
             status={status}
             batch={articles}
             makeRequest={makeRequest}
-            select={0}
             edit={true}
           />
 

@@ -1,31 +1,20 @@
 import { Box, createTheme } from "@mui/material";
 import MainBody from "../../mainBody/ui/MainBody";
-
 import { Outlet } from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
 import Header from "../../../processes/header/ui/Header";
+import LoadingUserData from "../../../processes/userData/ui/LoadingUserData";
+
+
 const theme = createTheme();
 function Layout() {
-    const authStatus = true
-  
-    const appStatus = true
-  
-  
-  
-     const handleLogOut = () => {};
-  
+
+
+
     return (
       <ThemeProvider theme={theme}>
-        <Box sx={{height:"100vh", width:"100%",bgcolor:"#F0F8FF", boxSizing:"border-box", overflow:"hidden", overflowY:"scroll"}}>
-          {
-           (authStatus !== true) ? 
-              <>
-              </>
-             : (appStatus !== true) ? 
-              // <LoadingUserData  />
-              <></>
-             : 
-                         
+        <LoadingUserData/>
+        <Box sx={{height:"100vh", width:"100%",bgcolor:"#F0F8FF", boxSizing:"border-box", overflow:"hidden", overflowY:"scroll"}}>                         
                 <Box
                   sx={{
                     display: "flex",
@@ -40,17 +29,10 @@ function Layout() {
                   }}
                 >
                   <Header/>
-  
-                  <MainBody>
+                    <MainBody>
                     <Outlet />
                   </MainBody>
-  
-                 
-            
                 </Box>
-          
-            
-          }
         </Box>
       </ThemeProvider>
     );

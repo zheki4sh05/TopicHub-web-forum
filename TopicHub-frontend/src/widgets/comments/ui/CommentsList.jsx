@@ -15,11 +15,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getComments, getStatusComments } from "../model/commentSlice";
 import statusTypes from "../../../app/util/statusTypes";
 import CachedIcon from '@mui/icons-material/Cached';
+import { isAuth } from "../../../pages/Profile/model/userSlice";
+import { PathConstants } from "../../../app/pathConstants";
+import { Link } from "react-router";
 function CommentsList({ article }) {
   const [comment, setComment] = useState({ value: "" });
   const [create, setCreate] = useState(false);
   const [parentId,setParentId] = useState(null)
-
+  const auth = useSelector(isAuth)
   const makeRequest=()=>{
     dispatch(fetchComments(
 
@@ -98,7 +101,7 @@ function CommentsList({ article }) {
               >
                 Отменить
               </Button>
-            ) : (
+            ) : auth ? (
               <Button
                 variant="outlined"
                 size="small"
@@ -108,7 +111,17 @@ function CommentsList({ article }) {
               >
                 Написать
               </Button>
-            )}
+            )
+            :(
+
+              <Link to={{ pathname: PathConstants.LOGIN }} >
+              <Typography>Авторизация</Typography>
+              </Link>
+            )
+          
+
+          
+          }
           </Stack>
 
           {create ? (

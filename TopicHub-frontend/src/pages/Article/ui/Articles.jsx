@@ -9,7 +9,7 @@ import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
 
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import { fetchFeed, fetchHubs } from "../api/requests";
 import { getFeed, getFeedStatus } from "../model/feedSlice";
 import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
@@ -23,16 +23,13 @@ function Articles() {
   const dispatch = useDispatch();
   const feedStatus = useSelector(getFeedStatus);
   const feed = useSelector(getFeed);
-
-
   const [select, setSelect] = useState(0);
-
   const handleClick = (id) => {
     setSelect(id);
   };
 
   useEffect(()=>{
-    makeRequest(select, 1);
+    makeRequest(1);
   },[select])
 
   const getRequestBody=(select, page)=>{
@@ -52,29 +49,21 @@ function Articles() {
     }
   }
 
-  const makeRequest = (select, page) => {
+  const makeRequest = (page) => {
     dispatch(
       fetchFeed(getRequestBody(select, page))
     );
   };
 
+
+
   useEffect(() => {
-    makeRequest(select, 1);
+    makeRequest(1);
   }, []);
 
   const handlePageChange = (event, page) => {
-    
-    makeRequest(select, page);
+    makeRequest(page);
   };
-
-    useEffect(()=>{
-  
-      if(hubs.length==0){
-        dispatch(fetchHubs())
-      }
-       
-    },[])
-
   return (
     <Box
       sx={{
@@ -111,10 +100,10 @@ function Articles() {
             </Typography>
           </Button>
 
-          {hubs.map((item, index) => (
+          {hubs.map((item) => (
             <Button
               variant="text"
-              key={index}
+              key={item.id}
               onClick={() => handleClick(item.id)}
             >
               <Typography
@@ -135,8 +124,7 @@ function Articles() {
       status={feedStatus}
       batch={feed}
       makeRequest={makeRequest}
-      select={select}
-
+  
       />
 
 

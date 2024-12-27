@@ -6,16 +6,6 @@ import { delComplaint, fetchComplaints, rejectComplaint } from "../../api/reques
 
 function ComplaintsList({list}) {
     const dispatch = useDispatch()
-
-    useEffect(()=>{
-
-        dispatch(fetchComplaints({
-            type:"article"
-        }))
-
-    },
-    [])
-
     const handleReject=(id)=>{
         dispatch(
             rejectComplaint({

@@ -6,8 +6,8 @@ import { PathConstants } from "./../../../app/pathConstants";
 import { useSelector } from "react-redux";
 import { getUser, isAuth } from "../../../pages/Profile/model/userSlice";
 import statusTypes from "../../../app/util/statusTypes";
-
-function Header() {
+import {memo} from 'react'
+const Header  = memo(function Header() {
   const location = useLocation();
 
   const user = useSelector(getUser);
@@ -139,6 +139,6 @@ function Header() {
       </Grid2>
     </Box>
   );
-}
+});
 
 export default Header;

@@ -60,8 +60,7 @@ public class ArticleDao extends BaseDao{
     public Long calcTotalEntitiesCount(){
         String countQ = "SELECT COUNT(a.id) FROM Article a";
         Query countQuery = this.em.createQuery(countQ, Long.class);
-        Long countResults =(Long) countQuery.getSingleResult();
-        return countResults;
+        return (Long) countQuery.getSingleResult();
     }
 
     public Integer getPageNumber(Long count, Integer pageSize){
@@ -69,9 +68,7 @@ public class ArticleDao extends BaseDao{
     }
 
     public Integer getLastPageNumber(Long count){
-
         return getPageNumber(count, BATCH_SIZE);
-
     }
 
     

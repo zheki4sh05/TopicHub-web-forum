@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
 import { signin, signup } from "../../Login/api/requests";
-import { delUserArticle, fetchAuthorArticles, fetchUserArticles, fetchUserBookmarks, fetchUserFollowers, fetchUserSubscriptions, logoutUser, updateUserData } from "../api/requests";
+import { delUserArticle, fetchUserFollowers, fetchUserSubscriptions, logoutUser, updateUserData } from "../api/requests";
+import { checkCookie, userData } from "../../../processes/userData/api/request";
 
 //----state---
 const initialState = {
@@ -99,9 +100,44 @@ const userSlice = createSlice({
     })
     .addCase(signin.rejected, (state, action) => {
       state.status = "failed";
+      state.auth = false;
       state.error = action.payload.error;
     })
   //----------------------------------------
+      //---проверка cookies-------------
+      .addCase(checkCookie.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(checkCookie.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        console.log(action.payload)
+        if(action.payload==1){
+          state.auth = true;
+        }else{
+          state.auth = false;
+        }
+        state.error=null
+      })
+      .addCase(checkCookie.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error;
+      })
+    //----------------------------------------
+        //---получение данных пользователя-------------
+        .addCase(userData.pending, (state, action) => {
+          state.status = "loading";
+        })
+        .addCase(userData.fulfilled, (state, action) => {
+          state.status = "succeeded";
+          state.user = action.payload
+          state.error=null
+        })
+        .addCase(userData.rejected, (state, action) => {
+          state.status = "failed";
+          state.error = action.error;
+          state.auth = false
+        })
+      //----------------------------------------
     //---выход-------------
     .addCase(logoutUser.pending, (state, action) => {
       state.statusLogout = "loading";

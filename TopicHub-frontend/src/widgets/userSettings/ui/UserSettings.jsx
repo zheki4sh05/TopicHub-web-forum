@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, isAuth, setActiveUser } from "../../../pages/Profile/model/userSlice";
 import { PathConstants } from './../../../app/pathConstants';
+import { SignalCellularNull } from "@mui/icons-material";
 
 function UserSettings() {
   const dispatch = useDispatch()
@@ -45,6 +46,12 @@ function UserSettings() {
           aria-describedby={id}
         >
           <AccountCircleIcon color="white" />
+          <Typography variant="subtitle1" sx={{marginLeft:"5px"}}>{
+            auth ? 
+            user.login:
+            null
+          }</Typography>
+          
         </IconButton>
         <Popover
   id={id}
