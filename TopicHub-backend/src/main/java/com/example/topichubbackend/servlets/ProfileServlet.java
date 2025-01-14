@@ -31,17 +31,15 @@ public class ProfileServlet extends HttpServlet{
             }
             String result="";
             String userId =(String) request.getAttribute("id");
-            switch(type){
-                case "articles":{
+            switch (type) {
+                case "articles" -> {
                     Integer page = Integer.valueOf(request.getParameter("page"));
-                   ArticleBatchDto articleBatchDto = articleService.fetch(page,userId);
-                   result = JsonMapper.mapTo(articleBatchDto);
-                   break;
+                    ArticleBatchDto articleBatchDto = articleService.fetch(page, userId);
+                    result = JsonMapper.mapTo(articleBatchDto);
                 }
-                case "profile":{
+                case "profile" -> {
                     UserDto userDto = authService.findById(userId);
                     result = JsonMapper.mapTo(userDto);
-                    break;
                 }
             }
 

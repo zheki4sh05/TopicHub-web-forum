@@ -1,8 +1,10 @@
 package com.example.topichubbackend.util;
 
 import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
+import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.util.factories.*;
 import jakarta.servlet.http.*;
 
@@ -28,4 +30,6 @@ public class HttpRequestHandler {
         Session session = sessionDao.findById(uuid).orElseThrow(BadRequestException::new);
         return session.getUser();
     }
+
+
 }

@@ -7,8 +7,8 @@ import java.util.*;
 
 public class CustomValidator {
 
-   private  ValidatorFactory factory;
-   private Validator validator;
+   private final ValidatorFactory factory;
+   private final Validator validator;
 
     {
         factory = Validation.buildDefaultValidatorFactory();

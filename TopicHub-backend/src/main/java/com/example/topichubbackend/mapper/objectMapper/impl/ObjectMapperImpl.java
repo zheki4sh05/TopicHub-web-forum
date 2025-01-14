@@ -39,6 +39,7 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .value(item.getValue())
                 .name(item.getName())
                 .type(item.getType())
+                .created(item.getCreated())
                 .build();
 
 
@@ -74,12 +75,11 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .authorDto(mapFrom(comment.getAuthor()))
                 .parentId(comment.getParentComment()!=null ? comment.getParentComment().getId().toString() : null)
                 .build();
-
+        System.out.println(comment.getMessage() + " "+comment.getReplies().size());
 
         if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
             List<CommentDto> replyDtos = new ArrayList<>();
             for (Comment reply : comment.getReplies()) {
-
                 replyDtos.add(mapFrom(reply, aLong, processedIds));
             }
             dto.setReplies(replyDtos);

@@ -74,7 +74,8 @@ create table if not exists articlepart
     id      integer,
     uuid    uuid                                                           not null
     constraint articlepart_pkey
-    primary key
+    primary key,
+    created bigint
     );
 
 alter sequence "articlePart_article_seq" owned by articlepart.article;

@@ -24,7 +24,8 @@ const api={
     },
     sandbox:{
         url :base.concat("sandbox"),
-        create:""
+        create:"",
+        update:""
     },
     search:{
         url :base.concat("search"),

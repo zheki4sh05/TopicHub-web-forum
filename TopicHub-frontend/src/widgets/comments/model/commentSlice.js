@@ -105,7 +105,7 @@ const initialState = {
         .addCase(fetchComments.fulfilled, (state, action) => {
           state.status = "succeeded";
 
-          state.list = action.payload
+          state.list = action.payload.filter(item=>item!=null)
 
           state.error = null
         })

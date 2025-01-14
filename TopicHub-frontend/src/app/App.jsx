@@ -4,7 +4,6 @@ import Page404 from "../pages/404/ui/Page404";
 import { PathConstants } from "./pathConstants";
 import Articles from "../pages/Article/ui/Articles";
 import Profile from "../pages/Profile/ui/Profile";
-import CreateArticle from "../pages/CreateArticle/ui/CreateArticle";
 import ArticleView from "../pages/ArticleView/ui/ArticleView";
 import ManageArticle from "../pages/ManagerArticle/ui/ManageArticle";
 import Login from "../pages/Login/ui/Login";
@@ -13,6 +12,8 @@ import SearchPage from "../pages/SearchPage/ui/SearchPage";
 import ManageAuthor from "../pages/ManageAuthor/ui/ManageAuthor";
 import ManageComments from './../pages/ManageComments/api/ManageComments';
 import ManageHubs from "../pages/ManageHubs/ui/ManageHubs";
+import CreateArticle from "../pages/Sandbox/ui/CreateArticle";
+import EditArticle from "../pages/Sandbox/ui/EditArticle";
 
 
 
@@ -69,6 +70,10 @@ function App() {
         {
           path:PathConstants.SEARCH,
           element:<SearchPage />,
+        },
+        {
+          path:PathConstants.EDIT,
+          element:<EditArticle/>,
         }
 
      

@@ -18,6 +18,7 @@ import {
   getSubscriptionStatus,
   manageBookmarkStatus,
   manageSubscriptionStatus,
+  setArticle,
 } from "../../../features/Article/model/articleSlice";
 import Article from "../../../features/Article/ui/Article";
 import CommentsList from "../../../widgets/comments/ui/CommentsList";
@@ -50,6 +51,8 @@ function ArticleView() {
   const auth = useSelector(isAuth)
   const subscribeStatus = useSelector(getSubscriptionStatus);
   const bookmarStatus = useSelector(getBookmarksStatus);
+const navigate  = useNavigate()
+  
 
   const dispatch = useDispatch();
 
@@ -149,7 +152,7 @@ function ArticleView() {
             gap: "10px",
           }}
         >
-          <Article item={article} mode={"long"} />
+          <Article item={article} mode={"long"}/>
 
           <MenuWrapper>
             <Box

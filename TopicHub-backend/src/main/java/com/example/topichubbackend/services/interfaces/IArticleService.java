@@ -18,4 +18,6 @@ public interface IArticleService {
     ArticleBatchDto fetch(Integer page, String userId, String otherUserId);
 
     void deleteAdmin(String targetId);
+
+    void update(ArticleDto updatedArticle, String id);
 }

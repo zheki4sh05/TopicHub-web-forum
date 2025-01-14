@@ -14,7 +14,7 @@ import { formatDateFromTimestamp } from "../../../app/util/date";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
-import { controlArticleStatus, getArticleStatus, getComplaintStatus, manageComplaintStatus, setArticle } from "../model/articleSlice";
+import { getComplaintStatus, manageComplaintStatus, setArticle } from "../model/articleSlice";
 import ReactionBox from "../../../shared/ReactionBox/ui/ReactionBox";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 import { fetchHubs } from "../../../entities/hubs/api/request";
 import MainModal from "../../../shared/ConfirmModal/ui/Modal";
 import ModalCreation from './../../../shared/Complaint/ui/ModalCreation';
-function Article({ item = {}, mode, edit = false, handleDelete }) {
+function Article({ item = {}, mode, edit = false, handleDelete, handleEdit }) {
   const hubs = useSelector(getHubsList);
      useEffect(()=>{
     
@@ -138,12 +138,18 @@ function Article({ item = {}, mode, edit = false, handleDelete }) {
         {mode == "long" && edit ? (
           
             <Box sx={{ display: "flex", justifyContent: "space-between",marginBottom:"15px" }}>
-              <IconButton onClick={handleEdit} >
+                    <Link
+              style={{ textDecoration: "none" }}
+              to={{ pathname: PathConstants.EDIT }}
+            >
+              <IconButton  >
                 <EditIcon />
               </IconButton>
+            </Link>
+              
 
-              <IconButton>
-                <DeleteIcon onClick={handleDelete}/>
+              <IconButton  onClick={()=>handleDelete(item)}>
+                <DeleteIcon/>
               </IconButton>
             </Box>
          

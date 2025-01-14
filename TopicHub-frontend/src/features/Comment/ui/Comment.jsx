@@ -14,13 +14,6 @@ function Comment({ item, handleComment, level=0 }) {
   const [update, setUpdate] = useState(false);
   const [value, setValue] = useState(item.value);
 
-
-  const c = {
-    likes: 2,
-    dislikes: 2,
-    comment: 2,
-  };
-
   const user = useSelector(getUser);
   const auth = useSelector(isAuth);
 
@@ -114,16 +107,16 @@ function Comment({ item, handleComment, level=0 }) {
         </Box>
       )}
 
-      {/* <ReactionBox
-        item={c}
+      <ReactionBox
+        item={item}
         handleLike={() => {}}
         handleDislike={() => {}}
         handleComment={(event) => handleComment(item.id)}
         showDanger={true}
         showEdit={true}
         showLikes={false}
-        showComment={false}
-      /> */}
+        showComment={true}
+      />
     </Box>
       {
 

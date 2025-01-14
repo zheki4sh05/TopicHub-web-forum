@@ -31,7 +31,10 @@ public class ArticlePart {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @Column(name = "created")
+    private Long created;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article")
     private Article article;
 }

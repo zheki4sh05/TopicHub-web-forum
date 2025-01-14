@@ -32,17 +32,14 @@ public class ArticleService implements IArticleService {
 
     private final CommentDao commentDao = DaoFactory.createCommentDao();
 
-    public static final String dilimiter = "|";
+    public static final String DILIMITER = "|";
     @Override
     public void create(ArticleDto articleDto, String id) {
-
         List<Hub> hubList = hubDao.fetchAll();
-
         User user = authDao.findById(id).orElseThrow(EntityNotFoundException::new);
-
         final Article article = Article.builder()
                 .theme(articleDto.getTheme())
-                .keyWords(String.join(dilimiter, articleDto.getKeyWords()))
+                .keyWords(String.join(DILIMITER, articleDto.getKeyWords()))
                 .created(Timestamp.valueOf(LocalDateTime.now()))
                 .author(user)
                 .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
@@ -51,13 +48,13 @@ public class ArticleService implements IArticleService {
        articleDao.save(article);
 
         articleDto.getList().forEach(item->{
-
             articleDao.save(ArticlePart.builder()
                     .uuid(UUID.randomUUID())
                     .id(item.getId())
                     .value(item.getValue())
                     .name(item.getName())
                     .type(item.getType())
+                    .created(item.getCreated())
                     .article(article)
                     .build());
         });
@@ -205,6 +202,13 @@ public class ArticleService implements IArticleService {
         articleDao.delete(article);
     }
 
+    @Override
+    public void update(ArticleDto updatedArticle, String id) {
+        Article delarticle = articleDao.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException("Статья не найдена"));
+        articleDao.delete(delarticle);
+        create(updatedArticle, id);
+    }
+
     private List<ArticleDto> gteOtherArticles(Integer page, String userId, String otherUserId) {
         List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,otherUserId );
         return doMapping(articles,userId);
@@ -249,7 +253,7 @@ public class ArticleService implements IArticleService {
     }
 
     private ArticleDto getLikesAndDislikes(Article item, String userId){
-        var dto = objectMapper.mapFrom(item, dilimiter);
+        var dto = objectMapper.mapFrom(item, DILIMITER);
         Long[] list= reactionDao.getLikesAndDislikes(item.getId());
         dto.setLikes(list[0]);
         dto.setDislikes(list[1]);

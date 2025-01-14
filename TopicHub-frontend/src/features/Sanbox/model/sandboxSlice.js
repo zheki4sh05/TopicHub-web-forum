@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
-import ApiRequestCreator from "../../../app/util/requestFactory";
-import api from "../../../app/util/apiPath";
 import { createArticle } from "../api/requests";
 //----state---
 const initialState = {
+  id:"",
   theme:"",
   hub:null,
   keywords:[],
@@ -50,19 +49,15 @@ const initialState = {
 //-------------
 
 
-// const apiFactory = new ApiRequestCreator(DomainNames.sandbox, api.article.url);
-
-// //--- create----
-// // export const createArticle = apiFactory.createPostRequest(api.article.create);
-// //----------------------
-
 const sandboxSlice = createSlice({
   name: DomainNames.sandbox,
   initialState,
   reducers: {
+    setId(state,action){
+      state.id = action.payload
+  },
     saveTheme(state,action){
-      
-        state.theme = action.payload.theme
+        state.theme = action.payload
     },
     saveItem(state, action) {
 
@@ -73,6 +68,10 @@ const sandboxSlice = createSlice({
       }else{
         state.list.push(action.payload);
       }
+    },
+    saveAllItems(state, action) {
+
+      state.list=action.payload
     },
     setKeywords(state,action){
     
@@ -104,8 +103,6 @@ const sandboxSlice = createSlice({
       })
       .addCase(createArticle.fulfilled, (state, action) => {
         state.status = "succeeded";
-
-       
       })
       .addCase(createArticle.rejected, (state, action) => {
         state.status = "failed";
@@ -115,7 +112,9 @@ const sandboxSlice = createSlice({
   },
 });
 
-
+export function getSandboxId(state) {
+  return state[DomainNames.sandbox].id;
+}
 export function getSandboxList(state) {
   return state[DomainNames.sandbox].list;
 }
@@ -139,6 +138,6 @@ export function getSandboxComponents(state) {
     return state[DomainNames.sandbox].theme.trim().length!=0 && state[DomainNames.sandbox].list.length!=0 && state[DomainNames.sandbox].list[0].value.length!=0 && state[DomainNames.sandbox].hub!=null;
   }
 
-export const { saveItem,delItem,saveTheme,setKeywords,resetSandBox,setHub } = sandboxSlice.actions;
+export const { saveItem,delItem,saveTheme,setKeywords,resetSandBox,setHub, saveAllItems,setId } = sandboxSlice.actions;
 
 export default sandboxSlice.reducer;

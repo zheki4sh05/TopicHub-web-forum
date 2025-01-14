@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { getUser, isAuth } from "../../../pages/Profile/model/userSlice";
 import statusTypes from "../../../app/util/statusTypes";
 import {memo} from 'react'
+import LanguageSelect from "../../../features/Language/ui/LanguageSelect";
 const Header  = memo(function Header() {
   const location = useLocation();
 
@@ -16,7 +17,7 @@ const Header  = memo(function Header() {
 
   const showSearchBox=(path)=>{
 
-    const names=[PathConstants.ARTICLE, PathConstants.PROFILE, PathConstants.SEARCH]
+    const names=[PathConstants.ARTICLE, PathConstants.PROFILE, PathConstants.SEARCH, PathConstants.HOME]
 
     if(names.includes(path)){
       return  <SearchBox />
@@ -133,6 +134,7 @@ const Header  = memo(function Header() {
           </Link>
               </Box>
               <UserSettings />
+              <LanguageSelect/>
             </Box>
           </Box>
         </Grid2>

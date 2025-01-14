@@ -2,7 +2,7 @@ export const PathConstants = {
     HOME: "/",
     LOGIN:"/login",
     ARTICLE: "/articles",
-    CREATE_ARTICLE:"/create-article",
+    CREATE_ARTICLE:"/article/create",
     PROFILE: "/profile",
     VIEW:"/articles/view",
     MANAGE_ARTICLES:"/admin/articles",
@@ -10,5 +10,6 @@ export const PathConstants = {
     MANAGE_COMMENTS:"/admin/comments",
     MANAGE_HUBS:"/admin/hubs",
     PROFILE_ARTICLE:"/profile/article",
-    SEARCH:"/search"
+    SEARCH:"/search",
+    EDIT:"/article/edit"
 }

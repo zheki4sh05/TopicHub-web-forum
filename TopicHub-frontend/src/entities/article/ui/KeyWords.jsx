@@ -50,8 +50,8 @@ function KeyWords() {
             justifyContent: "flex-start",
           }}
         >
-          {list.map((item, index) => (
-            <Box key={index} sx={{ marginBottom: "5px", marginRight: "5px" }}>
+          {list.map((item) => (
+            <Box key={item.id} sx={{ marginBottom: "5px", marginRight: "5px" }}>
               <Chip  label={item.name} onDelete={(e)=>handleDelete(e, item)} />
             </Box>
           ))}

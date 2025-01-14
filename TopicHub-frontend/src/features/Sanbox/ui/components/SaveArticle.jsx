@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   getHub,
+  getSandboxId,
   getSandboxList,
   getSandboxStatus,
   getSandboxWords,
@@ -14,19 +15,17 @@ import { useEffect, useState } from "react";
 import statusTypes from "../../../../app/util/statusTypes";
 import { useNavigate } from "react-router";
 import { PathConstants } from "../../../../app/pathConstants";
-import { createArticle } from "../../api/requests";
 
-function SaveArticle() {
-    const navigate = useNavigate();
+function SaveArticle({ action }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const empty = useSelector(isEmpty);
+  const id = useSelector(getSandboxId)
   const theme = useSelector(getTheme);
   const keyWords = useSelector(getSandboxWords);
   const list = useSelector(getSandboxList);
-  const hub = useSelector(getHub)
+  const hub = useSelector(getHub);
   const sandboxStatus = useSelector(getSandboxStatus);
-
-
   const [backDrop, setBackdrop] = useState(false);
   const handleClose = () => {
     setBackdrop(false);
@@ -36,34 +35,36 @@ function SaveArticle() {
   };
 
   const handleSave = () => {
-   
-    dispatch(
-      createArticle({
-        theme,
-        keyWords: keyWords.map((word) => word.name),
-        list,
-        hub:hub.id
-      })
-    );
+    action({
+      id,
+      theme,
+      keyWords: keyWords.map((word) => word.name),
+      list,
+      hub: hub,
+    });
   };
 
   useEffect(() => {
     if (sandboxStatus == statusTypes.loading) {
-        handleOpen()
+      handleOpen();
     } else if (sandboxStatus == statusTypes.succeeded) {
-        handleClose()
-        dispatch(resetSandBox())
-        
-        navigate(PathConstants.PROFILE)
-    }else if (sandboxStatus == statusTypes.failed){
-        handleClose()
+      handleClose();
+      dispatch(resetSandBox());
 
+      navigate(PathConstants.PROFILE);
+    } else if (sandboxStatus == statusTypes.failed) {
+      handleClose();
     }
   }, [sandboxStatus]);
 
   return (
     <>
-      <Button variant="contained" disabled={!empty} onClick={handleSave} sx={{marginBottom:"20px"}}>
+      <Button
+        variant="contained"
+        disabled={!empty}
+        onClick={handleSave}
+        sx={{ marginBottom: "20px" }}
+      >
         Опубликовать
       </Button>
 
