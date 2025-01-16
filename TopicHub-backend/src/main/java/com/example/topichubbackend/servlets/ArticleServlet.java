@@ -19,19 +19,16 @@ public class ArticleServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try{
-
             String userId = request.getParameter("userId");
-            Integer page = Integer.valueOf(request.getParameter("page"));
             String type = request.getParameter("type");
+            ArticleFilterDto articleFilterDto = parseFilterParams(request);
             ArticleBatchDto articleBatchDto;
-
             if(type.equals("author")){
                 String otherUserId = request.getParameter("otherUserId");
-                 articleBatchDto = articleService.fetch(page,userId, otherUserId);
+                articleBatchDto = articleService.fetch(articleFilterDto,userId,otherUserId);
             }else{
-                Integer hub = Integer.valueOf(request.getParameter("hub"));
-                 articleBatchDto = articleService.fetch(hub,page,userId);
-
+                articleFilterDto.setParam(Integer.valueOf(request.getParameter("hub")));
+                 articleBatchDto = articleService.fetch(articleFilterDto,userId);
             }
             response.getWriter().write(JsonMapper.mapTo(articleBatchDto));
             response.setStatus(200);
@@ -44,6 +41,16 @@ public class ArticleServlet extends HttpServlet {
             response.setStatus(400);
         }
 
+    }
+
+    private ArticleFilterDto parseFilterParams(HttpServletRequest request) {
+        return ArticleFilterDto.builder()
+                .month(request.getParameter("month"))
+                .year(request.getParameter("year"))
+                .rating(request.getParameter("rating"))
+                .page(Integer.valueOf(request.getParameter("page")))
+                .hub(Integer.valueOf(request.getParameter("hub")))
+                .build();
     }
 
 }

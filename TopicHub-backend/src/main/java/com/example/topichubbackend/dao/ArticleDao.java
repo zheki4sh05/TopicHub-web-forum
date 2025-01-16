@@ -1,12 +1,15 @@
 package com.example.topichubbackend.dao;
 
+import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import jakarta.persistence.*;
 import jakarta.persistence.Query;
+import jakarta.persistence.criteria.*;
 import org.hibernate.search.mapper.orm.*;
 import org.hibernate.search.mapper.orm.session.*;
 
 
+import java.sql.*;
 import java.util.*;
 
 
@@ -17,6 +20,8 @@ public class ArticleDao extends BaseDao{
     private final Integer BATCH_SIZE  = 15;
     public final static String authorArticles = "FROM Article a JOIN FETCH a.author WHERE a.author.id = :id ORDER BY a.created DESC";
     public final static String bookmarks = "FROM Article a JOIN Bookmark b ON a.id = b.article.id and b.author.id = :id";
+
+    private FilterQueryFactory filterQueryFactory;
 
     private final SearchSession searchSession;
     public ArticleDao(EntityManager entityManager) {
@@ -35,23 +40,21 @@ public class ArticleDao extends BaseDao{
         return results;
     }
 
-    public List<Article> getSortedAndPaginated(Integer pageNumber, Integer id){
+    public List<Article> getSortedAndPaginated(ArticleFilterDto articleFilterDto, Integer id){
 
         Query query = this.em.createQuery("FROM Article a JOIN FETCH a.author WHERE a.hub.id = :id ORDER BY a.created DESC", Article.class);
         query.setParameter("id", id);
-        query.setFirstResult((pageNumber - 1) * BATCH_SIZE);
+        query.setFirstResult((articleFilterDto.getPage() - 1) * BATCH_SIZE);
         query.setMaxResults(BATCH_SIZE);
-        List<Article> results = query.getResultList();
-        return results;
+        return (List<Article>) query.getResultList();
 
     }
 
-    public List<Article> getSortedAndPaginated(Integer page) {
-
-        EntityGraph<Article> entityGraph = this.em.createEntityGraph(Article.class);
-        String sql = "FROM Article a JOIN FETCH a.author ORDER BY a.created DESC";
-        TypedQuery<Article> query = this.em.createQuery(sql, Article.class);
-        query.setFirstResult((page - 1) * BATCH_SIZE);
+    public List<Article> getSortedAndPaginated(ArticleFilterDto articleFilterDto) {
+        filterQueryFactory = new FilterQueryFactory(this.em.getCriteriaBuilder());
+        EntityGraph<Article> entityGraph = em.createEntityGraph(Article.class);
+        TypedQuery<Article> query = em.createQuery(filterQueryFactory.createQuery(articleFilterDto, FilterJoin.DEFAULT, null));
+        query.setFirstResult((articleFilterDto.getPage() - 1) * BATCH_SIZE);
         query.setMaxResults(BATCH_SIZE);
         query.setHint("jakarta.persistence.fetchgraph", entityGraph);
         return query.getResultList();
@@ -159,15 +162,18 @@ public class ArticleDao extends BaseDao{
         return (Long) countQuery.getSingleResult();
     }
 
-    public List<Article> getSubscribeArticles(Integer page, String userId) {
+    public List<Article> getSubscribeArticles(ArticleFilterDto articleFilterDto, String userId) {
 
-        Query query = this.em.createQuery(" FROM Article a JOIN Subscription s ON s.follower.id = :id and a.author.id = s.author.id", Article.class);
-        query.setParameter("id", UUID.fromString(userId));
-        query.setFirstResult((page - 1) * BATCH_SIZE);
+        //Query query = this.em.createQuery(filterQueryFactory.createQuery(articleFilterDto));
+        filterQueryFactory = new FilterQueryFactory(this.em.getCriteriaBuilder());
+        Query query = this.em.createQuery(filterQueryFactory.createQuery(articleFilterDto, FilterJoin.SUBSCRIPTION, UUID.fromString(userId)));
+//        query.setParameter("id", UUID.fromString(userId));
+        query.setFirstResult((articleFilterDto.getPage() - 1) * BATCH_SIZE);
         query.setMaxResults(BATCH_SIZE);
-        List<Article> results = query.getResultList();
-        return results;
+        return query.getResultList();
 
     }
+
+
 
 }

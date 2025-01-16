@@ -31,4 +31,8 @@ public class ServiceFactory {
     public static ArticleService getArticleService() {
         return ArticleService.getInstance();
     }
+
+    public static EmailService getEmailService(){
+        return EmailService.getInstance();
+    }
 }

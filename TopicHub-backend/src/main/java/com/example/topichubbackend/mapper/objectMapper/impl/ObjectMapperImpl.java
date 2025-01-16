@@ -75,8 +75,6 @@ public class ObjectMapperImpl implements IObjectMapper {
                 .authorDto(mapFrom(comment.getAuthor()))
                 .parentId(comment.getParentComment()!=null ? comment.getParentComment().getId().toString() : null)
                 .build();
-        System.out.println(comment.getMessage() + " "+comment.getReplies().size());
-
         if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
             List<CommentDto> replyDtos = new ArrayList<>();
             for (Comment reply : comment.getReplies()) {

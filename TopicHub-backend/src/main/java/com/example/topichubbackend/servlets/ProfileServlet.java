@@ -74,7 +74,6 @@ public class ProfileServlet extends HttpServlet{
                     case "author":{
                         try{
                             authService.delete(userId);
-
                         }catch (EntityNotFoundException e){
                             response.getWriter().write(JsonMapper.mapTo(ErrorDto.builder()
                                     .code(404)

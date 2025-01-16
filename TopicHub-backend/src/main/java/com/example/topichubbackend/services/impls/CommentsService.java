@@ -16,26 +16,24 @@ import java.util.*;
 public class CommentsService implements ICommentsService {
 
     private final static CommentsService commentsService = new CommentsService();
+
     private CommentsService() { }
     public static CommentsService  getInstance(){
         return commentsService;
     }
-
+    private final IEmailService emailService = ServiceFactory.getEmailService();
     private final ArticleDao articleDao = DaoFactory.createArticleDao();
     private final AuthDao authDao = DaoFactory.createAuthDao();
     private final CommentDao commentDao = DaoFactory.createCommentDao();
     private final IObjectMapper objectMapper = new ObjectMapperImpl();
-
     @Override
     public List<CommentDto> fetch(String article) {
-
         List<Comment> comments = commentDao.findAllByArticleId(Long.valueOf(article));
         return mapToDtoList(comments,Long.valueOf(article));
     }
 
     @Override
     public CommentDto create(CommentDto commentDto, String userId) {
-
         Article article = articleDao.findById(commentDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
         User author = authDao.findById(userId).orElseThrow(EntityExistsException::new);
         Comment comment = Comment.builder()
@@ -51,22 +49,20 @@ public class CommentsService implements ICommentsService {
             );
         }
         commentDao.save(comment);
+        emailService.sendCommentNotification(comment, article.getAuthor());
         return objectMapper.mapFrom(comment, article.getId(), new HashSet<>());
     }
 
     @Override
     public CommentDto update(CommentDto commentDto, String userId) {
-
         Comment comment = commentDao.findByUuid(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
             comment.setMessage(commentDto.getValue());
             articleDao.merge(comment);
-
             return objectMapper.mapFrom(comment, commentDto.getArticleId(), new HashSet<>());
         }else{
             throw new EntityNotFoundException();
         }
-
     }
 
     @Override

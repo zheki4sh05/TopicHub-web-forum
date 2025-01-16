@@ -9,17 +9,17 @@ import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
 
-import {useEffect, useState } from "react";
-import { fetchFeed, fetchHubs } from "../api/requests";
+import { useEffect, useState } from "react";
+import { fetchFeed } from "../api/requests";
 import { getFeed, getFeedStatus } from "../model/feedSlice";
 import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
 import { getUser, isAuth } from "../../Profile/model/userSlice";
-
+import ArticleFilterBar from "../../../features/Filter/ui/ArticleFilterBar";
 
 function Articles() {
   const hubs = useSelector(getHubsList);
-  const user = useSelector(getUser)
-  const auth = useSelector(isAuth)
+  const user = useSelector(getUser);
+  const auth = useSelector(isAuth);
   const dispatch = useDispatch();
   const feedStatus = useSelector(getFeedStatus);
   const feed = useSelector(getFeed);
@@ -28,34 +28,37 @@ function Articles() {
     setSelect(id);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     makeRequest(1);
-  },[select])
+  }, [select]);
 
-  const getRequestBody=(select, page)=>{
-    if(auth){
+  const getRequestBody = (select, page) => {
+    if (auth) {
       return {
         type: "articles",
         page: page,
         hub: select,
-        userId:user.id
-      }
-    }else{
+        userId: user.id,
+      };
+    } else {
       return {
         type: "articles",
         page: page,
-        hub: select
-      }  
+        hub: select,
+      };
     }
+  };
+
+  const makeFilterRequest=(filter)=>{
+    dispatch(fetchFeed({
+      ...filter,
+      ...getRequestBody(select, 1)
+    }));
   }
 
   const makeRequest = (page) => {
-    dispatch(
-      fetchFeed(getRequestBody(select, page))
-    );
+    dispatch(fetchFeed(getRequestBody(select, page)));
   };
-
-
 
   useEffect(() => {
     makeRequest(1);
@@ -119,14 +122,13 @@ function Articles() {
         </Box>
       </MenuWrapper>
 
-      <ArticlesList
-      
-      status={feedStatus}
-      batch={feed}
-      makeRequest={makeRequest}
-  
-      />
+      <ArticleFilterBar filterAction={makeFilterRequest} defaultRequest={makeRequest}/>    
 
+      <ArticlesList
+        status={feedStatus}
+        batch={feed}
+        makeRequest={makeRequest}
+      />
 
       <MenuWrapper>
         <Box
