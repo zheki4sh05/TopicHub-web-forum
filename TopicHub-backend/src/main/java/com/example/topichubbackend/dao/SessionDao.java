@@ -8,11 +8,8 @@ import java.util.*;
 
 public class SessionDao extends AbstractHibernateDao<UUID, Session> implements SessionRepository {
     public SessionDao(EntityManager entityManager) {
-        this.em = entityManager;
-    }
-
-    public Optional<Session> findById(UUID uuid) {
-        return super.findById(uuid);
+        super.em = entityManager;
+        super.persistentClass = Session.class;
     }
 
     @Override

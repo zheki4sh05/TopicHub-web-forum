@@ -58,7 +58,7 @@ public class ArticleDao extends AbstractHibernateDao<Long, Article> implements A
     public Long calcTotalEntitiesCount(){
         String countQ = "SELECT COUNT(a.id) FROM Article a";
         Query countQuery = this.em.createQuery(countQ, Long.class);
-        return (Long) countQuery.getResultList().get(0);
+        return (Long) countQuery.getSingleResult();
     }
 
     public Integer getPageNumber(Long count, Integer pageSize){

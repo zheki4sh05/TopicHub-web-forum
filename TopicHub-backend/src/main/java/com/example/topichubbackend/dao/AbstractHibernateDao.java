@@ -1,5 +1,4 @@
 package com.example.topichubbackend.dao;
-import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
 import jakarta.persistence.*;
 import lombok.extern.slf4j.*;
@@ -23,8 +22,17 @@ public abstract class AbstractHibernateDao<K,T> {
             tx.begin();
             action.accept(em);
             tx.commit();
+        }
+        catch(RollbackException e){
+            tx.rollback();
+            var throwable = e.getCause();
+            log.warn("transaction RollbackException exception: {}", e.getMessage());
+            if(throwable instanceof ConstraintViolationException exception){
+                checkViolationException(exception);
+            }
         } catch (RuntimeException e) {
             tx.rollback();
+
             throw e;
         }
     }
@@ -44,14 +52,16 @@ public abstract class AbstractHibernateDao<K,T> {
     }
 
     public Optional<T> findById(K id){
-        return Optional.ofNullable(em.find(persistentClass, id));
+        return Optional.ofNullable(em.find(persistentClass,id));
     }
 
     private void checkViolationException(ConstraintViolationException e){
         if(Objects.requireNonNull(e.getConstraintName()).equals("email_uniq")){
-            throw new SuchEmailAlreadyExistsException();
+            log.warn("constraint exception: {}", e.getConstraintName());
+            throw new EntityAlreadyExists(ErrorKey.EMAIL_CONFLICT.type());
         }else if(Objects.requireNonNull(e.getConstraintName()).equals("login_uniq")){
-            throw new SuchLoginAlreadyExistsException();
+            log.warn("constraint exception: {}", e.getConstraintName());
+            throw new EntityAlreadyExists(ErrorKey.EMAIL_CONFLICT.type());
         }
         log.warn("constraint exception: {}", e.getConstraintName());
     }

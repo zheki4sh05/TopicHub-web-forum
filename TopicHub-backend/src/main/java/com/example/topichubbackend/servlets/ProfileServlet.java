@@ -5,12 +5,14 @@ import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.services.interfaces.*;
+import com.example.topichubbackend.util.*;
 import com.example.topichubbackend.util.factories.*;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
 
 import java.io.*;
+import java.time.*;
 
 
 @WebServlet(urlPatterns = {"/profile"})
@@ -104,22 +106,18 @@ public class ProfileServlet extends HttpServlet{
             response.setStatus(200);
         }
         catch (BadRequestException e){
-            response.getWriter().write(JsonMapper.mapTo(ErrorDto.builder()
-                    .code(409)
-                    .message("Пользователь с таким email либо логином уже существует")
-                    .build()));
-            response.setStatus(409);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         } catch(EntityNotFoundException e){
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
+        } catch (RuntimeException e){
             response.getWriter().write(JsonMapper.mapTo(ErrorDto.builder()
-                    .code(404)
-                    .message("Пользователь с таким email не найден")
+                    .code(500)
+                    .localDate(LocalDateTime.now().toString())
+                    .message(e.getLocalizedMessage())
                     .build()));
-            response.setStatus(404);
-        } catch (RuntimeException e){ response.getWriter().write(JsonMapper.mapTo(ErrorDto.builder()
-                .code(400)
-                .message("Неверный формат запроса")
-                .build()));
-            response.setStatus(400);
+            response.setStatus(500);
         }
     }
 

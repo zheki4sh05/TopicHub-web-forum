@@ -9,6 +9,7 @@ import java.util.*;
 public class UserDao extends AbstractHibernateDao<UUID, User> {
     public UserDao(EntityManager entityManager) {
         super.em = entityManager;
+        super.persistentClass = User.class;
     }
     public Optional<User> findByEmailOrLogin(String data) {
         String hql = "FROM User u WHERE u.email = :email or u.login = :login";

@@ -3,7 +3,7 @@ import DomainNames from "../../../app/store/DomainNames";
 
 //----state---
 const initialState = {
-    languagesList:[{id:"1",name:"Русский"}, {id:"2",name:"English"}],
+    languagesList:[{id:"1",name:"Русский",code:"ru"}, {id:"2",name:"English",code:"en"}],
   activeLanguage: "1",
 };
 //-------------

@@ -15,6 +15,7 @@ import { getFeed, getFeedStatus } from "../model/feedSlice";
 import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
 import { getUser, isAuth } from "../../Profile/model/userSlice";
 import ArticleFilterBar from "../../../features/Filter/ui/ArticleFilterBar";
+import { useTranslation } from "react-i18next";
 
 function Articles() {
   const hubs = useSelector(getHubsList);
@@ -24,6 +25,7 @@ function Articles() {
   const feedStatus = useSelector(getFeedStatus);
   const feed = useSelector(getFeed);
   const [select, setSelect] = useState(0);
+   const { t } = useTranslation();
   const handleClick = (id) => {
     setSelect(id);
   };
@@ -90,7 +92,7 @@ function Articles() {
               variant="body1"
               style={{ textDecoration: select == 0 ? "none" : "underline" }}
             >
-              Все
+              {t('hub_all')}
             </Typography>
           </Button>
 
@@ -99,7 +101,7 @@ function Articles() {
               variant="body1"
               style={{ textDecoration: select == -1 ? "none" : "underline" }}
             >
-              Моя лента
+             {t('hub_my_feed')}
             </Typography>
           </Button>
 

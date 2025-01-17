@@ -1,11 +1,13 @@
 import MainSelect from "../../../shared/Select/ui/MainSelect";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
 import {
+
   getSandboxComponents,
-  getSandboxList,
   saveItem,
 } from "../model/sandboxSlice";
 function SandboxSelect() {
+  const {t} = useTranslation()
   const list = useSelector(getSandboxComponents);
  
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ function SandboxSelect() {
   return (
     <MainSelect
       list={list}
-      title={"Часть статьи"}
+      title={t('select_title')}
       defaultValue={list[0].id}
       handleChange={handleChange}
       reset={true}

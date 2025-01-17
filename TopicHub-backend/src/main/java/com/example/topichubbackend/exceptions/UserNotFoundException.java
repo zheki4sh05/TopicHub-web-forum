@@ -1,10 +1,13 @@
 package com.example.topichubbackend.exceptions;
 
-public class UserNotFoundException extends RuntimeException{
-    public UserNotFoundException(String message) {
-        super(message);
+public class UserNotFoundException extends ImplRuntimeException{
+    public UserNotFoundException() {
+
+        super(ErrorKey.USER_NOT_FOUND.type());
     }
 
-    public UserNotFoundException() {
+    @Override
+    public Integer getCode() {
+        return 404;
     }
 }

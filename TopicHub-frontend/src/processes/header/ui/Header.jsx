@@ -8,8 +8,10 @@ import { getUser, isAuth } from "../../../pages/Profile/model/userSlice";
 import statusTypes from "../../../app/util/statusTypes";
 import {memo} from 'react'
 import LanguageSelect from "../../../features/Language/ui/LanguageSelect";
+import { useTranslation } from "react-i18next";
 const Header  = memo(function Header() {
   const location = useLocation();
+  const {t} = useTranslation()
 
   const user = useSelector(getUser);
 
@@ -99,7 +101,7 @@ const Header  = memo(function Header() {
                       variant="subtitle1"
                       style={{ color: "white", textDecoration: "underline" }}
                     >
-                      Админ панель
+                      {t('link_admin')}
                     </Typography>
                   </Link>
                
@@ -117,7 +119,7 @@ const Header  = memo(function Header() {
               variant="subtitle1"
               style={{ color: "white", textDecoration: "underline" }}
             >
-              Создать тему
+              {t('link_create_theme')}
             </Typography>
           </Link>
                 
@@ -129,7 +131,7 @@ const Header  = memo(function Header() {
               variant="subtitle1"
               style={{ color: "white", textDecoration: "underline" }}
             >
-              Лента
+               {t('link_feed')}
             </Typography>
           </Link>
               </Box>

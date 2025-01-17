@@ -1,0 +1,28 @@
+package com.example.topichubbackend.exceptions;
+
+import java.lang.invoke.*;
+
+public enum ErrorKey {
+    WRONG_REQUEST_PARAM ("error.wrong_request_param"),
+    CONFLICT ("error.conflict"),
+
+    EMAIL_CONFLICT ("error.conflict_email"),
+    LOGIN_EMPTY("error.login_empty"),
+    EMAIL_INCORRECT("error.email_incorrect"),
+    USER_NOT_FOUND("error.user_not_found"),
+    SERVER_ERROR("error.server"),
+    USER_BLOCKED("error.user_blocked"),
+    NOT_FOUND("error.not_found"),
+    PASS_EMPTY("error.pass_empty"),
+    PASS_INCORRECT("error.pass_incorrect");
+
+    private String key;
+
+    ErrorKey(String type) {
+        this.key = type;
+    }
+    public String type() {
+        return key;
+    }
+
+}

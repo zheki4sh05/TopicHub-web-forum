@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTranslation } from "react-i18next";
 function ArticleFilterBar({filterAction,defaultRequest}) {
   const rating = [
     {
@@ -40,7 +41,7 @@ function ArticleFilterBar({filterAction,defaultRequest}) {
   const [open, setOpen] = useState(false);
   const [date,setDate] = useState(dayjs(new Date()))
   const [ratValue,setRatingValue] = useState(rating[rating.length-1].id)
-
+const { t } = useTranslation();
   
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -57,11 +58,9 @@ function ArticleFilterBar({filterAction,defaultRequest}) {
   }
   const dateChange=(value)=>{
     setDate(value)
-    console.log(date)
   }
   const ratingChange=(value)=>{
     setRatingValue(value)
-    console.log(value)
   }
   return (
     <>
@@ -82,7 +81,7 @@ function ArticleFilterBar({filterAction,defaultRequest}) {
             }
             onClick={() => setOpen(!open)}
           >
-            Фильтр
+              {t('btn_filter')}
           </Button>
         </MenuWrapper>
       </Box>
@@ -97,14 +96,14 @@ function ArticleFilterBar({filterAction,defaultRequest}) {
             startIcon={<CloseIcon />}
             onClick={() => setOpen(!open)}
           >
-            Закрыть
+            {t('btn_close')}
           </Button>
             </Box>
          
       
               <Stack direction="column" sx={{ marginTop: "5px" }}>
                 <Stack direction="column">
-                  <Typography>По времени</Typography>
+                  <Typography> {t('txt_filter_1')}</Typography>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateCalendar
                       onChange={dateChange}
@@ -115,15 +114,15 @@ function ArticleFilterBar({filterAction,defaultRequest}) {
                   </LocalizationProvider>
                 </Stack>
                 <Stack direction="column">
-                  <Typography>По рейтингу</Typography>
+                  <Typography> {t('txt_filter_2')}</Typography>
                   <MainRadio list={rating} defaultValue={ratValue} changeHandler={ratingChange}/>
                 </Stack>
                 <Stack direction="row" sx={{justifyContent:"space-between"}}>
                   <Button variant="outlined" color="secondary" onClick={()=> {setOpen(!open); defaultRequest(1)}}>
-                    Сбросить
+                  {t('btn_reset')}
                   </Button>
                 <Button variant="outlined" color="success" onClick={handleFilter}>
-                  Применить
+                {t('btn_confirm')}
                 </Button>
                 </Stack>
                 

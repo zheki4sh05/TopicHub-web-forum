@@ -5,6 +5,7 @@ import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.services.interfaces.*;
+import com.example.topichubbackend.util.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
 import lombok.extern.slf4j.*;
@@ -38,8 +39,8 @@ public class ArticleServlet extends HttpServlet {
             response.setStatus(200);
         }
         catch (EntityNotFoundException e){
-            response.getWriter().write(e.getMessage());
-            response.setStatus(404);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         }
         catch (NumberFormatException e){
             response.setStatus(400);

@@ -22,7 +22,6 @@ public class CustomValidator {
         for (ConstraintViolation<T> violation : violations) {
             messages.add(violation.getMessage());
         }
-
         checkList(messages);
     }
 

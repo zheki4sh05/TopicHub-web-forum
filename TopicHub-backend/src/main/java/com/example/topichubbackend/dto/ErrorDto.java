@@ -1,4 +1,6 @@
 package com.example.topichubbackend.dto;
+import com.example.topichubbackend.exceptions.*;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import java.time.*;
@@ -8,10 +10,9 @@ import java.time.*;
 @Data
 @Builder
 public class ErrorDto {
-    private Integer code;
+
+   private Integer code;
     private String message;
+    private String localDate;
 }
 
-//public record ErrorDto(Integer code, String message, LocalDateTime localDateTime) {
-//
-//}

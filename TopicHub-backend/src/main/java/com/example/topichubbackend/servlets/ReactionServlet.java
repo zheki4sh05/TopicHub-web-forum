@@ -31,7 +31,7 @@ public class ReactionServlet extends HttpServlet{
                 response.setStatus(400);
             }catch (RuntimeException e){
                 response.getWriter().write(e.getMessage());
-                response.setStatus(400);
+                response.setStatus(500);
             }
 
     }
@@ -46,7 +46,6 @@ public class ReactionServlet extends HttpServlet{
             response.setStatus(400);
         }else{
             try{
-
                 reactionService.removeReaction(type,userId,Long.valueOf(targetId));
                 response.getWriter().write(targetId);
                 response.setStatus(200);

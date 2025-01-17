@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import getRequestConfig from "./requestConfig";
 import addParams from "./paramsConfig";
-import statusTypes from "./statusTypes";
+
 
 class ApiRequestCreator {
   constructor(domainName, url) {
@@ -14,12 +14,11 @@ class ApiRequestCreator {
   
     let fullUrl = this.url.concat(uri);
     return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
-    
         let response;
         if (withParms) {
           response = await axios.get(
             fullUrl.concat(addParams(initial)),
-            getRequestConfig()
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
           );
         } else {
           response = await axios.get(fullUrl, getRequestConfig());
@@ -39,7 +38,7 @@ class ApiRequestCreator {
           const response = await axios.post(
             this.url.concat(uri),
             initial,
-            getRequestConfig()
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
           );
           return response.data;
         } catch (error) {
@@ -53,19 +52,19 @@ class ApiRequestCreator {
    
     let fullUrl = this.url.concat(uri);
     if (withParms) {
-      return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
+      return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
         const response = await axios.delete(
           fullUrl.concat(addParams(initial)),
-          getRequestConfig()
+          getRequestConfig(thunkAPI.getState().settings.activeLanguage)
         );
         return response.data;
       });
     } else {
-      return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
+      return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
         const response = await axios.delete(
           fullUrl,
           initial,
-          getRequestConfig()
+          getRequestConfig(thunkAPI.getState().settings.activeLanguage)
         );
         return response.data;
       });
@@ -74,11 +73,11 @@ class ApiRequestCreator {
 
   createPatchRequest(uri) {
     
-    return createAsyncThunk(this.domainName.concat(uri), async (initial) => {
+    return createAsyncThunk(this.domainName.concat(uri), async (initial, thunkAPI) => {
       const response = await axios.patch(
         this.url.concat(uri),
         initial.data,
-        initial
+        getRequestConfig(thunkAPI.getState().settings.activeLanguage)
       );
       return response.data;
     });
@@ -92,7 +91,7 @@ class ApiRequestCreator {
           const response = await axios.put(
             this.url.concat(uri),
             initial,
-            getRequestConfig()
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
           );
           return response.data;
         } catch (error) {

@@ -84,10 +84,8 @@ public class ComplaintService implements IComplaintControl {
     @Override
     public void deleteById(String complaintId, String type) {
         if(type.equals(articleComplaint)){
-
             ArticleComplaint entity= complaintDao.findByIdArticle(complaintId).orElseThrow(EntityNotFoundException::new);
             complaintDao.delete(entity);
-
         }else if(type.equals(commentComplaint)){
             CommentComplaint entity= complaintDao.findByIdComment(complaintId).orElseThrow(EntityNotFoundException::new);
             complaintDao.delete(entity);

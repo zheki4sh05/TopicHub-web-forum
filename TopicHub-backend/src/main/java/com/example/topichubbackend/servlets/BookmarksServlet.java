@@ -44,7 +44,8 @@ public class BookmarksServlet extends HttpServlet {
             reactionService.manageBookmarks(1, bookmarksRequestDto.getArticle(),userId);
 
         }catch (BadRequestException e){
-            response.setStatus(400);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         }
         catch (RuntimeException e){
             response.setStatus(500);

@@ -15,13 +15,13 @@ import {
   Box,
   LinearProgress,
   Snackbar,
-  TextField,
   Typography,
 } from "@mui/material";
 import Signup from "./Signup";
 import Signin from "./SignIn";
 import statusTypes from "./../../../app/util/statusTypes";
 import { PathConstants } from "./../../../app/pathConstants";
+import { useTranslation } from "react-i18next";
 
 function Login() {
   const dispatch = useDispatch();
@@ -32,6 +32,7 @@ function Login() {
   const status = useSelector(getUserStatus);
   const error = useSelector(getUserError);
   const user = useSelector(getUser)
+  const {t} = useTranslation()
 
   const navigate = useNavigate();
   const auth = useSelector(isAuth);
@@ -52,7 +53,7 @@ function Login() {
 
         setOpen({
           state: true,
-          message: "Вы успешно зарегистрировались!",
+          message: t('message_success'),
           type: "success",
         });
       } else {
@@ -85,7 +86,7 @@ function Login() {
               sx={{ textAlign: "center", marginBottom: "10px" }}
               variant="h5"
             >
-              Добро пожаловать
+              {t('txt_welcome')}
             </Typography>
             {page == signIn ? (
               <Signin onTogglePage={handleTogglePage} />

@@ -6,7 +6,9 @@ import { delItem, saveItem } from "../../model/sandboxSlice";
 import { useDispatch } from "react-redux";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmModal from "../../../../shared/ConfirmModal/ui/ConfirmModal";
+import { useTranslation } from 'react-i18next';
 function ParagraphEdit({ item }) {
+  const {t} = useTranslation()
   const dispatch = useDispatch();
   const [save, setSave] = useState(false);
 
@@ -68,7 +70,7 @@ function ParagraphEdit({ item }) {
         ) : (
           <TextField
             id="standard-multiline-static"
-            label="Абзац"
+            label={t('input_p')}
             multiline
             defaultValue="Default Value"
             variant="standard"
@@ -91,8 +93,8 @@ function ParagraphEdit({ item }) {
     </Grid2>
     <ConfirmModal
         show={open}
-        title={"Удаление абазаца"}
-        body={"Вы действительно хотите удалить абзац с текстом?"}
+        title={t('modal_title_1')}
+        body={t('modal_body_1')}
         data={item}
         handlerAgree={handlerAgree}
         handlerDisagree={handlerDisagree}

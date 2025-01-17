@@ -32,8 +32,8 @@ public class CommentsServlet extends HttpServlet {
             response.setStatus(201);
         }
         catch(EntityNotFoundException e){
-
-            response.setStatus(404);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         } catch (RuntimeException e){
             response.setStatus(400);
         }
@@ -51,7 +51,8 @@ public class CommentsServlet extends HttpServlet {
             response.setStatus(200);
         }
         catch(EntityNotFoundException e){
-            response.setStatus(404);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         } catch (RuntimeException e){
             response.setStatus(400);
         }
@@ -67,7 +68,8 @@ public class CommentsServlet extends HttpServlet {
             response.setStatus(200);
         }
         catch(EntityNotFoundException e){
-            response.setStatus(404);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         } catch (RuntimeException e){
             response.setStatus(400);
         }

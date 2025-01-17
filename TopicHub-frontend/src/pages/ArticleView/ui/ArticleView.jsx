@@ -42,6 +42,7 @@ import statusTypes from "../../../app/util/statusTypes";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import Author from "../../../widgets/author/ui/Author";
+import { useTranslation } from "react-i18next";
 
 function ArticleView() {
   const article = useSelector(getArticle);
@@ -51,7 +52,7 @@ function ArticleView() {
   const auth = useSelector(isAuth)
   const subscribeStatus = useSelector(getSubscriptionStatus);
   const bookmarStatus = useSelector(getBookmarksStatus);
-const navigate  = useNavigate()
+  const {t} = useTranslation()
   
 
   const dispatch = useDispatch();
@@ -136,7 +137,7 @@ const navigate  = useNavigate()
         >
           <Link to={PathConstants.ARTICLE}>
             <Typography variant="body1" style={{ textDecoration: "underline" }}>
-              Назад
+              {t('btn_back')}
             </Typography>
           </Link>
         </Box>
@@ -178,7 +179,7 @@ const navigate  = useNavigate()
                 {user.id != article.userDto.id ? (
                   status == statusTypes.failed ? (
                     <Button variant="outlined" color="success" disabled={true}>
-                       Авторизация
+                         {t('btn_auth')}
                     </Button>
                   ) : status == statusTypes.loading ? (
                     <CircularProgress />
@@ -188,7 +189,7 @@ const navigate  = useNavigate()
                       color="success"
                       onClick={() => handleSubscribe(1)}
                     >
-                      Подписаться
+                         {t('btn_subscribe')}
                     </Button>
                   ) : (
                     <Button
@@ -196,7 +197,7 @@ const navigate  = useNavigate()
                       color="success"
                       onClick={() => handleSubscribe(-1)}
                     >
-                      Отписаться
+                       {t('btn_unsubscribe')}
                     </Button>
                   )
                 ) : null}
@@ -208,7 +209,7 @@ const navigate  = useNavigate()
                   alignItems: "center",
                 }}
               >
-                <Typography>Закладки</Typography>
+                <Typography>{t('txt_bookmark')}</Typography>
 
                 {reaction.isMarked ? (
                   <IconButton onClick={handleRemoveBookMark} disabled={!auth}>

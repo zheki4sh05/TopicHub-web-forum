@@ -1,9 +1,11 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import statusTypes from "../../../app/util/statusTypes";
 import Article from "../../../features/Article/ui/Article";
+import { useTranslation } from "react-i18next";
 
 
 function ArticlesList({ status, batch, makeRequest, edit = false }) {
+  const { t } = useTranslation();
   return (
     <Box sx={{ margin: "20px 0 20px 0" }}>
       {status == statusTypes.loading ? (
@@ -28,15 +30,16 @@ function ArticlesList({ status, batch, makeRequest, edit = false }) {
       ) : status == statusTypes.failed ? (
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <Typography variant="subtitle1" gutterBottom sx={{ color: "red" }}>
-            Ошибка загрузки!
+           {t('txt_error_http')}
           </Typography>
           <Button
             sx={{ marginLeft: "15px" }}
             variant="outlined"
             onClick={() => makeRequest(1)}
           >
-            Попробовать еще раз
+            {t('btn_repeat')}
           </Button>
+  
         </Box>
       ) : (
         <></>

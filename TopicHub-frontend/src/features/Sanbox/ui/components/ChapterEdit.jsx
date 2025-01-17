@@ -6,10 +6,11 @@ import { delItem, saveItem } from "../../model/sandboxSlice";
 import { useDispatch } from "react-redux";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmModal from "../../../../shared/ConfirmModal/ui/ConfirmModal";
+import { useTranslation } from 'react-i18next';
 function ChapterEdit({ item }) {
   const dispatch = useDispatch();
   const [save, setSave] = useState(false);
-
+  const {t} = useTranslation()
   const [open, setOpen] = useState(false);
   const [state, setState] = useState(item.value);
 
@@ -69,7 +70,7 @@ function ChapterEdit({ item }) {
             <Typography variant="h6" gutterBottom sx={{ width: "100%" }}>
           <TextField
             id="standard-multiline-static"
-            label="Заголовок"
+            label={t('input_title')}
             multiline
             defaultValue="Chapter"
             variant="standard"
@@ -93,8 +94,8 @@ function ChapterEdit({ item }) {
     </Grid2>
     <ConfirmModal
         show={open}
-        title={"Удаление заголовка"}
-        body={"Вы действительно хотите удалить заголовок?"}
+        title={t('modal_title_3')}
+        body={t('modal_body_3')}
         data={item}
         handlerAgree={handlerAgree}
         handlerDisagree={handlerDisagree}

@@ -6,14 +6,16 @@ import { useEffect, useState } from "react";
 import { createHubs, doDeleteHubs, doUpdateHubs } from "../../../entities/hubs/api/request";
 import { fetchHubs } from "../../Article/api/requests";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
+import { useTranslation } from "react-i18next";
 
 function ManageHubs() {
   const hubs = useSelector(getHubsList);
   const dispatch = useDispatch()
-
+  const {t} = useTranslation()
   const [create, setCreate] = useState(false);
   const [edit,setEdit] = useState(false)
   const [value, setValue] = useState("");
+  const [valueEn, setEnValue] = useState("");
   const [id,setId]=useState("")
 
   useEffect(()=>{
@@ -33,11 +35,11 @@ function ManageHubs() {
   };
 
   const handleEditHub = (id) => {
-    console.log(id)
     dispatch(doUpdateHubs(
       {
         id:id,
-        name:value
+        en:valueEn,
+        ru:value
       }
     ))
     setId("")
@@ -48,7 +50,8 @@ function ManageHubs() {
   const handleAddHub = () => {
       dispatch(
         createHubs({
-          name:value
+          en:valueEn,
+          ru:value
         })
       )
       setCreate(false)
@@ -67,7 +70,7 @@ function ManageHubs() {
               width: "100%",
             }}
           >
-            <Typography>Всего: {hubs.length}</Typography>
+            <Typography>{t('txt_total')} {hubs.length}</Typography>
             {create || edit ? (
               <Button
                 variant="outlined"
@@ -78,7 +81,8 @@ function ManageHubs() {
                   setValue("");
                 }}
               >
-                Отменить
+              
+                {t('btn_undo')}
               </Button>
             ) : (
               <Button
@@ -86,7 +90,8 @@ function ManageHubs() {
                 color="success"
                 onClick={() => setCreate(true)}
               >
-                Добавить
+              
+                {t('btn_add')}
               </Button>
             )}
           </Box>
@@ -102,12 +107,25 @@ function ManageHubs() {
                   width: "100%",
                 }}
               >
+                <Stack direction={"column"} gap={2}>
                 <TextField
                   value={value}
                   variant="standard"
                   size="small"
+                  label= {t('lng_ru')}
                   onChange={(event) => setValue(event.target.value)}
                 />
+                   <TextField
+                  value={valueEn}
+                  variant="standard"
+                  size="small"
+                  label={t('lng_en')}
+                  onChange={(event) => setEnValue(event.target.value)}
+                />
+
+                </Stack>
+
+                
 
                 <Stack direction={"row"} gap={2}>
                   {
@@ -117,7 +135,7 @@ function ManageHubs() {
                       color="primary"
                       onClick={handleAddHub}
                     >
-                      Сохранить
+                      {t('lng_en')}
                     </Button>
                     : edit ? 
                     <Button
@@ -125,12 +143,10 @@ function ManageHubs() {
                     color="primary"
                     onClick={()=>handleEditHub(id)}
                   >
-                    Сохранить
+                      {t('btn_save')}
                   </Button>
                   :
                   null
-
-
                   }
                  
                 </Stack>
@@ -155,14 +171,14 @@ function ManageHubs() {
                     color="error"
                     onClick={() => handleDelHub(item.id)}
                   >
-                    Удалить
+                     {t('btn_del')}
                   </Button>
                   <Button
                     variant="outlined"
                     color="primary"
                     onClick={() => {setId(item.id); setEdit(true); setValue(item.name)}}
                   >
-                    Изменить
+                     {t('btn_edit')}
                   </Button>
                 </Stack>
               </Box>

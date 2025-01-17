@@ -3,10 +3,11 @@ package com.example.topichubbackend.mapper;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import jakarta.servlet.http.*;
+import lombok.extern.slf4j.*;
 
 import java.io.*;
 import java.util.*;
-
+@Slf4j
 public final class JsonMapper {
 
     public static Optional<Object> mapFrom(HttpServletRequest request, Class cls){
@@ -46,7 +47,7 @@ public final class JsonMapper {
             data =  objectMapper.writeValueAsString(obj);
             return data;
         }catch (JsonProcessingException e) {
-
+            log.warn("json map error: {}", e.getMessage());
         }
         return "";
     }

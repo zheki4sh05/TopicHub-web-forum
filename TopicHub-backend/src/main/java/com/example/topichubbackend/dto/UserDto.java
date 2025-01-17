@@ -1,5 +1,4 @@
 package com.example.topichubbackend.dto;
-
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -13,14 +12,15 @@ import java.util.*;
 public class UserDto {
     private String id;
 
-    @NotBlank(message = "User login must not be empty")
+    @NotBlank(message ="LOGIN_EMPTY")
     private String login;
 
-    @Email(message = "Email must be correct")
+    @Email(message = "EMAIL_INCORRECT")
     private String email;
 
-    @NotBlank
-    @Size(min = 6, max = 12)
+    @NotBlank(message = "PASS_EMPTY")
+    @NotEmpty(message = "PASS_EMPTY")
+    @Size( min = 6,message = "PASS_INCORRECT", max = 12)
     private String password;
 
     private List<String> roles;

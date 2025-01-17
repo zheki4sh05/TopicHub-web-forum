@@ -8,8 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import AdminMenu from "../../../widgets/admin/ui/AdminMenu";
 
 import Author from "../../../widgets/author/ui/Author";
-
-import SearchIcon from "@mui/icons-material/Search";
 import { blockAuthors, delAuthors, fetchAuthors } from "../api/requests";
 import { getAuthors } from "../../../widgets/admin/model/adminSlice";
 

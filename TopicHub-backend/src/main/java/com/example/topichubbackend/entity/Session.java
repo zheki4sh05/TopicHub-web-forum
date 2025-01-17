@@ -19,6 +19,7 @@ public class Session {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @Column(name = "expiresat")

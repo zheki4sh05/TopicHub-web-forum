@@ -54,7 +54,6 @@ function SearchBox() {
           alignItems: "center",
           width: 350,
           bgcolor: "white",
-
           border: "#DCDCDC solid 2px",
           borderRadius: "10px",
         }}

@@ -1,8 +1,10 @@
 import { useDispatch } from "react-redux";
 import { subscribe, unsubscribe } from "../../../pages/ArticleView/api/requests";
 import { Button } from "@mui/material";
+import { useTranslation } from 'react-i18next';
 
 function SubscribeBtn({ state,authorId, text="Отписаться" }) {
+const {t} = useTranslation()  
 const dispatch = useDispatch()
 
  const handleSubscribe = (action) => {
@@ -29,7 +31,7 @@ const dispatch = useDispatch()
           color="success"
           onClick={() => handleSubscribe(1)}
         >
-          Подписаться
+          {t('btn_subscribe')}
         </Button>
       ) : (
         <Button
@@ -37,7 +39,7 @@ const dispatch = useDispatch()
           color="success"
           onClick={() => handleSubscribe(-1)}
         >
-          {text}
+           {t('btn_unsubscribe')}
         </Button>
       )}
     </>

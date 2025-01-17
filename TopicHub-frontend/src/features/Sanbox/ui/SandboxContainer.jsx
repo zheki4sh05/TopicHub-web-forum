@@ -7,9 +7,11 @@ import ArticleTheme from '../../../entities/article/ui/ArticleTheme';
 import MenuWrapper from '../../../widgets/menu/ui/MenuWrapper';
 import CreateArticleHeader from '../../../widgets/createArticleHeader/ui/CreateArticleHeader';
 import ArticleSanbox from './ArticleSanbox';
+import { useTranslation } from 'react-i18next';
 
 function SandboxContainer({auth, actionHandler}) {
   const navigate = useNavigate();
+  const {t} = useTranslation()
     return (    
 <Box
       sx={{
@@ -54,14 +56,14 @@ function SandboxContainer({auth, actionHandler}) {
         <MenuWrapper>
           <Stack direction={"row"} sx={{ alignItems: "center" }}>
             <Typography variant="body1">
-              Для публикации статей необходимо авторизоваться
+             {t('txt_warn_auth2')}
             </Typography>
             <Button
               sx={{ marginLeft: "20px" }}
               variant="outlined"
               onClick={() => navigate(PathConstants.LOGIN)}
             >
-              Авторизация
+                {t('btn_auth')}
             </Button>
           </Stack>
         </MenuWrapper>

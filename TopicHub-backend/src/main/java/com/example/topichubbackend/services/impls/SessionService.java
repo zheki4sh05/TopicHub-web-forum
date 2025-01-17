@@ -1,17 +1,16 @@
 package com.example.topichubbackend.services.impls;
-
-import com.example.topichubbackend.dao.*;
 import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
 import jakarta.servlet.http.*;
-
+import lombok.extern.slf4j.*;
 import java.time.*;
 import java.time.chrono.*;
 import java.util.*;
 
+@Slf4j
 public class SessionService implements ISessionService {
     private final static SessionService sessionService = new SessionService();
     private SessionService() { }
@@ -46,9 +45,11 @@ public class SessionService implements ISessionService {
     @Override
     public boolean isSessionActiveBy(Optional<Cookie> cookie) {
         UUID uuid = UUID.fromString(cookie.get().getValue());
+        log.info("check session by id: {}",uuid);
         Session session = null;
         try {
             session = sessionDao.findById(uuid).orElseThrow(BadRequestException::new);
+            log.info("session: {}",session);
         } catch (BadRequestException e) {
             return false;
         }

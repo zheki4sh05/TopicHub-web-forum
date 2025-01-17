@@ -29,13 +29,12 @@ public class ComplaintServlet extends HttpServlet {
             complaintControl.create(userId, complaintDto);
             response.setStatus(200);
         }catch (BadRequestException e){
-            response.setStatus(400);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         }
-        catch (EntityAlreadyExists e){
-            response.setStatus(409);
-        }
-        catch (EntityNotFoundException e){
-            response.setStatus(404);
+        catch (EntityAlreadyExists | EntityNotFoundException e){
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         }
         catch (RuntimeException e){
             response.setStatus(500);

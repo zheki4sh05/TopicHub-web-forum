@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { signin } from "../api/requests";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 function Signin({onTogglePage}) {
     const dispatch = useDispatch()
     const [message, setMessage] = useState("");
     const { handleSubmit, control, reset } = useForm();
+    const {t} = useTranslation()
     const onSubmit = (data) => {
-      
+   
       
       dispatch(signin({
         data:data.login,
@@ -29,7 +32,7 @@ function Signin({onTogglePage}) {
         }}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Typography variant="h6" gutterBottom>Авторизация</Typography>
+        <Typography variant="h6" gutterBottom>{t('btn_auth')}</Typography>
         <Controller
           name="login"
           control={control}
@@ -41,7 +44,7 @@ function Signin({onTogglePage}) {
               id="login"
               type="login"
               name="login"
-              label="Логин либо почту"
+              label={t('message_login')}
               variant="outlined"
             />
           )}
@@ -59,7 +62,7 @@ function Signin({onTogglePage}) {
               sx={{ marginBottom: "15px" }}
               id="password"
               name="password"
-              label="Пароль"
+              label={t('message_pass')}
               variant="outlined"
               type="password"
             />
@@ -78,10 +81,10 @@ function Signin({onTogglePage}) {
           variant="contained"
           type="submit"
         >
-          Войти
+          {t('btn_enter')}
         </Button>
         <Box sx={{marginTop:"10px", display:"flex", flexDirection:"row", gap:"10px",alignItems:"center"}} >
-          <Typography>Впервые на форуме?</Typography>
+          <Typography> {t('txt_at_first')}</Typography>
           <Button variant="text" onClick={(event)=>onTogglePage(1)}> Регистрация </Button>
         </Box>
       </form>

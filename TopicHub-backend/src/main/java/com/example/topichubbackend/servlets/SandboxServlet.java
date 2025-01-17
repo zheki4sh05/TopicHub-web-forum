@@ -24,10 +24,8 @@ public class SandboxServlet extends HttpServlet{
             articleService.create(newArticle,id);
             response.setStatus(201);
         }catch (EntityNotFoundException e){
-            response.getWriter().write(JsonMapper.mapTo(
-                    ResponseEntity.error(HttpServletResponse.SC_NOT_FOUND,
-                    "Пользователь не найден")));
-            response.setStatus(404);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         }
     }
     @Override
@@ -40,8 +38,8 @@ public class SandboxServlet extends HttpServlet{
             articleService.update(updatedArticle,id);
             response.setStatus(200);
         }catch (EntityNotFoundException e){
-            response.getWriter().write(e.getMessage());
-            response.setStatus(404);
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         }
     }
 

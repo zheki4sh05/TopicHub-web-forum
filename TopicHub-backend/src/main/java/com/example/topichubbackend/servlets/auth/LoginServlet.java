@@ -32,34 +32,18 @@ public class LoginServlet extends HttpServlet{
 
             customValidator.validate(userDto);
             User user = authService.login(userDto).orElseThrow(UserNotFoundException::new);
-
             resp.getWriter().write(
                     JsonMapper.mapTo(
                             objectMapper.mapFrom(user,
                                     authService.getUserRole(user.getUuid()))));
             resp.addCookie(createCookie(user));
             resp.setStatus(200);
-        } catch (UserNotFoundException e) {
-            resp.getWriter().write(JsonMapper.mapTo(
-                    ErrorDto
-                            .builder()
-                            .message("Неверный логин или пароль")
-                            .code(401)
-                            .build()));
-            resp.setStatus(401);
-        } catch (InternalServerErrorException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }catch (BadRequestException e){
-            resp.getWriter().write(e.getMessage());
-            resp.setStatus(400);
-        }catch (UserBlockException e){
-            resp.getWriter().write(JsonMapper.mapTo(
-                    ErrorDto
-                            .builder()
-                    .message(e.getMessage())
-                            .code(401)
-                    .build()));
-            resp.setStatus(401);
+        } catch (UserNotFoundException | InternalServerErrorException | UserBlockException e) {
+            resp.getWriter().write(HttpResponseHandler.error(e));
+            resp.setStatus(e.getCode());
+        } catch (BadRequestException e){
+            resp.getWriter().write(HttpResponseHandler.error(e));
+            resp.setStatus(e.getCode());
         }
 
     }

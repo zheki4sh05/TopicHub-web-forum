@@ -30,20 +30,14 @@ public class SignupServlet extends HttpServlet{
             log.info("sign up success with code:{}", 201);
         }
         catch(BadRequestException e){
-            response.getWriter().write(JsonMapper.mapTo(ErrorDto.builder()
-                            .code(400)
-                            .message(e.getMessage())
-                    .build()));
-            response.setStatus(400);
-            log.warn("sign up warn with code: {}, message: {}", 400, e.getMessage());
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
+            log.warn("sign up warning with code: {}, message: {}", 400, e.getLocalizedMessages());
         }
-        catch (SuchEmailAlreadyExistsException | SuchLoginAlreadyExistsException e){
-            response.getWriter().write(JsonMapper.mapTo(ErrorDto.builder()
-                    .code(409)
-                    .message(e.getMessage())
-                    .build()));
-            response.setStatus(409);
-            log.warn("sign up warn with code: {}, message: {}", 409, e.getMessage());
+        catch (EntityAlreadyExists e){
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
+            log.warn("sign up warn with code: {}, message: {}", e.getCode(), e.getLocalizedMessage());
         }
     }
 

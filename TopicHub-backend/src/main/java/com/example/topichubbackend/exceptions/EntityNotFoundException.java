@@ -1,11 +1,11 @@
 package com.example.topichubbackend.exceptions;
 
-public class EntityNotFoundException extends RuntimeException{
+public class EntityNotFoundException extends ImplRuntimeException{
     public EntityNotFoundException(String message) {
         super(message);
     }
 
     public EntityNotFoundException() {
-        super("Article not found");
+        super(ErrorKey.NOT_FOUND.type());
     }
 }

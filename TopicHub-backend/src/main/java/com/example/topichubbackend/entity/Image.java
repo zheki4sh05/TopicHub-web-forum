@@ -1,7 +1,9 @@
 package com.example.topichubbackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.*;
 
 import java.util.*;
 
@@ -20,8 +22,7 @@ public class Image {
     @JoinColumn(name = "author")
     private User author;
 
-    @Lob
-    @Column(name = "img")
-    private byte[] imageData;
+    @Column(name = "data")
+    private byte[] data;
 
 }
