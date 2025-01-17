@@ -1,6 +1,7 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.impl.article.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
@@ -21,16 +22,16 @@ public class ArticleService implements IArticleService {
     public static ArticleService  getInstance(){
         return articleService;
     }
-    private final ArticleDao articleDao = DaoFactory.createArticleDao();
-    private final HubDao hubDao = DaoFactory.createHubDao();
+    private final ArticleRepository articleDao = RepositoryFactory.createArticleDao();
+    private final HubRepository hubDao = RepositoryFactory.createHubDao();
 
-    private final AuthDao authDao = DaoFactory.createAuthDao();
+    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
 
-    private final ReactionDao reactionDao = DaoFactory.createReactionDao();
+    private final ReactionRepository reactionDao = RepositoryFactory.createReactionDao();
 
     private final IObjectMapper objectMapper = new ObjectMapperImpl();
 
-    private final CommentDao commentDao = DaoFactory.createCommentDao();
+    private final CommentRepository commentDao = RepositoryFactory.createCommentDao();
 
     public static final String DILIMITER = "|";
     @Override
@@ -222,7 +223,6 @@ public class ArticleService implements IArticleService {
     }
 
     private List<ArticleDto> getBookmarks(Integer page, String userId) {
-
         List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.bookmarks, page,userId );
         return doMapping(articles,userId);
 

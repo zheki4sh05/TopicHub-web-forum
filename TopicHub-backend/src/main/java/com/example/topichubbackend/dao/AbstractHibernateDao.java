@@ -1,32 +1,23 @@
 package com.example.topichubbackend.dao;
-
-
-
-
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
 import jakarta.persistence.*;
+import lombok.extern.slf4j.*;
 import org.hibernate.exception.*;
-
-
-import java.sql.*;
 import java.util.*;
 import java.util.function.*;
-
-public abstract class BaseDao {
+@Slf4j
+public abstract class AbstractHibernateDao<K,T> {
 
     protected EntityManager em;
-
-    public BaseDao() {
+    protected Class<T> persistentClass;
+    public AbstractHibernateDao() {
     }
-    public <T> void merge(T entity) {
+    public void update(T entity) {
         transaction(em -> em.merge(entity));
     }
-    public <T> void refresh(T entity) {
-        em.refresh(entity);
-    }
 
-    protected void transaction(Consumer<EntityManager> action) {
+    private void transaction(Consumer<EntityManager> action) {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
@@ -39,17 +30,21 @@ public abstract class BaseDao {
     }
 
 
-    public Object save(Object entity) {
+    public T save(T entity) {
         transaction(em -> em.persist(entity));
         return entity;
     }
 
-    public void saveAll(List<Object> entities) {
+    public void saveAll(List<T> entities) {
         listTransaction(entities, em::persist);
     }
 
-    public void delete(Object entity) {
+    public void delete(T entity) {
         transaction(em -> em.remove(entity));
+    }
+
+    public Optional<T> findById(K id){
+        return Optional.ofNullable(em.find(persistentClass, id));
     }
 
     private void checkViolationException(ConstraintViolationException e){
@@ -58,30 +53,28 @@ public abstract class BaseDao {
         }else if(Objects.requireNonNull(e.getConstraintName()).equals("login_uniq")){
             throw new SuchLoginAlreadyExistsException();
         }
+        log.warn("constraint exception: {}", e.getConstraintName());
     }
 
-
-    public void deleteAll(List<Object> objectList) {
-        listTransaction(objectList, em::remove);
-    }
-
-    private void listTransaction(List<Object> objectList, Consumer<Object> action){
+    private void listTransaction(List<T> objectList, Consumer<Object> action){
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-
+            log.debug("start list transaction, item: {}", objectList.size());
             objectList.forEach(action);
             tx.commit();
+            log.debug("transaction commit");
         }
         catch(RollbackException e){
             tx.rollback();
             var throwable = e.getCause();
-
+            log.warn("transaction RollbackException exception: {}", e.getMessage());
             if(throwable instanceof ConstraintViolationException exception){
                 checkViolationException(exception);
             }
         } catch (RuntimeException e) {
             tx.rollback();
+            log.warn("transaction rollback, {}", e.getMessage());
             throw e;
         }
     }

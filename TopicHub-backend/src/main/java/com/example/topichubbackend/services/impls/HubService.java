@@ -1,6 +1,7 @@
 package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.services.interfaces.*;
@@ -17,7 +18,7 @@ public class HubService implements IHubService {
         return hubService;
     }
 
-    private final HubDao hubDao = DaoFactory.createHubDao();
+    private final HubRepository hubDao = RepositoryFactory.createHubDao();
 
     @Override
     public List<HubDto> findAll() {
@@ -38,7 +39,7 @@ public class HubService implements IHubService {
                 .name(hubDto.getName())
                 .build();
 
-       Hub created = (Hub) hubDao.save(hub);
+       Hub created = hubDao.save(hub);
 
         return HubDto.builder()
                 .id(created.getId().toString())
@@ -56,7 +57,7 @@ public class HubService implements IHubService {
     public HubDto update(HubDto hubDto) {
         Hub hub = hubDao.findById(Integer.valueOf(hubDto.getId())).orElseThrow(EntityNotFoundException::new);
         hub.setName(hubDto.getName());
-        hubDao.merge(hub);
+        hubDao.update(hub);
         return hubDto;
     }
 }

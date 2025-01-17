@@ -1,7 +1,7 @@
 package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dao.*;
-import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
@@ -19,7 +19,7 @@ public class SessionService implements ISessionService {
         return sessionService;
     }
 
-    private final SessionDao sessionDao = DaoFactory.createSessionDao();
+    private final SessionRepository sessionDao = RepositoryFactory.createSessionDao();
 
     @Override
     public UUID createByUser(User registeredUser) {

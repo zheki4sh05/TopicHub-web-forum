@@ -1,11 +1,12 @@
 package com.example.topichubbackend.dao;
 
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.entity.*;
 import jakarta.persistence.*;
 
 import java.util.*;
 
-public class ImageDao extends BaseDao{
+public class ImageDao extends AbstractHibernateDao<UUID, Image> implements ImageRepository {
 
     public ImageDao(EntityManager entityManager) {
         this.em = entityManager;

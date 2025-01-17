@@ -1,6 +1,7 @@
 package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
@@ -17,8 +18,8 @@ public class ImageService implements IImageService {
         return imageService;
     }
 
-    private final ImageDao imageDao = DaoFactory.createImageDao();
-    private final AuthDao authDao = DaoFactory.createAuthDao();
+    private final ImageRepository imageDao = RepositoryFactory.createImageDao();
+    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
 
 
     @Override
@@ -32,7 +33,7 @@ public class ImageService implements IImageService {
         Optional<Image> image = imageDao.findImg(userId);
         if(image.isPresent()){
             image.get().setImageData(fileContent.readAllBytes());
-            imageDao.merge(image.get());
+            imageDao.update(image.get());
         }else{
             User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
             var b = fileContent.readAllBytes();

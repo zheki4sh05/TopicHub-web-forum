@@ -1,6 +1,7 @@
 package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
@@ -11,10 +12,11 @@ import com.example.topichubbackend.util.factories.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
 import com.example.topichubbackend.mapper.objectMapper.impl.*;
 import jakarta.persistence.*;
+import lombok.extern.slf4j.*;
 
 import java.util.*;
 import java.util.stream.*;
-
+@Slf4j
 public class AuthService implements IAuthService {
 
     private final IObjectMapper objectMapper = new ObjectMapperImpl();
@@ -24,12 +26,14 @@ public class AuthService implements IAuthService {
         return authService;
     }
 
-    private final AuthDao authDao = DaoFactory.createAuthDao();
+    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
 
     @Override
     public UserDto register(UserDto userDto) {
         User newUser  =prepareNewUser(userDto);
+        log.info("prepared new user: {}", newUser);
         List<UserRole> userRoles = prepareUserRole(newUser);
+        log.info("user roles: {}",userRoles);
         authDao.register(newUser, userRoles);
         return objectMapper.mapFrom(newUser, userRoles);
     }
@@ -51,7 +55,7 @@ public class AuthService implements IAuthService {
             User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
             user.setEmail(userDto.getEmail());
             user.setLogin(userDto.getLogin());
-            authDao.merge(user);
+            authDao.update(user);
         }catch (RollbackException e){
             throw new BadRequestException();
         }
@@ -82,7 +86,7 @@ public class AuthService implements IAuthService {
         }else{
             user.setState(true);
         }
-        authDao.merge(user);
+        authDao.update(user);
 
 
     }
@@ -94,9 +98,7 @@ public class AuthService implements IAuthService {
     }
 
     private User prepareNewUser(UserDto userDto){
-
         UUID uuid = UUID.randomUUID();
-
         return  User.builder()
                 .uuid(uuid)
                 .state(false)

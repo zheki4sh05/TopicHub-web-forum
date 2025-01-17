@@ -1,6 +1,6 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.entity.complaints.*;
@@ -19,11 +19,10 @@ public class ComplaintService implements IComplaintControl {
     public static ComplaintService  getInstance(){
         return complaintService;
     }
-
-    private final ComplaintDao complaintDao  = DaoFactory.createComplaintDao();
-    private final AuthDao authDao  =DaoFactory.createAuthDao();
-    private final CommentDao commentDao= DaoFactory.createCommentDao();
-    private final ArticleDao articleDao= DaoFactory.createArticleDao();
+    private final ComplaintRepository complaintDao  = RepositoryFactory.createComplaintDao();
+    private final AuthRepository authDao  = RepositoryFactory.createAuthDao();
+    private final CommentRepository commentDao= RepositoryFactory.createCommentDao();
+    private final ArticleRepository articleDao= RepositoryFactory.createArticleDao();
     private final IObjectMapper objectMapper  =new ObjectMapperImpl();
 
     private final String articleComplaint="article";
@@ -86,11 +85,11 @@ public class ComplaintService implements IComplaintControl {
     public void deleteById(String complaintId, String type) {
         if(type.equals(articleComplaint)){
 
-            var entity= complaintDao.findByIdArticle(complaintId).orElseThrow(EntityNotFoundException::new);
+            ArticleComplaint entity= complaintDao.findByIdArticle(complaintId).orElseThrow(EntityNotFoundException::new);
             complaintDao.delete(entity);
 
         }else if(type.equals(commentComplaint)){
-            var entity= complaintDao.findByIdComment(complaintId).orElseThrow(EntityNotFoundException::new);
+            CommentComplaint entity= complaintDao.findByIdComment(complaintId).orElseThrow(EntityNotFoundException::new);
             complaintDao.delete(entity);
         }else{
             throw new BadRequestException();

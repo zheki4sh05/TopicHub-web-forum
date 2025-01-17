@@ -9,6 +9,7 @@ import java.util.*;
 @NoArgsConstructor
 @Data
 @Builder
+@ToString
 public class UserDto {
     private String id;
 

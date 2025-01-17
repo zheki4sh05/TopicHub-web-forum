@@ -1,7 +1,9 @@
 package com.example.topichubbackend.util;
 
+import com.zaxxer.hikari.*;
 import jakarta.persistence.*;
 
+import javax.sql.*;
 import java.util.*;
 
 public class PersistUtil {
@@ -23,6 +25,20 @@ public class PersistUtil {
 //        properties.put("hibernate.connection.driver_class", dbDriver);
 //        EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa",properties);
 //
+//        HikariConfig hikariConfig = new HikariConfig();
+//        hikariConfig.setJdbcUrl(dbUrl);
+//        hikariConfig.setUsername("your_username");
+//        hikariConfig.setPassword("your_password");
+//        hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//        hikariConfig.setMaximumPoolSize(10);
+//        hikariConfig.setConnectionTestQuery("SELECT 1");
+//
+//        // Создание DataSource
+//        DataSource dataSource = new HikariDataSource(hikariConfig);
+//
+//        // Настройка EntityManagerFactory
+//        java.util.Map<String, Object> properties = new java.util.HashMap<>();
+//        properties.put("hibernate.datasource", dataSource);
 
         EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
 

@@ -30,6 +30,7 @@ public class User {
     @Column(name = "state")
     private Boolean state;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user")
     private List<UserRole> userRoles;
 
