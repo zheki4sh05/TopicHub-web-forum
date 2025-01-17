@@ -19,6 +19,7 @@ public class UserRole {
 
     @ManyToOne
     @JoinColumn(name = "userid")
+    @ToString.Exclude
     private User user;
 
 

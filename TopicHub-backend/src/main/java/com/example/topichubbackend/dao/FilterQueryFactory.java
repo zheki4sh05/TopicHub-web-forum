@@ -18,6 +18,9 @@ public class FilterQueryFactory {
         List<Predicate> predicates = new ArrayList<>();
         CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
         Root<Article> articleRoot = criteriaQuery.from(Article.class);
+        Join<Article, Hub> hubJoin = articleRoot.join("hub", JoinType.INNER);  // Используется INNER JOIN по умолчанию
+
+
         Expression<Integer> monthExpression = criteriaBuilder.function(
                 "date_part", Integer.class, criteriaBuilder.literal("month"), articleRoot.get("created")
         );

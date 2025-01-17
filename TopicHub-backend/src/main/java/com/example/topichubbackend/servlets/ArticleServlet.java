@@ -7,10 +7,12 @@ import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
+import lombok.extern.slf4j.*;
 
 import java.io.*;
 
 @WebServlet("/article")
+@Slf4j
 public class ArticleServlet extends HttpServlet {
 
     private final IArticleService articleService  = ArticleService.getInstance();
@@ -25,8 +27,10 @@ public class ArticleServlet extends HttpServlet {
             ArticleBatchDto articleBatchDto;
             if(type.equals("author")){
                 String otherUserId = request.getParameter("otherUserId");
+                log.info("filter dto: {}",articleFilterDto);
                 articleBatchDto = articleService.fetch(articleFilterDto,userId,otherUserId);
             }else{
+                log.info("filter dto: {}",articleFilterDto);
                 articleFilterDto.setParam(Integer.valueOf(request.getParameter("hub")));
                  articleBatchDto = articleService.fetch(articleFilterDto,userId);
             }

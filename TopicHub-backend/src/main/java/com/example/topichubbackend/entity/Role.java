@@ -11,6 +11,7 @@ import java.util.*;
 @Builder
 @Entity
 @Table(name="role")
+@ToString
 public class Role {
     @Column(name = "id")
     @Id

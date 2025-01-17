@@ -1,6 +1,7 @@
 package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.mapper.objectMapper.*;
@@ -22,9 +23,9 @@ public class CommentsService implements ICommentsService {
         return commentsService;
     }
     private final IEmailService emailService = ServiceFactory.getEmailService();
-    private final ArticleDao articleDao = DaoFactory.createArticleDao();
-    private final AuthDao authDao = DaoFactory.createAuthDao();
-    private final CommentDao commentDao = DaoFactory.createCommentDao();
+    private final ArticleRepository articleDao = RepositoryFactory.createArticleDao();
+    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
+    private final CommentRepository commentDao = RepositoryFactory.createCommentDao();
     private final IObjectMapper objectMapper = new ObjectMapperImpl();
     @Override
     public List<CommentDto> fetch(String article) {
@@ -58,7 +59,7 @@ public class CommentsService implements ICommentsService {
         Comment comment = commentDao.findByUuid(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
             comment.setMessage(commentDto.getValue());
-            articleDao.merge(comment);
+            commentDao.update(comment);
             return objectMapper.mapFrom(comment, commentDto.getArticleId(), new HashSet<>());
         }else{
             throw new EntityNotFoundException();

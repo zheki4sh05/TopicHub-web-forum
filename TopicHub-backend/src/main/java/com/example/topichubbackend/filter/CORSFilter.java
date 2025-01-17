@@ -4,9 +4,10 @@ package com.example.topichubbackend.filter;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
+import lombok.extern.slf4j.*;
 
 import java.io.*;
-
+@Slf4j
 @WebFilter("/*")
 public class CORSFilter implements Filter {
     private final String front;
@@ -18,7 +19,7 @@ public class CORSFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-
+        log.info("New request:{}", request.getMethod());
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Origin", "http://"+front+":3000");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Max-Age", "3600");
         ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "OPTIONS, GET,HEAD, PUT, POST, DELETE");

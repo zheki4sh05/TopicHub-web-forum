@@ -1,11 +1,9 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
-import com.example.topichubbackend.mapper.objectMapper.*;
-import com.example.topichubbackend.mapper.objectMapper.impl.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
 
@@ -19,19 +17,14 @@ public class ReactionService implements IReactionService {
         return reactionService;
     }
 
-    private final ReactionDao reactionDao = DaoFactory.createReactionDao();
+    private final ReactionRepository reactionDao = RepositoryFactory.createReactionDao();
 
-    private final AuthDao authDao = DaoFactory.createAuthDao();
-    private final ArticleDao articleDao = DaoFactory.createArticleDao();
-
-    private final IObjectMapper objectMapper = new ObjectMapperImpl();
+    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
+    private final ArticleRepository articleDao = RepositoryFactory.createArticleDao();
     @Override
     public ReactionDto check(String articleId, String authorId, String userId) {
-
         Boolean subscribe =reactionDao.checkSubscribe(userId, authorId);
-
         Boolean marked = reactionDao.checkMarked(userId, articleId);
-
         return ReactionDto.builder()
                 .isMarked(marked)
                 .isSubscribe(subscribe)
@@ -41,22 +34,20 @@ public class ReactionService implements IReactionService {
     @Override
     public void makeReaction(String type, Integer value, String userId, Long targetId) {
 
-        switch(type){
-            case "article":{
+        switch (type) {
+            case "article" -> {
                 Article article = articleDao.findById(targetId).orElseThrow(EntityNotFoundException::new);
                 User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
                 Optional<Likes> reaction = reactionDao.findById(article.getId(), user.getUuid());
                 reaction.ifPresentOrElse(
-                        (item)-> updateReaction(item, value),
-                        ()-> createNewReaction(article, user, value)
+                        (item) -> updateReaction(item, value),
+                        () -> createNewReaction(article, user, value)
                 );
-                break;
             }
-            case "comment":{
-                reactionDao.reactionComment(value,userId,targetId);
-                break;
+            case "comment" -> {
+                reactionDao.reactionComment(value, userId, targetId);
             }
-            default:{
+            default -> {
                 throw new BadRequestException();
             }
         }
@@ -137,7 +128,6 @@ public class ReactionService implements IReactionService {
     @Override
     public List<AuthorDto> fetchAllFollowers(String id) {
         List<Subscription> userList = authDao.findFollowersById(id);
-
         return userList.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
                 .email(item.getAuthor().getEmail())

@@ -1,20 +1,23 @@
 package com.example.topichubbackend.dao;
 
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.entity.*;
 import jakarta.persistence.*;
 
 import java.util.*;
 
-public class SessionDao extends BaseDao{
+public class SessionDao extends AbstractHibernateDao<UUID, Session> implements SessionRepository {
     public SessionDao(EntityManager entityManager) {
         this.em = entityManager;
     }
 
     public Optional<Session> findById(UUID uuid) {
+        return super.findById(uuid);
+    }
 
-        Session session = this.em.find(Session.class, uuid);
-        return Optional.of(session);
-
+    @Override
+    public Session save(Session session){
+        return super.save(session);
     }
 
     public Optional<Session> findByUserId(UUID id) {

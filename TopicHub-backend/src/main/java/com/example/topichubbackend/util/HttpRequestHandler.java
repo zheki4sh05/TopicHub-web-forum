@@ -1,10 +1,9 @@
 package com.example.topichubbackend.util;
 
 import com.example.topichubbackend.dao.*;
-import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
-import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.util.factories.*;
 import jakarta.servlet.http.*;
 
@@ -13,7 +12,7 @@ import java.util.*;
 public class HttpRequestHandler {
     public static String COOKIE_NAME="topichub";
 
-    private final SessionDao sessionDao = DaoFactory.createSessionDao();
+    private final SessionRepository sessionDao = RepositoryFactory.createSessionDao();
     public static Optional<Cookie> getSessionCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
 
