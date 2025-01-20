@@ -4,16 +4,22 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, isAuth } from "./../../../pages/Profile/model/userSlice";
+import {isAuth } from "./../../../pages/Profile/model/userSlice";
 import { makeReaction, removeReaction } from "../api/request";
 import { useState } from "react";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,showLikes=true}) {
-
+import { useTranslation } from "react-i18next";
+function ReactionBox({
+  item,
+  handleDanger,
+  showDanger = false,
+  handleComment,
+  showLikes = true,
+}) {
   const dispatch = useDispatch();
-
-  const auth = useSelector(isAuth)
+  const { t } = useTranslation();
+  const auth = useSelector(isAuth);
   const [like, setLike] = useState(item.likeState == 1);
   const [dislike, setDislike] = useState(item.likeState == -1);
   const [likeCount, setLikeCount] = useState(item.likes);
@@ -27,7 +33,6 @@ function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,sho
         targetId: item.id,
       })
     );
-
   };
 
   const handleRemoveReaction = () => {
@@ -43,14 +48,14 @@ function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,sho
     if (!like) {
       if (dislike) {
         setDislike(false);
-        setDisLikeCount(dislikeCount-1)
+        setDisLikeCount(dislikeCount - 1);
       }
-      setLikeCount(likeCount+1)
+      setLikeCount(likeCount + 1);
       setLike(true);
       handleMakeReaction(1);
     } else {
       setLike(false);
-      setLikeCount(likeCount-1)
+      setLikeCount(likeCount - 1);
       handleRemoveReaction();
     }
   };
@@ -58,47 +63,39 @@ function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,sho
     if (!dislike) {
       if (like) {
         setLike(false);
-        setLikeCount(likeCount-1)
+        setLikeCount(likeCount - 1);
       }
-      setDisLikeCount(dislikeCount+1)
+      setDisLikeCount(dislikeCount + 1);
       setDislike(true);
       handleMakeReaction(-1);
     } else {
-      setDisLikeCount(dislikeCount-1)
+      setDisLikeCount(dislikeCount - 1);
       setDislike(false);
       handleRemoveReaction();
     }
   };
 
- 
-
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
       <Box sx={{ display: "flex", justifyContent: "start", marginTop: "10px" }}>
-
-        {
-            showLikes ? 
-            <>
+        {showLikes ? (
+          <>
             <IconButton onClick={handleLike} disabled={!auth}>
-          <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
-            {likeCount}
-          </Typography>
+              <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
+                {likeCount}
+              </Typography>
 
-          {like && !dislike ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
-        </IconButton>
-        <IconButton onClick={handleDislike} disabled={!auth}>
-          <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
-            {dislikeCount}
-          </Typography>
-          {dislike && !like ? <ThumbDownIcon /> : <ThumbDownOffAltIcon />}
-        </IconButton>
-            
-            </>
-            :
-            null
+              {like && !dislike ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
+            </IconButton>
+            <IconButton onClick={handleDislike} disabled={!auth}>
+              <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
+                {dislikeCount}
+              </Typography>
+              {dislike && !like ? <ThumbDownIcon /> : <ThumbDownOffAltIcon />}
+            </IconButton>
+          </>
+        ) : null}
 
-        }
-        
         <IconButton onClick={handleComment} disabled={!auth}>
           <Typography variant="subtitle2" sx={{ marginRight: "5px" }}>
             {item.commentsCount}
@@ -107,37 +104,19 @@ function ReactionBox({ item, handleDanger, showDanger = false,handleComment ,sho
         </IconButton>
       </Box>
 
-
-      {showDanger ? 
-      
-      auth ?
-      
-      (
+      {showDanger ? (
         <Box>
-          <IconButton onClick={handleDanger}>
+          <IconButton onClick={handleDanger} disabled={!auth}>
             <Typography variant="caption" sx={{ marginRight: "5px" }}>
-              Пожаловаться
+              {t("btn_complaint")}
             </Typography>
             <DangerousIcon />
           </IconButton>
+          {!auth ? (
+            <Typography variant="caption">{t("txt_warn_auth3")}</Typography>
+          ) : null}
         </Box>
-      ) : 
-      <Box sx={{display:"flex",flexDirection:"column"}}>
-          <IconButton disabled={true}>
-            <Typography variant="caption" sx={{ marginRight: "5px" }}>
-              Пожаловаться
-            </Typography>
-            <DangerousIcon />
-          </IconButton>
-          <Typography variant="caption" >Требуется авторизация</Typography>
-        </Box>
-     
-
-      :
-      null
-    
-    
-    }
+      ) : null}
     </Box>
   );
 }

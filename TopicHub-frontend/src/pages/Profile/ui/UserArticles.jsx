@@ -17,6 +17,7 @@ import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
 import { fetchAuthorArticles, fetchUserArticles } from "./../api/requests";
 import statusTypes from "../../../app/util/statusTypes";
 import { getFeed, getFeedStatus } from "../../Article/model/feedSlice";
+import { useTranslation } from "react-i18next";
 
 function UserArticles({ edit }) {
   const articles = useSelector(getFeed);
@@ -25,7 +26,7 @@ function UserArticles({ edit }) {
   const user = useSelector(getActiveUser);
   const currentUser = useSelector(getUser);
   const auth = useSelector(isAuth);
-
+  const {t} = useTranslation()
   const makeRequest = (page) => {
     if (edit) {
       dispatch(
@@ -91,7 +92,7 @@ function UserArticles({ edit }) {
       ) : (
         <>
           <Typography>
-            У Вас нет публикаий. Перейдите в раздел создания темы
+           {t('txt_warning_articles')}
           </Typography>
         </>
       )}

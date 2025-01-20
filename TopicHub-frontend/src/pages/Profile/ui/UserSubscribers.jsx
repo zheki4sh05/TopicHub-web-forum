@@ -10,12 +10,13 @@ import {
   manageSubscriptionStatus,
 } from "../../../features/Article/model/articleSlice";
 import statusTypes from "../../../app/util/statusTypes";
+import { useTranslation } from 'react-i18next';
 
 function UserSubscribers({ edit }) {
   const subscribeStatus = useSelector(getSubscriptionStatus);
   const subscribes = useSelector(getUserSubscribes);
   const dispatch = useDispatch();
-
+  const {t} = useTranslation()
   const makeRequest = () => {
     dispatch(
       fetchUserSubscriptions({
@@ -49,7 +50,7 @@ function UserSubscribers({ edit }) {
       ) : subscribes.length > 0 ? (
         <>
           <Typography sx={{ marginBottom: "15px" }}>
-            Всего {subscribes.length}
+            {t('txt_total')} {subscribes.length}
           </Typography>
           <Stack direction="row">
             {subscribes.map((item, index) => (
@@ -77,7 +78,7 @@ function UserSubscribers({ edit }) {
           </Stack>
         </>
       ) : (
-        <Typography>Нет подписок</Typography>
+        <Typography>{t('txt_subscription_warn')}</Typography>
       )}
     </>
   );

@@ -22,6 +22,7 @@ function App() {
     {
       element: <Layout />,
       errorElement: <Page404 />,
+    
       children: [
         {
           path: PathConstants.HOME,
@@ -74,7 +75,11 @@ function App() {
         {
           path:PathConstants.EDIT,
           element:<EditArticle/>,
-        }
+        },
+        {
+          path: "*",
+          element: <Page404 />,
+        },
 
      
       ],

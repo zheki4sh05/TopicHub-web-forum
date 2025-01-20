@@ -39,7 +39,7 @@ const hubsSlice = createSlice({
         })
         .addCase(createHubs.fulfilled, (state, action) => {
           state.status = "succeeded";
-          state.list.push( action.payload) 
+          state.list.push(action.payload) 
         })
         .addCase(createHubs.rejected, (state, action) => {
           state.status = "failed";

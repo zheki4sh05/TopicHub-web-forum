@@ -1,30 +1,31 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { areAllFieldsFilled, isValidLogin, isValidPass } from "../config/fieldValidator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signup } from "../api/requests";
-import { getUserError } from "../../Profile/model/userSlice";
+import { useTranslation } from "react-i18next";
 
 function Signup({ onTogglePage }) {
     const dispatch = useDispatch()
+    const {t} = useTranslation()
   const [message, setMessage] = useState("");
   const { handleSubmit, control, reset } = useForm();
 
   const onSubmit = (data) => {
     
     if(!areAllFieldsFilled(data)){
-        setMessage("Не все поля заполнены!")
+        setMessage(t('auth_warn1'))
     }else if(data.password!==data.password2){
-        setMessage("Пароли не совпадают!")
+        setMessage(t('auth_warn2'))
         
     }else if(data.password.length<6 || data.password.lengt>12){
-        setMessage("Пароль слишком короткий! Минимальный: 6 символов, Максимальный: 12")
+        setMessage(t('auth_warn3'))
     }
     else if (!isValidLogin(data.login)){
-        setMessage("Логин должен содержать только латинские буквы и _ ")
+        setMessage(t('auth_warn4'))
     }else if(!isValidPass(data.password)){
-        setMessage("Пароль должен содержать только латинские буквы либо цифры и #!? ")
+        setMessage(t('auth_warn5'))
     }else{
       setMessage("")
       dispatch(signup({
@@ -43,7 +44,7 @@ function Signup({ onTogglePage }) {
       }}
       onSubmit={handleSubmit(onSubmit)}
     >
-        <Typography variant="h6" gutterBottom>Регистрация</Typography>
+        <Typography variant="h6" gutterBottom>{t('txt_signup')}</Typography>
       <Controller
         name="login"
         control={control}
@@ -55,7 +56,7 @@ function Signup({ onTogglePage }) {
             id="login"
             type="login"
             name="login"
-            label="Логин"
+            label={t('message_login')}
             variant="outlined"
           />
         )}
@@ -72,7 +73,7 @@ function Signup({ onTogglePage }) {
             id="email"
             type="email"
             name="email"
-            label="Почта"
+            label={t('message_email')}
             variant="outlined"
           />
         )}
@@ -88,7 +89,7 @@ function Signup({ onTogglePage }) {
             sx={{ marginBottom: "15px" }}
             id="password"
             name="password"
-            label="Пароль"
+            label={t('message_pass')}
             variant="outlined"
             type="password"
           />
@@ -104,7 +105,7 @@ function Signup({ onTogglePage }) {
             {...field}
             id="password2"
             name="password2"
-            label="Еще раз пароль"
+            label={t('message_pass_twise')}
             variant="outlined"
             type="password"
           />
@@ -123,11 +124,12 @@ function Signup({ onTogglePage }) {
         variant="contained"
         type="submit"
       >
-        Зарегистрироваться
+        
+        {t('btn_signup')}
       </Button>
       <Box sx={{marginTop:"10px", display:"flex", flexDirection:"row", gap:"10px",alignItems:"center"}} >
-        <Typography>Уже есть аккаунт?</Typography>
-        <Button variant="text" onClick={(event)=>onTogglePage(2)}> Войти </Button>
+        <Typography>{t('txt_is_auth')}</Typography>
+        <Button variant="text" onClick={(event)=>onTogglePage(2)}> {t('btn_signin')} </Button>
       </Box>
     </form>
   );

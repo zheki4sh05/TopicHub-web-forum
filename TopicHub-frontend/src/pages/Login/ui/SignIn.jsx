@@ -44,7 +44,7 @@ function Signin({onTogglePage}) {
               id="login"
               type="login"
               name="login"
-              label={t('message_login')}
+              label={t('message_login_or_email')}
               variant="outlined"
             />
           )}
@@ -85,7 +85,7 @@ function Signin({onTogglePage}) {
         </Button>
         <Box sx={{marginTop:"10px", display:"flex", flexDirection:"row", gap:"10px",alignItems:"center"}} >
           <Typography> {t('txt_at_first')}</Typography>
-          <Button variant="text" onClick={(event)=>onTogglePage(1)}> Регистрация </Button>
+          <Button variant="text" onClick={(event)=>onTogglePage(1)}> {t('btn_signup')} </Button>
         </Box>
       </form>
     );

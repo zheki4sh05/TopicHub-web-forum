@@ -2,12 +2,13 @@ import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { complaintArticle } from "../api/requests";
+import { useTranslation } from 'react-i18next';
 
 function ModalCreation({ item, handleClose }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [edit, setIsEdit] = useState(false);
-
+  const {t} = useTranslation()
   const dispatch = useDispatch();
 
   const valid = () => {
@@ -41,12 +42,12 @@ function ModalCreation({ item, handleClose }) {
             variant="body2"
             style={{ textTransform: "uppercase", color: "red" }}
           >
-            Жалоба
+            {t('txt_complaint_title')}
           </Typography>
         </Box>
         <Box>
           <Typography variant="body2" style={{ textTransform: "uppercase" }}>
-            Статья
+          {t('txt_article')}
           </Typography>
         </Box>
       </Stack>
@@ -54,7 +55,7 @@ function ModalCreation({ item, handleClose }) {
         <TextField
           id="outlined-basic"
           sx={{ marginBottom: "10px" }}
-          label="Заголовок"
+          label= {t('input_title')}
           variant="outlined"
           value={title}
           onChange={(event) => {
@@ -64,7 +65,7 @@ function ModalCreation({ item, handleClose }) {
 
         <TextField
           id="outlined-multiline-static"
-          label="Описание"
+          label={t('input_description')}
           multiline
           rows={4}
           value={body}
@@ -73,7 +74,7 @@ function ModalCreation({ item, handleClose }) {
           }}
         />
         <Button onClick={handleCreate} disabled={!edit}>
-          Отправить
+          {t('btn_send')}
         </Button>
       </Stack>
     </Stack>

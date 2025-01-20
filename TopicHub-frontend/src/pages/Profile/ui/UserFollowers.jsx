@@ -11,7 +11,7 @@ import SubscribeBtn from "../../../features/Subscribe/ui/SibsctibeBtn";
 function UserFollowers({edit}) {
 
     const user = useSelector(getActiveUser)
-
+    const {t} = useSelector()
     const status = useSelector(getUserStatus);
     const subscribes = useSelector(getUserFollowers);
     const dispatch = useDispatch();
@@ -38,7 +38,7 @@ function UserFollowers({edit}) {
 
         : subscribes.length>0 ? 
         <Stack direction="column">
-            <Typography sx={{marginBottom:"15px"}} >Всего: {subscribes.length}</Typography>
+            <Typography sx={{marginBottom:"15px"}} >{t('txt_total')} {subscribes.length}</Typography>
         {subscribes.map((item, index) => (
           <Box
             key={index}
@@ -53,14 +53,14 @@ function UserFollowers({edit}) {
             <Author user={item} edit={false} size={50} />
             <Box>
               {edit ? (
-                <SubscribeBtn state={!subscribes.length > 0} authorId={user.id} text={"Отписать"}/>
+                <SubscribeBtn state={!subscribes.length > 0} authorId={user.id} text={t('btn_unfollow')}/>
               ) : null}
             </Box>
           </Box>
         ))}
       </Stack>
       :
-      <Typography>Нет подписчиков</Typography>
+      <Typography>{t('txt_no_followers')}</Typography>
         
         
         }

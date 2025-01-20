@@ -11,6 +11,7 @@ import ComplaintsList from "../../../widgets/admin/ui/Article/ComplaintsList";
 
 import { getArticleComplaints } from "../../../widgets/admin/model/adminSlice";
 import { fetchComplaints } from "../../../widgets/admin/api/requests";
+import { useTranslation } from "react-i18next";
 
 function ManageArticle() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ function ManageArticle() {
   const auth = useSelector(isAuth);
   const [choice, setCoice] = useState(1);
   const dispatch = useDispatch();
+  const {t} = useTranslation()
   useEffect(() => {
     if (!auth || !user.roles.includes(statusTypes.admin)) {
       navigate(PathConstants.ARTICLE);
@@ -54,7 +56,7 @@ function ManageArticle() {
                 variant="body1"
                 style={{ textDecoration: choice == 1 ? "none" : "underline" }}
               >
-                Жалобы
+                {t('txt_complaints')}
               </Typography>
             </Button>
           </Box>

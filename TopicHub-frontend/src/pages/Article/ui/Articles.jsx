@@ -16,6 +16,7 @@ import ArticlesList from "../../../widgets/articlesList/ui/ArticlesList";
 import { getUser, isAuth } from "../../Profile/model/userSlice";
 import ArticleFilterBar from "../../../features/Filter/ui/ArticleFilterBar";
 import { useTranslation } from "react-i18next";
+import { getActiveLanguage } from "../../../processes/header/model/settingsSlice";
 
 function Articles() {
   const hubs = useSelector(getHubsList);
@@ -25,6 +26,7 @@ function Articles() {
   const feedStatus = useSelector(getFeedStatus);
   const feed = useSelector(getFeed);
   const [select, setSelect] = useState(0);
+  const lng = useSelector(getActiveLanguage)
    const { t } = useTranslation();
   const handleClick = (id) => {
     setSelect(id);
@@ -117,7 +119,7 @@ function Articles() {
                   textDecoration: select == item.id ? "none" : "underline",
                 }}
               >
-                {item.name}
+                {item[lng]}
               </Typography>
             </Button>
           ))}
