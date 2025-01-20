@@ -126,7 +126,6 @@ public class ArticleService implements IArticleService {
 
     private List<ArticleDto> getFeed(ArticleFilterDto articleFilterDto, String userId) {
        List<Article> articles = articleDao.getSortedAndPaginated(articleFilterDto);
-
         return doMapping(articles,userId);
     }
 

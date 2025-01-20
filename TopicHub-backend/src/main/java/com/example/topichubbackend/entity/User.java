@@ -2,10 +2,10 @@ package com.example.topichubbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.search.engine.backend.types.*;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
+import org.hibernate.validator.constraints.*;
 
 import java.util.*;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class User {
     @Column(name = "login")
     private String login;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")

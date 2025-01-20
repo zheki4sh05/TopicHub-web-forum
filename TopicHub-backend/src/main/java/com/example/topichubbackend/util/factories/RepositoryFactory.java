@@ -22,7 +22,7 @@ public class RepositoryFactory {
     }
 
     public static AuthRepository createAuthDao(){
-        return new AuthDao();
+        return new AuthDao(createUserDao(), createRoleDao(), createUserRoleDao());
     }
 
     public static SessionRepository createSessionDao(){

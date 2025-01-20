@@ -14,6 +14,7 @@ public class HubDao extends AbstractHibernateDao<Long, Hub> implements HubReposi
     public List<Hub> fetchAll() {
         String hql = "FROM Hub h";
         Query query = this.em.createQuery(hql, Hub.class);
+        query.setHint("org.hibernate.cacheable", true);
         List<Hub> hubList = query.getResultList();
         return hubList;
     }

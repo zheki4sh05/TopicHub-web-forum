@@ -5,7 +5,6 @@ import java.lang.invoke.*;
 public enum ErrorKey {
     WRONG_REQUEST_PARAM ("error.wrong_request_param"),
     CONFLICT ("error.conflict"),
-
     EMAIL_CONFLICT ("error.conflict_email"),
     LOGIN_EMPTY("error.login_empty"),
     EMAIL_INCORRECT("error.email_incorrect"),
@@ -14,6 +13,7 @@ public enum ErrorKey {
     USER_BLOCKED("error.user_blocked"),
     NOT_FOUND("error.not_found"),
     PASS_EMPTY("error.pass_empty"),
+    IMAGE_LOAD_ERROR("error.image_load"),
     PASS_INCORRECT("error.pass_incorrect");
 
     private String key;

@@ -11,7 +11,6 @@ public class CommentDao extends AbstractHibernateDao<UUID, Comment> implements C
     public CommentDao(EntityManager entityManager) {
         this.em= entityManager;
     }
-
     public Optional<Comment> findByParentId(String parentId) {
 
         try{
@@ -41,7 +40,6 @@ public class CommentDao extends AbstractHibernateDao<UUID, Comment> implements C
 
         try{
             String sql = "From Comment c where c.id = :id";
-
             Query query = this.em.createQuery(sql, Comment.class);
             query.setParameter("id", UUID.fromString(id));
             Comment result =(Comment) query.getSingleResult();
@@ -49,7 +47,6 @@ public class CommentDao extends AbstractHibernateDao<UUID, Comment> implements C
         }catch (NoResultException e){
             return Optional.empty();
         }
-
     }
 
 
@@ -58,6 +55,5 @@ public class CommentDao extends AbstractHibernateDao<UUID, Comment> implements C
         Query countQuery = this.em.createQuery(countQ, Long.class);
         countQuery.setParameter("id", id);
         return (Long) countQuery.getSingleResult();
-
     }
 }

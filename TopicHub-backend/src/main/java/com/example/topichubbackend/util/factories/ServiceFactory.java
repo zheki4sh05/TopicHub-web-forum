@@ -3,6 +3,9 @@ package com.example.topichubbackend.util.factories;
 import com.example.topichubbackend.services.impls.*;
 import com.example.topichubbackend.services.interfaces.*;
 
+import java.io.*;
+import java.security.*;
+
 public class ServiceFactory {
     public static AuthService getAuthService(){
         return AuthService.getInstance();
@@ -34,5 +37,9 @@ public class ServiceFactory {
 
     public static EmailService getEmailService(){
         return EmailService.getInstance();
+    }
+
+    public static IFileStorage getFileStorageService() throws IOException, NoSuchAlgorithmException, InvalidKeyException {
+        return new MinioService();
     }
 }

@@ -136,8 +136,12 @@ public class ProfileServlet extends HttpServlet{
             } else {
                 response.setStatus(400);
             }
+
         } catch (ServletException e) {
             response.setStatus(400);
+        }catch (InternalServerErrorException e){
+            response.getWriter().write(HttpResponseHandler.error(e));
+            response.setStatus(e.getCode());
         }
     }
     private Boolean isValid(String type){

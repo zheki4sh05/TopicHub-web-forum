@@ -8,27 +8,30 @@ import java.util.*;
 
 public class AuthDao implements AuthRepository {
 
-    private final UserDao userDao = RepositoryFactory.createUserDao();
-    private final RoleDao roleDao = RepositoryFactory.createRoleDao();
-    private final UserRoleDao userRoleDao = RepositoryFactory.createUserRoleDao();
+    private final UserDao userDao;
+    private final RoleDao roleDao;
+    private final UserRoleDao userRoleDao;
+
+    public AuthDao(UserDao userDao, RoleDao roleDao, UserRoleDao userRoleDao) {
+        this.userDao = userDao;
+        this.roleDao = roleDao;
+        this.userRoleDao = userRoleDao;
+    }
+
     public Role findRoleByType(String type){
        return roleDao.findRoleByType(type);
     }
 
     public void register(User newUser, List<UserRole> userRoles) {
-        userDao.save(newUser);
-        userRoleDao.saveAll(userRoles);
+        //userDao.save(newUser);
+
+        List<Object> objects = new ArrayList<>();
+        objects.add(newUser);
+        objects.addAll(userRoles);
+        userRoleDao.saveAll(objects);
+
     }
 
-    @Override
-    public List<Subscription> findSubscribesById(String id) {
-        return null;
-    }
-
-    @Override
-    public List<Subscription> findFollowersById(String id) {
-        return null;
-    }
 
     public Optional<User> findByEmailOrLogin(String data) {
        return userDao.findByEmailOrLogin(data);

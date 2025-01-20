@@ -152,11 +152,46 @@
           <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
           <version>2.0.0-M2</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+      <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <version>2.3.232</version>
+          <scope>test</scope>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-core</artifactId>
+          <version>5.15.2</version>
+          <scope>test</scope>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-junit-jupiter</artifactId>
+          <version>5.15.2</version>
+          <scope>test</scope>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-jcache -->
+      <dependency>
+          <groupId>org.hibernate.orm</groupId>
+          <artifactId>hibernate-jcache</artifactId>
+          <version>6.5.2.Final</version>
+      </dependency>
 
-
-
-
-
+      <!-- https://mvnrepository.com/artifact/org.ehcache/ehcache -->
+      <dependency>
+          <groupId>org.ehcache</groupId>
+          <artifactId>ehcache</artifactId>
+          <version>3.9.7</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/io.minio/minio -->
+      <dependency>
+          <groupId>io.minio</groupId>
+          <artifactId>minio</artifactId>
+          <version>8.5.17</version>
+      </dependency>
 
 
   </dependencies>

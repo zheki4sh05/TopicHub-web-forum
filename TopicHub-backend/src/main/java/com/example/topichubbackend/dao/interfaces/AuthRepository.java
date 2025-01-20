@@ -23,7 +23,4 @@ public interface AuthRepository {
 
     void register(User newUser, List<UserRole> userRoles);
 
-    List<Subscription> findSubscribesById(String id);
-
-    List<Subscription> findFollowersById(String id);
 }

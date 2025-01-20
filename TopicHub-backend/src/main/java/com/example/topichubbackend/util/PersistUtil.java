@@ -41,7 +41,6 @@ public class PersistUtil {
 //        properties.put("hibernate.datasource", dataSource);
 
         EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
-
     }
 
     public static EntityManager getEntityManager() {

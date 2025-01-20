@@ -116,7 +116,7 @@ public class ReactionService implements IReactionService {
     @Override
     public List<AuthorDto> fetchAllSubscribes(String id) {
 
-        List<Subscription> subscriptions = authDao.findSubscribesById(id);
+        List<Subscription> subscriptions = reactionDao.findSubscribesById(id);
 
         return subscriptions.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
@@ -127,7 +127,7 @@ public class ReactionService implements IReactionService {
 
     @Override
     public List<AuthorDto> fetchAllFollowers(String id) {
-        List<Subscription> userList = authDao.findFollowersById(id);
+        List<Subscription> userList = reactionDao.findFollowersById(id);
         return userList.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
                 .email(item.getAuthor().getEmail())

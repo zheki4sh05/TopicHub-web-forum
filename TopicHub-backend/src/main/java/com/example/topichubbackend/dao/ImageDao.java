@@ -29,4 +29,9 @@ public class ImageDao extends AbstractHibernateDao<UUID, Image> implements Image
         }
 
     }
+
+    @Override
+    public void delete(String string) {
+
+    }
 }

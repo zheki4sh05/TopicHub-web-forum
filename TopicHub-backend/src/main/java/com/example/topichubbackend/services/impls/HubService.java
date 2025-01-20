@@ -26,7 +26,8 @@ public class HubService implements IHubService {
         return  hubDao.fetchAll().stream()
                 .map(item->HubDto.builder()
                         .id(item.getId().toString())
-                        .name(item.getName())
+                        .en(item.getEnName())
+                        .ru(item.getRuName())
                         .build())
                 .collect(Collectors.toList());
 
@@ -36,14 +37,12 @@ public class HubService implements IHubService {
     public HubDto create(HubDto hubDto) {
 
         Hub hub = Hub.builder()
-                .name(hubDto.getName())
-                .ruName(hubDto.getRu())
                 .enName(hubDto.getEn())
+                .ruName(hubDto.getRu())
                 .build();
        Hub created = hubDao.save(hub);
         return HubDto.builder()
                 .id(created.getId().toString())
-                .name(created.getName())
                 .ru(created.getRuName())
                 .en(created.getEnName())
                 .build();
@@ -58,7 +57,6 @@ public class HubService implements IHubService {
     @Override
     public HubDto update(HubDto hubDto) {
         Hub hub = hubDao.findById(Integer.valueOf(hubDto.getId())).orElseThrow(EntityNotFoundException::new);
-        hub.setName(hubDto.getName());
         hub.setEnName(hub.getEnName());
         hub.setRuName(hub.getRuName());
         hubDao.update(hub);

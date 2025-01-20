@@ -10,4 +10,6 @@ public interface ImageRepository {
     void update(Image image);
 
     Image save(Image newImage);
+
+    void delete(String string);
 }

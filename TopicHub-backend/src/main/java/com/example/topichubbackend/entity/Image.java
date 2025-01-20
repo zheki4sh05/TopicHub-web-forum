@@ -22,7 +22,7 @@ public class Image {
     @JoinColumn(name = "author")
     private User author;
 
-    @Column(name = "data")
-    private byte[] data;
+//    @Column(name = "data")
+//    private byte[] data;
 
 }

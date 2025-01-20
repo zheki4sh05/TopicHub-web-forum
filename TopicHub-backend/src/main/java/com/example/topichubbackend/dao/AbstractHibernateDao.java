@@ -16,21 +16,25 @@ public abstract class AbstractHibernateDao<K,T> {
         transaction(em -> em.merge(entity));
     }
 
-    private void transaction(Consumer<EntityManager> action) {
+    public void transaction(Consumer<EntityManager> action) {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
             action.accept(em);
             tx.commit();
         }
-        catch(RollbackException e){
+        catch(RollbackException e) {
             tx.rollback();
             var throwable = e.getCause();
             log.warn("transaction RollbackException exception: {}", e.getMessage());
-            if(throwable instanceof ConstraintViolationException exception){
+            if (throwable instanceof ConstraintViolationException exception) {
                 checkViolationException(exception);
             }
-        } catch (RuntimeException e) {
+        }
+        catch(ConstraintViolationException e){
+                checkViolationException(e);
+            }
+         catch (RuntimeException e) {
             tx.rollback();
 
             throw e;
@@ -43,7 +47,7 @@ public abstract class AbstractHibernateDao<K,T> {
         return entity;
     }
 
-    public void saveAll(List<T> entities) {
+    public void saveAll(List<Object> entities) {
         listTransaction(entities, em::persist);
     }
 
@@ -66,7 +70,7 @@ public abstract class AbstractHibernateDao<K,T> {
         log.warn("constraint exception: {}", e.getConstraintName());
     }
 
-    private void listTransaction(List<T> objectList, Consumer<Object> action){
+    private void listTransaction(List<Object> objectList, Consumer<Object> action){
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
@@ -75,17 +79,22 @@ public abstract class AbstractHibernateDao<K,T> {
             tx.commit();
             log.debug("transaction commit");
         }
-        catch(RollbackException e){
+        catch(RollbackException e) {
             tx.rollback();
             var throwable = e.getCause();
             log.warn("transaction RollbackException exception: {}", e.getMessage());
-            if(throwable instanceof ConstraintViolationException exception){
+            if (throwable instanceof ConstraintViolationException exception) {
                 checkViolationException(exception);
             }
-        } catch (RuntimeException e) {
+        }
+        catch(ConstraintViolationException e){
+            checkViolationException(e);
+        }
+        catch (RuntimeException e) {
             tx.rollback();
             log.warn("transaction rollback, {}", e.getMessage());
             throw e;
         }
     }
+
 }

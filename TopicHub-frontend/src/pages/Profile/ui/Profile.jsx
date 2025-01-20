@@ -19,11 +19,13 @@ import UserMarks from "./UserMarks";
 import UserSubscribers from "./UserSubscribers";
 import UserFollowers from "./UserFollowers";
 import CustomTabPanel from "../../../shared/Tabs/ui/CustomTabPanel";
+import { useTranslation } from "react-i18next";
 
 function Profile() {
   const user = useSelector(getUser);
   const activeUser = useSelector(getActiveUser);
   const [value, setValue] = useState(0);
+  const {t} = useTranslation()
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -38,27 +40,27 @@ function Profile() {
 
   const tabsList = [
     {
-      name: "Публикации",
+      name: t('tab_name1'),
       number: 0,
       component: <UserArticles edit={user.id == activeUser.id} />,
     },
     {
-      name: "Профиль",
+      name:t('tab_name2'),
       number: 1,
       component: <UserProfile edit={user.id == activeUser.id} />,
     },
     {
-      name: "закладки",
+      name: t('tab_name3'),
       number: 2,
       component: <UserMarks />,
     },
     {
-      name: "подписчики",
+      name: t('tab_name4'),
       number: 3,
       component: <UserFollowers edit={user.id == activeUser.id} />,
     },
     {
-      name: "подписки",
+      name: t('tab_name5'),
       number: 4,
       component: <UserSubscribers edit={user.id == activeUser.id} />,
      
@@ -92,10 +94,6 @@ function Profile() {
               width: "100%",
             }}
           >
-            {/* <Stack direction={"row"} spacing={2}>
-              <img alt="logo" />
-              <Typography variant="subtitle1">{user.login}</Typography>
-            </Stack> */}
           </Box>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs

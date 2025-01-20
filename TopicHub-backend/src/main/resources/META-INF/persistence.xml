@@ -18,7 +18,9 @@
             <property name="jakarta.persistence.jdbc.password" value="lhs22LI=D=" />
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.region_prefix.factory_class" value="org.hibernate.cache.jcache.internal.JCacheRegionFactory"/>
             <!-- Automatically export the schema -->
             <!--            <property name="jakarta.persistence.schema-generation.database.action" value="" />-->
 
