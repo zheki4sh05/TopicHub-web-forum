@@ -18,7 +18,7 @@ public class User {
     @Id
     private UUID uuid;
 
-    @Column(name = "login")
+    @Column(name = "login",unique = true)
     private String login;
 
     @Column(name = "email", unique = true)

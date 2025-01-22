@@ -1,6 +1,6 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.dao.*;
+import com.example.topichubbackend.dao.impl.user.*;
 import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
@@ -21,12 +21,18 @@ public class AuthService implements IAuthService {
 
     private final IObjectMapper objectMapper = new ObjectMapperImpl();
     private final static AuthService authService = new AuthService();
+
+    public void setAuthDao(AuthRepository authDao) {
+        this.authDao = authDao;
+    }
+
+    private AuthRepository authDao;
     private AuthService() { }
-    public static AuthService  getInstance(){
+    public static AuthService getInstance(){
         return authService;
     }
 
-    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
+
 
     @Override
     public UserDto register(UserDto userDto) {
@@ -64,10 +70,15 @@ public class AuthService implements IAuthService {
 
     @Override
     public void delete(String userId) {
-        User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
-            List<UserRole> userRoles = user.getUserRoles();
+        Optional<User> user = authDao.findById(userId);
+        if(user.isPresent()) {
+            List<UserRole> userRoles = user.get().getUserRoles();
             userRoles.forEach(authDao::delete);
-            authDao.delete(user);
+            authDao.delete(user.get());
+        }else{
+            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.type());
+        }
+
     }
 
     @Override
@@ -79,16 +90,16 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void manageBlock(String authorId) {
-        User user = authDao.findById(authorId).orElseThrow(EntityNotFoundException::new);
-        if(user.getState()){
-            user.setState(false);
+    public UserDto manageBlock(String authorId) {
+        Optional<User> user = authDao.findById(authorId);
+        if(user.isPresent()){
+            var item = user.get();
+            item.setState(!item.getState());
+            authDao.update(item);
+            return objectMapper.mapFrom(item, new ArrayList<>());
         }else{
-            user.setState(true);
+            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.type());
         }
-        authDao.update(user);
-
-
     }
 
     @Override
@@ -117,7 +128,7 @@ public class AuthService implements IAuthService {
     }
     private Optional<User> checkUser(User isExist, AuthDto userDto) {
         if(isExist.getState()){
-            throw new UserBlockException("Учетная запись заблокирована");
+            throw new UserBlockException();
         }else{
             if(isExist.getPassword().equals(PasswordEncoder.getHash(userDto.getPassword(), isExist.getUuid().toString()))){
                 return Optional.of(isExist);

@@ -30,12 +30,10 @@ function Articles() {
    const { t } = useTranslation();
   const handleClick = (id) => {
     setSelect(id);
+    makeRequest(1, id);
   };
 
-  useEffect(() => {
-    makeRequest(1);
-  }, [select]);
-
+  
   const getRequestBody = (select, page) => {
     if (auth) {
       return {
@@ -60,17 +58,20 @@ function Articles() {
     }));
   }
 
-  const makeRequest = (page) => {
+  const makeRequest = (page, select) => {
     dispatch(fetchFeed(getRequestBody(select, page)));
   };
 
   useEffect(() => {
-    makeRequest(1);
+    makeRequest(1, select);
   }, []);
 
   const handlePageChange = (event, page) => {
-    makeRequest(page);
+    makeRequest(page, select);
   };
+  const handleReloadArticles=(page)=>{
+    makeRequest(page,select)
+  }
   return (
     <Box
       sx={{
@@ -126,12 +127,12 @@ function Articles() {
         </Box>
       </MenuWrapper>
 
-      <ArticleFilterBar filterAction={makeFilterRequest} defaultRequest={makeRequest}/>    
+      <ArticleFilterBar filterAction={makeFilterRequest} defaultRequest={handleReloadArticles}/>    
 
       <ArticlesList
         status={feedStatus}
         batch={feed}
-        makeRequest={makeRequest}
+        makeRequest={handleReloadArticles}
       />
 
       <MenuWrapper>

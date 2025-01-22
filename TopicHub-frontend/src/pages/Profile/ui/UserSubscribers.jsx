@@ -26,22 +26,16 @@ function UserSubscribers({ edit }) {
   };
 
   useEffect(() => {
-    if (subscribeStatus == statusTypes.idle) {
+    // if (subscribeStatus == statusTypes.idle) {
       makeRequest();
-    }
+    // }
   }, []);
 
-  useEffect(() => {
-    if (subscribeStatus == statusTypes.idle) {
-      makeRequest();
-    }
-  }, [subscribeStatus]);
-
-  useEffect(() => {
-    if (subscribeStatus == statusTypes.succeeded) {
-      dispatch(manageSubscriptionStatus(statusTypes.idle));
-    }
-  }, [subscribeStatus]);
+  // useEffect(() => {
+  //   if (subscribeStatus == statusTypes.succeeded) {
+  //     dispatch(manageSubscriptionStatus(statusTypes.idle));
+  //   }
+  // }, [subscribeStatus]);
 
   return (
     <>

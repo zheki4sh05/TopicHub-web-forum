@@ -27,27 +27,30 @@ public class ArticleDao extends AbstractHibernateDao<Long, Article> implements A
     }
 
     public List<Article> getSortedAndPaginated(String sql, Integer pageNumber, String id){
+        EntityGraph entityGraph = em.createEntityGraph("article.articlePartList");
         Query query = this.em.createQuery(sql, Article.class);
         query.setParameter("id", UUID.fromString(id));
         query.setFirstResult((pageNumber - 1) * BATCH_SIZE);
         query.setMaxResults(BATCH_SIZE);
+        query.setHint("jakarta.persistence.fetchgraph", entityGraph);
         List<Article> results = query.getResultList();
         return results;
     }
 
     public List<Article> getSortedAndPaginated(ArticleFilterDto articleFilterDto, Integer id){
-
+        EntityGraph entityGraph = em.createEntityGraph("article.articlePartList");
         Query query = this.em.createQuery("FROM Article a JOIN FETCH a.author WHERE a.hub.id = :id ORDER BY a.created DESC", Article.class);
         query.setParameter("id", id);
         query.setFirstResult((articleFilterDto.getPage() - 1) * BATCH_SIZE);
         query.setMaxResults(BATCH_SIZE);
+        query.setHint("jakarta.persistence.fetchgraph", entityGraph);
         return (List<Article>) query.getResultList();
 
     }
 
     public List<Article> getSortedAndPaginated(ArticleFilterDto articleFilterDto) {
         filterQueryFactory = new FilterQueryFactory(this.em.getCriteriaBuilder());
-        EntityGraph<Article> entityGraph = em.createEntityGraph(Article.class);
+        EntityGraph entityGraph = em.createEntityGraph("article.articlePartList");
         TypedQuery<Article> query = em.createQuery(filterQueryFactory.createQuery(articleFilterDto, FilterJoin.DEFAULT, null));
         query.setFirstResult((articleFilterDto.getPage() - 1) * BATCH_SIZE);
         query.setMaxResults(BATCH_SIZE);

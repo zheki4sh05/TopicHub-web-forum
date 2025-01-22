@@ -11,11 +11,15 @@ import java.util.*;
 public class MinioService implements IFileStorage {
     private final MinioClient minioClient;
 
-    private final String BUCKET_NAME = "image";
+    private final String BUCKET_NAME = System.getenv("MN_BUCKET")!=null ? System.getenv("MN_BUCKET") : "image";
+
+    private String login = System.getenv("MN_LOGIN")!=null ? System.getenv("MN_LOGIN") : "minioadmin";
+    private String password = System.getenv("MN_PASS")!=null ? System.getenv("MN_PASS") : "minioadmin";
+    private String url = System.getenv("MN_URL")!=null ? System.getenv("MN_URL") : "http://192.168.0.5:9000";
     public MinioService() throws IOException, InvalidKeyException, NoSuchAlgorithmException {
         this.minioClient = MinioClient.builder()
-                .endpoint("http://192.168.0.5:9000")
-                .credentials("minioadmin", "minioadmin")
+                .endpoint(url)
+                .credentials(login, password)
                 .build();
 
     }

@@ -93,7 +93,6 @@ public class ArticleService implements IArticleService {
                 });
 
         return articleBatchDto;
-
     }
 
     private ArticleBatchDto fetchFromUserSubscribes(ArticleFilterDto articleFilterDto, String userId) {

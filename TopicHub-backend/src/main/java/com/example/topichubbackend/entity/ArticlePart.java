@@ -26,7 +26,7 @@ public class ArticlePart {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "value")
+    @Column(name = "val")
     @EqualsAndHashCode.Include
     private String value;
 
@@ -39,4 +39,5 @@ public class ArticlePart {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article")
     private Article article;
+
 }

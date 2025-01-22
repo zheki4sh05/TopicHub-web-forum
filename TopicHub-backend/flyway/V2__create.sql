@@ -16,10 +16,11 @@ create sequence article_hub_seq
 
 create table if not exists hub
 (
-    name varchar,
-    id   integer default nextval('hub_id_seq'::regclass) not null
+    id integer default nextval('hub_id_seq'::regclass) not null
     constraint hub_pkey
-    primary key
+    primary key,
+    ru varchar,
+    en varchar
     );
 
 alter sequence hub_id_seq owned by hub.id;
@@ -46,16 +47,15 @@ create table if not exists article
     primary key,
     theme     varchar                                             not null,
     keywords  varchar,
-    created   timestamp,
-    hub       integer default nextval('article_hub_seq'::regclass)
+    created   timestamp with time zone,
+                            hub       integer default nextval('article_hub_seq'::regclass)
     constraint hub_fk
     references hub
-    on update set null on delete set null,
-    status    varchar,
+                        on update set null on delete set null,
     author_id uuid
     constraint author_fk
     references author
-    on update cascade on delete cascade
+                        on update cascade on delete cascade
     );
 
 alter sequence article_id_seq owned by article.id;
@@ -64,7 +64,7 @@ alter sequence article_hub_seq owned by article.hub;
 
 create table if not exists articlepart
 (
-    value   varchar                                                        not null,
+    val     varchar                                                        not null,
     article integer default nextval('"articlePart_article_seq"'::regclass) not null
     constraint articlepart_article_id_fk
     references article
@@ -189,8 +189,7 @@ create table if not exists image
     unique
     constraint image_author_id_fk
     references author
-    on update cascade on delete cascade,
-    img    oid
+    on update cascade on delete cascade
 );
 
 create table if not exists complaint_article
@@ -227,6 +226,8 @@ create table if not exists complaint_comment
 );
 
 
+
+
 insert into role (id, name)
 values (1, 'ADMIN');
 insert into role (id, name)
@@ -236,24 +237,23 @@ values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','j8H6ZRy
 insert into user_role (id, userid, role)
 values ('5a34fa56-e294-4602-8e7f-24e7a7832c2c', 'a904e8b8-9da8-4535-b402-9be0b78b2981',2);
 insert into user_role (id, userid, role) values ('c5086606-b949-4426-a340-2626f19f5ef2', 'a904e8b8-9da8-4535-b402-9be0b78b2981',1);
-insert into hub (name)
-values ('Программирование');
-insert into hub (name)
-values ('Наука');
-insert into hub (name)
-values ('Спорт');
+insert into hub (en, ru)
+values ('Programming','Программирование');
+insert into hub (en, ru)
+values ('Science','Наука');
+insert into hub (en, ru)
+values ('Sport','Спорт');
 
-insert into article (theme, keywords, created, hub, status, author_id)
+insert into article (theme, keywords, created, hub, author_id)
 values (
         'Влияние искусственного интеллекта на общество: возможности и вызовы',
         'ИИ|Умный город',
         '2024-12-19 11:36:45.321343',
         1,
-        null,
         'a904e8b8-9da8-4535-b402-9be0b78b2981'
 );
 
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
         'Введение',
     1,
@@ -263,7 +263,7 @@ values (
     uuid_generate_v4()
     );
 
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Краткий обзор развития искусственного интеллекта (ИИ). Основные области применения ИИ в современном мире.',
     1,
@@ -273,7 +273,7 @@ values (
     uuid_generate_v4()
     );
 
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Основная часть:',
     1,
@@ -283,7 +283,7 @@ values (
     uuid_generate_v4()
     );
 
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Преимущества ИИ:',
     1,
@@ -292,7 +292,7 @@ values (
     3,
     uuid_generate_v4()
     );
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Повышение эффективности и продуктивности в различных секторах (медицина, транспорт, производство).
 Новые возможности для научных исследований и технологических инноваций.
@@ -303,7 +303,7 @@ values (
     1,
     uuid_generate_v4()
     );
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'https://content.timeweb.com/assets/2ee2c8e4-93ec-4e4e-a9c3-dc74e12e63c3?width=860&height=573',
     1,
@@ -313,7 +313,7 @@ values (
     uuid_generate_v4()
     );
 
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Вызовы и риски:',
     1,
@@ -322,7 +322,7 @@ values (
     3,
     uuid_generate_v4()
     );
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Вопросы безопасности и конфиденциальности данных.
 Потеря рабочих мест из-за автоматизации.
@@ -333,7 +333,7 @@ values (
     1,
     uuid_generate_v4()
     );
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Социальное влияние:',
     1,
@@ -342,7 +342,7 @@ values (
     3,
     uuid_generate_v4()
     );
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Изменения в социальной структуре и образе жизни людей.
 Влияние на образование и требования к профессиональным навыкам.
@@ -353,7 +353,7 @@ values (
     1,
     uuid_generate_v4()
     );
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Заключение:',
     1,
@@ -362,7 +362,7 @@ values (
     3,
     uuid_generate_v4()
     );
-insert into articlepart (value, article, type, name, id, uuid)
+insert into articlepart (val, article, type, name, id, uuid)
 values (
     'Перспективы развития ИИ в будущем.
 Необходимость балансировки между преимуществами и рисками использования ИИ.

@@ -87,9 +87,6 @@ public abstract class AbstractHibernateDao<K,T> {
                 checkViolationException(exception);
             }
         }
-        catch(ConstraintViolationException e){
-            checkViolationException(e);
-        }
         catch (RuntimeException e) {
             tx.rollback();
             log.warn("transaction rollback, {}", e.getMessage());

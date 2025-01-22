@@ -8,6 +8,8 @@ import java.security.*;
 
 public class ServiceFactory {
     public static AuthService getAuthService(){
+        var service = AuthService.getInstance();
+        service.setAuthDao(RepositoryFactory.createAuthDao());
         return AuthService.getInstance();
     }
 

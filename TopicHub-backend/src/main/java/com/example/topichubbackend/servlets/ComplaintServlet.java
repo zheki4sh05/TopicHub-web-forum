@@ -9,10 +9,11 @@ import com.example.topichubbackend.util.*;
 import com.example.topichubbackend.util.factories.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.*;
+import lombok.extern.slf4j.*;
 
 import java.io.*;
 import java.util.*;
-
+@Slf4j
 @WebServlet(urlPatterns = {"/complaint"})
 public class ComplaintServlet extends HttpServlet {
 
@@ -25,19 +26,23 @@ public class ComplaintServlet extends HttpServlet {
         try{
             ComplaintDto complaintDto =(ComplaintDto) JsonMapper.mapFrom(request, ComplaintDto.class).orElseThrow(RuntimeException::new);
             customValidator.validate(complaintDto);
+            log.info("new complaint: {}", complaintDto);
             String userId = (String) request.getAttribute("id");
             complaintControl.create(userId, complaintDto);
             response.setStatus(200);
         }catch (BadRequestException e){
             response.getWriter().write(HttpResponseHandler.error(e));
             response.setStatus(e.getCode());
+            log.warn("create complaint exception: {}", e.getMessage());
         }
         catch (EntityAlreadyExists | EntityNotFoundException e){
             response.getWriter().write(HttpResponseHandler.error(e));
             response.setStatus(e.getCode());
+            log.warn("create complaint exception: {}", e.getMessage());
         }
         catch (RuntimeException e){
             response.setStatus(500);
+            log.warn("create complaint exception: {}", e.getMessage());
         }
     }
 

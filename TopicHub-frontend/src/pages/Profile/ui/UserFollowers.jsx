@@ -7,11 +7,12 @@ import { useEffect } from "react";
 import statusTypes from "../../../app/util/statusTypes";
 import Author from "../../../widgets/author/ui/Author";
 import SubscribeBtn from "../../../features/Subscribe/ui/SibsctibeBtn";
+import { useTranslation } from "react-i18next";
 
 function UserFollowers({edit}) {
 
     const user = useSelector(getActiveUser)
-    const {t} = useSelector()
+    const {t} = useTranslation()
     const status = useSelector(getUserStatus);
     const subscribes = useSelector(getUserFollowers);
     const dispatch = useDispatch();

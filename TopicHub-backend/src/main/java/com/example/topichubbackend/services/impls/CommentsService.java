@@ -1,6 +1,4 @@
 package com.example.topichubbackend.services.impls;
-
-import com.example.topichubbackend.dao.*;
 import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.entity.*;
@@ -9,15 +7,12 @@ import com.example.topichubbackend.mapper.objectMapper.impl.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.factories.*;
 import jakarta.persistence.*;
-
 import java.sql.*;
 import java.time.*;
 import java.util.*;
 
 public class CommentsService implements ICommentsService {
-
     private final static CommentsService commentsService = new CommentsService();
-
     private CommentsService() { }
     public static CommentsService  getInstance(){
         return commentsService;
@@ -46,7 +41,7 @@ public class CommentsService implements ICommentsService {
                 .build();
         if(commentDto.getParentId()!=null){
             comment.setParentComment(
-                    commentDao.findByParentId(commentDto.getParentId()).orElseThrow(EntityNotFoundException::new)
+                    commentDao.findById(commentDto.getParentId()).orElseThrow(EntityNotFoundException::new)
             );
         }
         commentDao.save(comment);
@@ -56,7 +51,7 @@ public class CommentsService implements ICommentsService {
 
     @Override
     public CommentDto update(CommentDto commentDto, String userId) {
-        Comment comment = commentDao.findByUuid(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentDao.findById(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
             comment.setMessage(commentDto.getValue());
             commentDao.update(comment);
@@ -68,11 +63,9 @@ public class CommentsService implements ICommentsService {
 
     @Override
     public void delete(String commentId, String userId) {
-        Comment comment = commentDao.findByUuid(commentId).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentDao.findById(commentId).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
-
           commentDao.delete(comment);
-
         }else{
             throw new EntityNotFoundException();
         }

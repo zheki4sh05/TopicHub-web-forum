@@ -19,11 +19,6 @@ public class HubDao extends AbstractHibernateDao<Long, Hub> implements HubReposi
         return hubList;
     }
 
-    @Override
-    public Hub save(Hub hub) {
-        return super.save(hub);
-    }
-
     public Optional<Hub> findById(Integer hubId) {
 
         String hql = "FROM Hub h WHERE h.id = :id";

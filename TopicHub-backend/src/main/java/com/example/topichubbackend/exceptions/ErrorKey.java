@@ -10,7 +10,7 @@ public enum ErrorKey {
     EMAIL_INCORRECT("error.email_incorrect"),
     USER_NOT_FOUND("error.user_not_found"),
     SERVER_ERROR("error.server"),
-    USER_BLOCKED("error.user_blocked"),
+    USER_BLOCKED("error.user_block"),
     NOT_FOUND("error.not_found"),
     PASS_EMPTY("error.pass_empty"),
     IMAGE_LOAD_ERROR("error.image_load"),

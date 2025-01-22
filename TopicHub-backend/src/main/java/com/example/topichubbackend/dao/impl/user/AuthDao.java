@@ -23,13 +23,10 @@ public class AuthDao implements AuthRepository {
     }
 
     public void register(User newUser, List<UserRole> userRoles) {
-        //userDao.save(newUser);
-
         List<Object> objects = new ArrayList<>();
         objects.add(newUser);
         objects.addAll(userRoles);
         userRoleDao.saveAll(objects);
-
     }
 
 

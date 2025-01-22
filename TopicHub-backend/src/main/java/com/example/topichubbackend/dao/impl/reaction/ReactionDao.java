@@ -41,8 +41,7 @@ public class ReactionDao implements ReactionRepository {
     }
 
     public void reactionComment(Integer value, String userId, Long targetId) {
-
-
+        throw new UnsupportedException();
     }
 
     public Optional<Likes> findById(Long targetId, UUID uuid) {

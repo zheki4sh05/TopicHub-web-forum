@@ -23,8 +23,8 @@ public class PersistUtil {
 //        properties.put("hibernate.connection.username", dbUsername);
 //        properties.put("hibernate.connection.password", dbPassword);
 //        properties.put("hibernate.connection.driver_class", dbDriver);
-//        EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa",properties);
-//
+        EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+
 //        HikariConfig hikariConfig = new HikariConfig();
 //        hikariConfig.setJdbcUrl(dbUrl);
 //        hikariConfig.setUsername("your_username");
@@ -39,8 +39,8 @@ public class PersistUtil {
 //        // Настройка EntityManagerFactory
 //        java.util.Map<String, Object> properties = new java.util.HashMap<>();
 //        properties.put("hibernate.datasource", dataSource);
-
-        EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+//
+//        EMF =  Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
     }
 
     public static EntityManager getEntityManager() {

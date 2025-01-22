@@ -1,6 +1,7 @@
 package com.example.topichubbackend.dao.impl.util;
 
 import com.example.topichubbackend.entity.*;
+import com.example.topichubbackend.entity.Session;
 import com.example.topichubbackend.util.*;
 import jakarta.persistence.*;
 import org.hibernate.*;
@@ -10,12 +11,11 @@ import java.io.*;
 import java.sql.*;
 
 public class PersistUtilTest {
-    private static final EntityManagerFactory EMF;
-    private static final SessionFactory session;
 
-    static {
-        EMF =  Persistence.createEntityManagerFactory("h2-test");
-        Configuration configuration = new Configuration();
+    private static SessionFactory session;
+
+    public static Configuration getConfig(){
+         Configuration configuration = new Configuration();
 
         // Устанавливаем параметры конфигурации
         configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
@@ -39,14 +39,24 @@ public class PersistUtilTest {
 
         // Строим и возвращаем SessionFactory
         configuration.addAnnotatedClass(User.class);
-        configuration.addAnnotatedClass(UserRole.class);
         configuration.addAnnotatedClass(Role.class);
-        session = configuration.buildSessionFactory();
+        configuration.addAnnotatedClass(UserRole.class);
+        configuration.addAnnotatedClass(Hub.class);
+        configuration.addAnnotatedClass(Article.class);
+        configuration.addAnnotatedClass(Likes.class);
+        configuration.addAnnotatedClass(ArticlePart.class);
+        configuration.addAnnotatedClass(Session.class);
+        return configuration;
+    }
 
-
+    public static void createSession(){
+        session = getConfig().buildSessionFactory();
     }
 
     public static EntityManager configureManager(){
         return session.createEntityManager();
+    }
+    public static void  dropDb(){
+        session.close();
     }
 }

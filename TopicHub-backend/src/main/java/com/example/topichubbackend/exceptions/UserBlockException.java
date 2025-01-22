@@ -5,7 +5,4 @@ public class UserBlockException extends ImplRuntimeException{
         super(ErrorKey.USER_BLOCKED.type());
     }
 
-    public UserBlockException(String message) {
-        super(message);
-    }
 }

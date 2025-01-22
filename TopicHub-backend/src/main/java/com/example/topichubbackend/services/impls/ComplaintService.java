@@ -97,7 +97,7 @@ public class ComplaintService implements IComplaintControl {
 
     private void createAndSaveCommentComplaint(ComplaintDto complaintDto, User author) {
 
-        Comment comment = commentDao.findByUuid(complaintDto.getTargetId())
+        Comment comment = commentDao.findById(complaintDto.getTargetId())
                 .orElseThrow(EntityNotFoundException::new);
 
         CommentComplaint complaint = CommentComplaint.builder()

@@ -49,11 +49,15 @@ public class SubscriptionDao  extends AbstractHibernateDao<UUID, Subscription> {
 
         String hql = "FROM Subscription s where s.follower.id = :id";
         try {
-            return this.em.createQuery(hql, Subscription.class)
+            List<Subscription> result = this.em.createQuery(hql, Subscription.class)
                     .setParameter("id", UUID.fromString(id))
                     .getResultList();
+            return result;
         } catch (NoResultException e) {
             return new ArrayList<>();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 

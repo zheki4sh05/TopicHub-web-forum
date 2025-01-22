@@ -6,10 +6,6 @@
 
     <persistence-unit name="h2-test">
 
-
-
-        <!--        <class>org.hibernate.tutorial.em.Event</class>-->
-
         <properties>
             <!-- Database connection settings -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:web_forum_test"/>
@@ -18,6 +14,7 @@
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
             <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.default_schema" value="TEST" />
             <!-- Automatically export the schema -->
             <!--            <property name="jakarta.persistence.schema-generation.database.action" value="" />-->
 

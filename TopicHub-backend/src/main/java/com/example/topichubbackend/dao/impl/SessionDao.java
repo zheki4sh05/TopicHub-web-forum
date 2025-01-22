@@ -1,5 +1,6 @@
-package com.example.topichubbackend.dao;
+package com.example.topichubbackend.dao.impl;
 
+import com.example.topichubbackend.dao.*;
 import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.entity.*;
 import jakarta.persistence.*;

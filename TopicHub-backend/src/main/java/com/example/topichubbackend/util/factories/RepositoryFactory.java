@@ -1,6 +1,5 @@
 package com.example.topichubbackend.util.factories;
 
-import com.example.topichubbackend.dao.*;
 import com.example.topichubbackend.dao.impl.*;
 import com.example.topichubbackend.dao.impl.article.*;
 import com.example.topichubbackend.dao.impl.complaint.*;
@@ -35,10 +34,6 @@ public class RepositoryFactory {
 
     public static CommentRepository createCommentDao(){
         return new CommentDao(RepositoryFactory.configureManager());
-    }
-
-    public static ImageRepository createImageDao(){
-        return new ImageDao(RepositoryFactory.configureManager());
     }
 
     public static ComplaintRepository createComplaintDao(){

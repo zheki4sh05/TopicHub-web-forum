@@ -12,6 +12,7 @@ import java.util.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "sessions")
+@Builder
 public class Session {
     @Id
     @Column(name = "id")
