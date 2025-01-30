@@ -1,43 +1,41 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.dao.impl.article.*;
-import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
+import com.example.topichubbackend.mapper.*;
+import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
-import com.example.topichubbackend.util.factories.*;
-import com.example.topichubbackend.mapper.objectMapper.*;
-import com.example.topichubbackend.mapper.objectMapper.impl.*;
+import jakarta.transaction.*;
+import lombok.*;
+import org.springframework.stereotype.*;
 
 import java.sql.*;
 import java.time.*;
 import java.util.*;
 import java.util.stream.*;
 
-
+@AllArgsConstructor
+@Service
 public class ArticleService implements IArticleService {
-    private final static ArticleService articleService = new ArticleService();
-    private ArticleService() { }
-    public static ArticleService  getInstance(){
-        return articleService;
-    }
-    private final ArticleRepository articleDao = RepositoryFactory.createArticleDao();
-    private final HubRepository hubDao = RepositoryFactory.createHubDao();
 
-    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
+    private final ArticleRepository articleRepository;
+    private final ArticlePartRepository articlePartRepository;
+    private final HubRepository hubDao;
 
-    private final ReactionRepository reactionDao = RepositoryFactory.createReactionDao();
+    private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
-    private final IObjectMapper objectMapper = new ObjectMapperImpl();
+    private final ArticleMapper articleMapper;
 
-    private final CommentRepository commentDao = RepositoryFactory.createCommentDao();
+    private final CommentRepository commentRepository;
 
     public static final String DILIMITER = "|";
     @Override
+    @Transactional
     public void create(ArticleDto articleDto, String id) {
-        List<Hub> hubList = hubDao.fetchAll();
-        User user = authDao.findById(id).orElseThrow(EntityNotFoundException::new);
+        List<Hub> hubList = hubDao.findAll();
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(EntityNotFoundException::new);
         final Article article = Article.builder()
                 .theme(articleDto.getTheme())
                 .keyWords(String.join(DILIMITER, articleDto.getKeyWords()))
@@ -46,10 +44,10 @@ public class ArticleService implements IArticleService {
                 .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
                 .build();
 
-       articleDao.save(article);
+        articleRepository.save(article);
 
         articleDto.getList().forEach(item->{
-            articleDao.save(ArticlePart.builder()
+            articlePartRepository.save(ArticlePart.builder()
                     .uuid(UUID.randomUUID())
                     .id(item.getId())
                     .value(item.getValue())
@@ -79,12 +77,12 @@ public class ArticleService implements IArticleService {
 
     private ArticleBatchDto fetchFromHubs(ArticleFilterDto articleFilterDto, String userId) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        List<Hub> hubList = hubDao.fetchAll();
+        List<Hub> hubList = hubDao.findAll();
         Optional<Hub> result = hubList.stream().filter(item->item.getId().equals(articleFilterDto.getParam())).findFirst();
         result.ifPresentOrElse(
                 (item)->{
-                    Long totalCount = articleDao.calcTotalEntitiesCountByHub(articleFilterDto.getParam());
-                    Integer pageCount = articleDao.getLastPageNumber(totalCount);
+                    Long totalCount = articleRepository.calcTotalEntitiesCountByHub(articleFilterDto.getParam());
+                    Integer pageCount = articleRepository.getLastPageNumber(totalCount);
                     articleBatchDto.setPageCount(pageCount);
                     articleBatchDto.setArticleDtoList(getArticleByType(result.get().getId(),articleFilterDto,userId));
 
@@ -101,8 +99,8 @@ public class ArticleService implements IArticleService {
             articleBatchDto.setPageCount(0);
             articleBatchDto.setArticleDtoList(new ArrayList<>());
         }else{
-            Long totalCount = articleDao.calcTotalSubscribeEntitiesCount(userId);
-            Integer pageCount = articleDao.getLastPageNumber(totalCount);
+            Long totalCount = articleRepository.calcTotalSubscribeEntitiesCount(userId);
+            Integer pageCount = articleRepository.getLastPageNumber(totalCount);
             articleBatchDto.setPageCount(pageCount);
             articleBatchDto.setArticleDtoList(getSubscribesArticles(articleFilterDto,userId));
         }
@@ -112,7 +110,7 @@ public class ArticleService implements IArticleService {
 
     private List<ArticleDto> getSubscribesArticles(ArticleFilterDto articleFilterDto, String userId) {
 
-        List<Article> articles = articleDao.getSubscribeArticles(articleFilterDto,userId);
+        List<Article> articles = articleRepository.getSubscribeArticles(articleFilterDto,userId);
         return doMapping(articles,userId);
 
     }
@@ -124,14 +122,14 @@ public class ArticleService implements IArticleService {
     }
 
     private List<ArticleDto> getFeed(ArticleFilterDto articleFilterDto, String userId) {
-       List<Article> articles = articleDao.getSortedAndPaginated(articleFilterDto);
+       List<Article> articles = articleRepository.getSortedAndPaginated(articleFilterDto);
         return doMapping(articles,userId);
     }
 
     private  ArticleBatchDto createBatch(){
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleDao.calcTotalEntitiesCount();
-        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        Long totalCount = articleRepository.calcTotalEntitiesCount();
+        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
         articleBatchDto.setPageCount(pageCount);
         return articleBatchDto;
     }
@@ -139,8 +137,8 @@ public class ArticleService implements IArticleService {
     @Override
     public ArticleBatchDto fetch(Integer page,String userId) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleDao.calcTotalUserArticles(userId);
-        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        Long totalCount = articleRepository.calcTotalUserArticles(userId);
+        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
         articleBatchDto.setPageCount(pageCount);
         articleBatchDto.setArticleDtoList(getOwnArticles(page, userId));
         return articleBatchDto;
@@ -148,9 +146,9 @@ public class ArticleService implements IArticleService {
 
     @Override
     public void delete(String id, String userId) {
-        Article article = articleDao.findById(Long.parseLong(id)).orElseThrow(EntityNotFoundException::new);
+        Article article = articleRepository.findById(Long.parseLong(id)).orElseThrow(EntityNotFoundException::new);
         if(article.getAuthor().getUuid().toString().equals(userId)){
-            articleDao.delete(article);
+            articleRepository.delete(article);
         }else{
             throw new EntityNotFoundException("Not found article for user");
         }
@@ -163,17 +161,17 @@ public class ArticleService implements IArticleService {
 
         if(!author.isEmpty() && theme.isEmpty() && keywords.isEmpty() ){
 
-            articles.addAll(articleDao.search(author));
+            articles.addAll(articleRepository.search(author));
             articleBatchDto.setArticleDtoList(doMapping(articles,userId));
         }else if(!author.isEmpty()){
-            articles.addAll(articleDao.search(theme,  keywords));
+            articles.addAll(articleRepository.search(theme,  keywords));
             var filtered = articles.stream()
                     .filter(item->item.getAuthor().getLogin()
                             .startsWith(author));
 
             articleBatchDto.setArticleDtoList(doMapping(filtered.collect(Collectors.toList()),userId));
         }else{
-            articles.addAll(articleDao.search(theme,  keywords));
+            articles.addAll(articleRepository.search(theme,  keywords));
             articleBatchDto.setArticleDtoList(doMapping(articles,userId));
 
         }
@@ -183,8 +181,8 @@ public class ArticleService implements IArticleService {
     @Override
     public ArticleBatchDto fetchBookMarks(String userId, Integer page) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleDao.calcTotalBookmarksCount(userId);
-        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        Long totalCount = articleRepository.calcTotalBookmarksCount(userId);
+        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
         articleBatchDto.setPageCount(pageCount);
         articleBatchDto.setArticleDtoList(getBookmarks(page, userId));
         return articleBatchDto;
@@ -194,57 +192,69 @@ public class ArticleService implements IArticleService {
     public ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId) {
 
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleDao.calcTotalUserArticles(otherUserId);
-        Integer pageCount = articleDao.getLastPageNumber(totalCount);
+        Long totalCount = articleRepository.calcTotalUserArticles(otherUserId);
+        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
         articleBatchDto.setPageCount(pageCount);
         articleBatchDto.setArticleDtoList(gteOtherArticles(articleFilterDto.getPage(), userId,otherUserId));
         return articleBatchDto;
     }
 
     @Override
+    public ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, Integer page) {
+        return null;
+    }
+
+    @Override
+    public ArticleBatchDto fetch(ArticleFilterDto articleFilter) {
+
+
+
+        return null;
+    }
+
+    @Override
     public void deleteAdmin(String targetId) {
-        Article article = articleDao.findById(Long.parseLong(targetId)).orElseThrow(EntityNotFoundException::new);
-        articleDao.delete(article);
+        Article article = articleRepository.findById(Long.parseLong(targetId)).orElseThrow(EntityNotFoundException::new);
+        articleRepository.delete(article);
     }
 
     @Override
     public void update(ArticleDto updatedArticle, String id) {
-        Article delarticle = articleDao.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException("Статья не найдена"));
-        articleDao.delete(delarticle);
+        Article delarticle = articleRepository.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException("Статья не найдена"));
+        articleRepository.delete(delarticle);
         create(updatedArticle, id);
     }
 
+
+    @Override
+    public void update(ArticleStatusDto articleStatusDto) {
+
+    }
+
     private List<ArticleDto> gteOtherArticles(Integer page, String userId, String otherUserId) {
-        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,otherUserId );
+        List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.authorArticles, page,otherUserId );
         return doMapping(articles,userId);
 
     }
-
     private List<ArticleDto> getBookmarks(Integer page, String userId) {
-        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.bookmarks, page,userId );
+        List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.bookmarks, page,userId );
         return doMapping(articles,userId);
 
     }
-
-
     private List<ArticleDto> getArticleByType(Integer id, ArticleFilterDto articleFilterDto, String userId) {
-        List<Article> articles = articleDao.getSortedAndPaginated(articleFilterDto,id);
+        List<Article> articles = articleRepository.getSortedAndPaginated(articleFilterDto,id);
         return  doMapping(articles,userId);
     }
 
     private List<ArticleDto> getOwnArticles(Integer page, String userId){
-        List<Article> articles = articleDao.getSortedAndPaginated(ArticleDao.authorArticles, page,userId );
+        List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.authorArticles, page,userId );
         return doMapping(articles,userId);
-    }
-
-    private List<ArticlePart> getArticlePart(Long id){
-        return  articleDao.findByArticleId(id);
     }
 
     private List<ArticleDto> doMapping(List<Article> articles,String userId){
         List<ArticleDto> articleDtos = new ArrayList<>();
         articles.forEach(item->{
-            item.setArticlePartList(getArticlePart(item.getId()));
+            item.setArticlePartList(item.getArticlePartList());
             ArticleDto articleDto = getLikesAndDislikes(item, userId);
             articleDto.setCommentsCount(getCommentsCount(item.getId()));
             articleDtos.add(articleDto);
@@ -253,15 +263,14 @@ public class ArticleService implements IArticleService {
     }
 
     private Long getCommentsCount(Long id) {
-        return commentDao.calcArticleCommentsCount(id);
+        return commentRepository.calcArticleCommentsCount(id);
     }
 
     private ArticleDto getLikesAndDislikes(Article item, String userId){
-        var dto = objectMapper.mapFrom(item, DILIMITER);
-        Long[] list= reactionDao.getLikesAndDislikes(item.getId());
-        dto.setLikes(list[0]);
-        dto.setDislikes(list[1]);
-        dto.setLikeState(reactionDao.userLikeState(userId, item.getId()));
+        var dto = articleMapper.toDto(item);
+        dto.setLikes(likeRepository.getLikesCount(item.getId()));
+        dto.setDislikes(likeRepository.getDisLikesCount(item.getId()));
+        dto.setLikeState(likeRepository.userLikeState(UUID.fromString(userId), item.getId()));
         return dto;
     }
 

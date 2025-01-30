@@ -13,4 +13,5 @@ public class ArticleFilterDto {
     private Integer param;
     private Integer page;
     private Integer hub;
+    private String status;
 }

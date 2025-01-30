@@ -25,5 +25,7 @@ public class UserDto {
 
     private List<String> roles;
 
-    private Boolean status;
+    private Boolean state;
+
+    private String  status;
 }

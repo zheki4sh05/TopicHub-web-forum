@@ -1,42 +1,38 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.entity.*;
-import com.example.topichubbackend.entity.complaints.*;
+import com.example.topichubbackend.mapper.*;
+import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.model.complaints.*;
 import com.example.topichubbackend.exceptions.*;
-import com.example.topichubbackend.mapper.objectMapper.*;
-import com.example.topichubbackend.mapper.objectMapper.impl.*;
+import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
-import com.example.topichubbackend.util.factories.*;
-
+import lombok.*;
+import org.springframework.stereotype.*;
 import java.util.*;
 import java.util.stream.*;
 
+@Service
+@AllArgsConstructor
 public class ComplaintService implements IComplaintControl {
-    private final static ComplaintService complaintService = new ComplaintService();
-    private ComplaintService() { }
-    public static ComplaintService  getInstance(){
-        return complaintService;
-    }
-    private final ComplaintRepository complaintDao  = RepositoryFactory.createComplaintDao();
-    private final AuthRepository authDao  = RepositoryFactory.createAuthDao();
-    private final CommentRepository commentDao= RepositoryFactory.createCommentDao();
-    private final ArticleRepository articleDao= RepositoryFactory.createArticleDao();
-    private final IObjectMapper objectMapper  =new ObjectMapperImpl();
-
-    private final String articleComplaint="article";
-    private final String commentComplaint="comment";
+    private final ArticleComplaintRepository articleComplaintRepository;
+    private final CommentComplaintRepository commentComplaintRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final ArticleRepository articleRepository;
+    private final ComplaintMapper complaintMapper;
+    private final String ARTICLE="article";
+    private final String COMMENT="comment";
 
     @Override
     public void create(String userId, ComplaintDto complaintDto) {
 
-        User user = authDao.findById(userId)
+        User user = userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(EntityNotFoundException::new);
 
-        if(complaintDto.getType().equals(articleComplaint)){
+        if(complaintDto.getType().equals(ARTICLE)){
 
-            Optional<ArticleComplaint> complaint = complaintDao.findByArticleUserId(complaintDto.getTargetId(), userId);
+            Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(complaintDto.getTargetId(), userId);
             if(complaint.isEmpty()){
 
                 createAndSaveArticleComplaint(complaintDto, user);
@@ -45,17 +41,13 @@ public class ComplaintService implements IComplaintControl {
                 throw new EntityAlreadyExists();
             }
 
-        }else if(complaintDto.getType().equals(commentComplaint)){
-            Optional<CommentComplaint> complaint = complaintDao.findByCommentUserId(complaintDto.getTargetId(), userId);
+        }else if(complaintDto.getType().equals(COMMENT)){
+            Optional<CommentComplaint> complaint = commentComplaintRepository.findByCommentUserId(complaintDto.getTargetId(), userId);
             if(complaint.isEmpty()){
-
                 createAndSaveCommentComplaint(complaintDto, user);
-
             }else{
                 throw new EntityAlreadyExists();
             }
-
-
         }else{
             throw new BadRequestException();
         }
@@ -65,15 +57,15 @@ public class ComplaintService implements IComplaintControl {
     @Override
     public List<ComplaintDto> findAllByType(String type) {
 
-        if(type.equals(articleComplaint)){
+        if(type.equals(ARTICLE)){
 
-            return complaintDao.findAllArticle().stream()
-                    .map(objectMapper::mapFrom)
+            return articleComplaintRepository.findAllArticle().stream()
+                    .map(complaintMapper::mapFrom)
                     .collect(Collectors.toList());
 
-        }else if(type.equals(commentComplaint)){
-            return complaintDao.findAllComment().stream()
-                    .map(objectMapper::mapFrom)
+        }else if(type.equals(COMMENT)){
+            return commentComplaintRepository.findAllComment().stream()
+                    .map(complaintMapper::mapFrom)
                     .collect(Collectors.toList());
         }else{
             throw  new BadRequestException();
@@ -83,12 +75,12 @@ public class ComplaintService implements IComplaintControl {
 
     @Override
     public void deleteById(String complaintId, String type) {
-        if(type.equals(articleComplaint)){
-            ArticleComplaint entity= complaintDao.findByIdArticle(complaintId).orElseThrow(EntityNotFoundException::new);
-            complaintDao.delete(entity);
-        }else if(type.equals(commentComplaint)){
-            CommentComplaint entity= complaintDao.findByIdComment(complaintId).orElseThrow(EntityNotFoundException::new);
-            complaintDao.delete(entity);
+        if(type.equals(ARTICLE)){
+            ArticleComplaint entity= articleComplaintRepository.findByIdArticle(complaintId).orElseThrow(EntityNotFoundException::new);
+            articleComplaintRepository.delete(entity);
+        }else if(type.equals(COMMENT)){
+            CommentComplaint entity= commentComplaintRepository.findByIdComment(complaintId).orElseThrow(EntityNotFoundException::new);
+            commentComplaintRepository.delete(entity);
         }else{
             throw new BadRequestException();
         }
@@ -96,10 +88,8 @@ public class ComplaintService implements IComplaintControl {
     }
 
     private void createAndSaveCommentComplaint(ComplaintDto complaintDto, User author) {
-
-        Comment comment = commentDao.findById(complaintDto.getTargetId())
+        Comment comment = commentRepository.findById(complaintDto.getTargetId())
                 .orElseThrow(EntityNotFoundException::new);
-
         CommentComplaint complaint = CommentComplaint.builder()
                 .id(UUID.randomUUID())
                 .author(author)
@@ -107,14 +97,12 @@ public class ComplaintService implements IComplaintControl {
                 .body(complaintDto.getBody())
                 .comment(comment)
                 .build();
-
-        complaintDao.save(complaint);
-
+        commentComplaintRepository.save(complaint);
     }
 
     private void createAndSaveArticleComplaint(ComplaintDto complaintDto, User author) {
 
-        Article article = articleDao.findById(Long.valueOf(complaintDto.getTargetId()))
+        Article article = articleRepository.findById(Long.valueOf(complaintDto.getTargetId()))
                 .orElseThrow(EntityNotFoundException::new);
 
         ArticleComplaint articleComplaint = ArticleComplaint.builder()
@@ -125,8 +113,6 @@ public class ComplaintService implements IComplaintControl {
                 .article(article)
                 .build();
 
-        complaintDao.save(articleComplaint);
-
-
+        articleComplaintRepository.save(articleComplaint);
     }
 }

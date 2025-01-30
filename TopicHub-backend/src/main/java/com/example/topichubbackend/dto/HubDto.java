@@ -1,5 +1,6 @@
 package com.example.topichubbackend.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -8,6 +9,13 @@ import lombok.*;
 @Builder
 public class HubDto {
     private String id;
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 10)
     private String en;
+
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 10)
     private String ru;
 }

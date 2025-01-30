@@ -6,8 +6,10 @@ public interface IArticleService {
     void create(ArticleDto articleDto, String id);
 
     ArticleBatchDto fetch(ArticleFilterDto param,String userId);
-
     ArticleBatchDto fetch(Integer page,String userId);
+    ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId);
+    ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, Integer page);
+    ArticleBatchDto fetch(ArticleFilterDto articleFilter);
 
     void delete(String id, String userId);
 
@@ -15,9 +17,15 @@ public interface IArticleService {
 
     ArticleBatchDto fetchBookMarks(String userId, Integer page);
 
-    ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId);
+
 
     void deleteAdmin(String targetId);
 
     void update(ArticleDto updatedArticle, String id);
+
+
+
+    void update(ArticleStatusDto articleStatusDto);
+
+
 }

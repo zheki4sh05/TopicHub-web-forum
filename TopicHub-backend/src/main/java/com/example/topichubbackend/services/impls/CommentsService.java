@@ -1,37 +1,35 @@
 package com.example.topichubbackend.services.impls;
-import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.entity.*;
-import com.example.topichubbackend.mapper.objectMapper.*;
-import com.example.topichubbackend.mapper.objectMapper.impl.*;
+import com.example.topichubbackend.mapper.*;
+import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
-import com.example.topichubbackend.util.factories.*;
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.stereotype.*;
+
 import java.sql.*;
 import java.time.*;
 import java.util.*;
 
+@Service
+@AllArgsConstructor
 public class CommentsService implements ICommentsService {
-    private final static CommentsService commentsService = new CommentsService();
-    private CommentsService() { }
-    public static CommentsService  getInstance(){
-        return commentsService;
-    }
-    private final IEmailService emailService = ServiceFactory.getEmailService();
-    private final ArticleRepository articleDao = RepositoryFactory.createArticleDao();
-    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
-    private final CommentRepository commentDao = RepositoryFactory.createCommentDao();
-    private final IObjectMapper objectMapper = new ObjectMapperImpl();
+    private final IEmailService emailService;
+    private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    //private final CommentMapper commentMapper;
     @Override
     public List<CommentDto> fetch(String article) {
-        List<Comment> comments = commentDao.findAllByArticleId(Long.valueOf(article));
+        List<Comment> comments = commentRepository.findAllByArticleId(Long.valueOf(article));
         return mapToDtoList(comments,Long.valueOf(article));
     }
 
     @Override
     public CommentDto create(CommentDto commentDto, String userId) {
-        Article article = articleDao.findById(commentDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
-        User author = authDao.findById(userId).orElseThrow(EntityExistsException::new);
+        Article article = articleRepository.findById(commentDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
+        User author = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityExistsException::new);
         Comment comment = Comment.builder()
                 .id(UUID.randomUUID())
                 .message(commentDto.getValue())
@@ -41,21 +39,23 @@ public class CommentsService implements ICommentsService {
                 .build();
         if(commentDto.getParentId()!=null){
             comment.setParentComment(
-                    commentDao.findById(commentDto.getParentId()).orElseThrow(EntityNotFoundException::new)
+                    commentRepository.findById(commentDto.getParentId()).orElseThrow(EntityNotFoundException::new)
             );
         }
-        commentDao.save(comment);
+        commentRepository.save(comment);
         emailService.sendCommentNotification(comment, article.getAuthor());
-        return objectMapper.mapFrom(comment, article.getId(), new HashSet<>());
+       // return commentMapper.mapFrom(comment, article.getId(), new HashSet<>());
+        return new CommentDto();
     }
 
     @Override
     public CommentDto update(CommentDto commentDto, String userId) {
-        Comment comment = commentDao.findById(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
             comment.setMessage(commentDto.getValue());
-            commentDao.update(comment);
-            return objectMapper.mapFrom(comment, commentDto.getArticleId(), new HashSet<>());
+            commentRepository.save(comment);
+//            return commentMapper.mapFrom(comment, commentDto.getArticleId(), new HashSet<>());
+            return new CommentDto();
         }else{
             throw new EntityNotFoundException();
         }
@@ -63,9 +63,9 @@ public class CommentsService implements ICommentsService {
 
     @Override
     public void delete(String commentId, String userId) {
-        Comment comment = commentDao.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
-          commentDao.delete(comment);
+            commentRepository.delete(comment);
         }else{
             throw new EntityNotFoundException();
         }
@@ -75,7 +75,8 @@ public class CommentsService implements ICommentsService {
         Set<UUID> processedIds = new HashSet<>();
         List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {
-            commentDtos.add(objectMapper.mapFrom(comment,articleId, processedIds));
+//            commentDtos.add(commentMapper.mapFrom(comment,articleId, processedIds));
+            commentDtos.add( new CommentDto());
         }
         return commentDtos;
     }

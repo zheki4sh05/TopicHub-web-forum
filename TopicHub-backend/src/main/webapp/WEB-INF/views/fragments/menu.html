@@ -1,0 +1,14 @@
+
+<th:block th:fragment="menu">
+    <div class="dropdown" style="position: absolute; top: 70px; left: 15px;">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Меню
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="#" th:href="@{/admin}">Главная</a></li>
+            <li><a class="dropdown-item" href="#" th:href="@{/admin/hub/fetch}">Хабы</a></li>
+            <li><a class="dropdown-item" href="#" th:href="@{/WEB-INF/views/admin/hub/hub.html}">Статьи</a></li>
+            <li><a class="dropdown-item" href="#" th:href="@{/admin/author/fetch(status='ACTIVE')}">Авторы</a></li>
+        </ul>
+    </div>
+</th:block>

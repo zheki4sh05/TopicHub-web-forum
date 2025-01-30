@@ -1,14 +1,15 @@
 package com.example.topichubbackend.services.interfaces;
 
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.entity.*;
+import com.example.topichubbackend.model.*;
+import org.springframework.data.domain.*;
 
 import java.util.*;
 
 public interface IAuthService {
     UserDto register(UserDto userDto);
 
-    Optional<User> login(AuthDto userDto);
+    UserDto login(AuthDto userDto);
 
     List<UserRole> getUserRole(UUID id);
 
@@ -18,7 +19,9 @@ public interface IAuthService {
 
     List<UserDto> findAll(String id);
 
-    UserDto manageBlock(String authorId);
+    UserDto manageBlock(String authorId, String status);
 
     UserDto findById(String userId);
+
+    Page<UserDto> fetch(String status, Pageable page);
 }

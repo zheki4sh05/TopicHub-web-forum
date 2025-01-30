@@ -1,65 +1,48 @@
 package com.example.topichubbackend.services.impls;
-
-import com.example.topichubbackend.dao.*;
-import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.entity.*;
+import com.example.topichubbackend.exceptions.*;
+import com.example.topichubbackend.mapper.*;
+import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
-import com.example.topichubbackend.util.factories.*;
-import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.stereotype.*;
 
 import java.util.*;
 import java.util.stream.*;
-
+@Service
+@AllArgsConstructor
 public class HubService implements IHubService {
-    private final static HubService hubService = new HubService();
-    private HubService() { }
-    public static HubService  getInstance(){
-        return hubService;
-    }
 
-    private final HubRepository hubDao = RepositoryFactory.createHubDao();
-
+    private final HubRepository hubRepository;
+    private final HubMapper hubMapper;
     @Override
     public List<HubDto> findAll() {
-
-        return  hubDao.fetchAll().stream()
-                .map(item->HubDto.builder()
-                        .id(item.getId().toString())
-                        .en(item.getEnName())
-                        .ru(item.getRuName())
-                        .build())
+        var list = hubRepository.findAll();
+        return  list.stream()
+                .map(hubMapper::toDto)
                 .collect(Collectors.toList());
-
     }
 
     @Override
     public HubDto create(HubDto hubDto) {
-
-        Hub hub = Hub.builder()
-                .enName(hubDto.getEn())
-                .ruName(hubDto.getRu())
-                .build();
-       Hub created = hubDao.save(hub);
-        return HubDto.builder()
-                .id(created.getId().toString())
-                .ru(created.getRuName())
-                .en(created.getEnName())
-                .build();
+        Hub hub = hubMapper.fromDto(hubDto);
+       Hub created = hubRepository.save(hub);
+        return hubMapper.toDto(created);
     }
 
     @Override
-    public void delete(Integer hubId) {
-        Hub hub = hubDao.findById(hubId).orElseThrow(EntityNotFoundException::new);
-        hubDao.delete(hub);
+    public void delete(Long hubId) {
+        Hub hub = hubRepository.findById(hubId.intValue()).orElseThrow(EntityNotFoundException::new);
+        hubRepository.delete(hub);
     }
 
     @Override
     public HubDto update(HubDto hubDto) {
-        Hub hub = hubDao.findById(Integer.valueOf(hubDto.getId())).orElseThrow(EntityNotFoundException::new);
-        hub.setEnName(hub.getEnName());
-        hub.setRuName(hub.getRuName());
-        hubDao.update(hub);
+        Hub hub = hubRepository.findById(Integer.parseInt(hubDto.getId())).orElseThrow(EntityNotFoundException::new);
+        hub.setEnName(hubDto.getEn());
+        hub.setRuName(hubDto.getRu());
+        hubRepository.save(hub);
         return hubDto;
     }
 }

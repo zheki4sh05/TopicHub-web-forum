@@ -1,0 +1,18 @@
+<th:block th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #007bff;">
+        <div class="container-fluid">
+
+            <a class="navbar-brand text-white" href="/admin">
+                TopicHub.admin
+            </a>
+
+            <div class="ml-auto">
+                <a class="nav-link text-white" href="#" th:href="@{/your-link}">Вернуться в приложение</a>
+            </div>
+
+            <div th:insert="~{fragments/language.html :: language}" ></div>
+
+
+        </div>
+    </nav>
+</th:block>

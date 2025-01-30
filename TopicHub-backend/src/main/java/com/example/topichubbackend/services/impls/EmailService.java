@@ -1,24 +1,20 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.entity.*;
+import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.mail.*;
 import jakarta.mail.Session;
 import jakarta.mail.internet.*;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class EmailService implements IEmailService {
-    private final static EmailService emailService = new EmailService();
     private final Session session;
-
     private final String email;
     private final String password;
 
-    private EmailService() { }
-    public static EmailService  getInstance(){
-        return emailService;
-    }
     {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

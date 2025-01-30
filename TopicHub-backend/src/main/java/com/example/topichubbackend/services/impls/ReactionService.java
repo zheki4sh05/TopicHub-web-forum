@@ -1,30 +1,31 @@
 package com.example.topichubbackend.services.impls;
 
-import com.example.topichubbackend.dao.interfaces.*;
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.entity.*;
 import com.example.topichubbackend.exceptions.*;
+import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
-import com.example.topichubbackend.util.factories.*;
+import lombok.*;
+import lombok.extern.slf4j.*;
+import org.springframework.stereotype.*;
 
 import java.util.*;
 import java.util.stream.*;
 
+@Service
+@Slf4j
+@AllArgsConstructor
 public class ReactionService implements IReactionService {
-    private final static ReactionService reactionService = new ReactionService();
-    private ReactionService() { }
-    public static ReactionService  getInstance(){
-        return reactionService;
-    }
 
-    private final ReactionRepository reactionDao = RepositoryFactory.createReactionDao();
-
-    private final AuthRepository authDao = RepositoryFactory.createAuthDao();
-    private final ArticleRepository articleDao = RepositoryFactory.createArticleDao();
+    private final BookmarkRepository bookmarkRepository;
+    private final LikeRepository likeRepository;
+    private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
+    private final ArticleRepository articleRepository;
     @Override
     public ReactionDto check(String articleId, String authorId, String userId) {
-        Boolean subscribe =reactionDao.checkSubscribe(userId, authorId);
-        Boolean marked = reactionDao.checkMarked(userId, articleId);
+        Boolean subscribe =subscriptionRepository.checkSubscribe(UUID.fromString(userId),UUID.fromString(authorId));
+        Boolean marked = bookmarkRepository.checkMarked(userId, Long.valueOf(articleId));
         return ReactionDto.builder()
                 .isMarked(marked)
                 .isSubscribe(subscribe)
@@ -36,16 +37,16 @@ public class ReactionService implements IReactionService {
 
         switch (type) {
             case "article" -> {
-                Article article = articleDao.findById(targetId).orElseThrow(EntityNotFoundException::new);
-                User user = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
-                Optional<Likes> reaction = reactionDao.findById(article.getId(), user.getUuid());
+                Article article = articleRepository.findById(targetId).orElseThrow(EntityNotFoundException::new);
+                User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
+                Optional<Likes> reaction = likeRepository.findById(article.getId(), user.getUuid());
                 reaction.ifPresentOrElse(
                         (item) -> updateReaction(item, value),
                         () -> createNewReaction(article, user, value)
                 );
             }
             case "comment" -> {
-                reactionDao.reactionComment(value, userId, targetId);
+                throw new UnsupportedException();
             }
             default -> {
                 throw new BadRequestException();
@@ -54,45 +55,48 @@ public class ReactionService implements IReactionService {
     }
 
     private void updateReaction(Likes item, Integer value) {
-
         item.setState(value);
-        reactionDao.updateReaction(item);
-
+        likeRepository.save(item);
     }
 
     private void createNewReaction(Article article, User user, Integer value) {
-
-
-        reactionDao.saveReaction(Likes.builder()
+        likeRepository.save(Likes.builder()
                 .uuid(UUID.randomUUID())
                 .state(value)
                 .article(article)
                 .user(user)
                 .build());
-
     }
 
     @Override
     public void manageSubscription(Integer value, String authorId, String userId) {
-
+        User user  = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
+        User author = userRepository.findById(UUID.fromString(authorId)).orElseThrow(EntityNotFoundException::new);
        if(value==1){
-           User user  = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
-           User author = authDao.findById(authorId).orElseThrow(EntityNotFoundException::new);
-           reactionDao.subscribe(author,user);
+           subscriptionRepository.save(Subscription.builder()
+                           .author(author)
+                           .follower(user)
+                   .build());
        }else{
-           reactionDao.unsubscribe(authorId,userId);
+           var subscription = subscriptionRepository.findByUsers(author.getUuid(), user.getUuid()).orElseThrow(()->new EntityNotFoundException(ErrorKey.NOT_FOUND.type()));
+           subscriptionRepository.delete(subscription);
        }
 
     }
 
     @Override
     public void manageBookmarks(Integer value, String articleId, String userId) {
+        User user  = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
+        Article article = articleRepository.findById(Long.valueOf(articleId)).orElseThrow(EntityNotFoundException::new);
         if(value==1){
-            User user  = authDao.findById(userId).orElseThrow(EntityNotFoundException::new);
-            Article article = articleDao.findById(Long.valueOf(articleId)).orElseThrow(EntityNotFoundException::new);
-            reactionDao.addBookmark(article,user);
+            bookmarkRepository.save(Bookmark.builder()
+                            .article(article)
+                            .author(user)
+                    .build());
         }else{
-            reactionDao.removeBookmark(articleId,userId);
+            var bookmark = bookmarkRepository.findByUserIdArticleId(UUID.fromString(userId),Long.valueOf(articleId))
+                    .orElseThrow(()-> new EntityNotFoundException(ErrorKey.NOT_FOUND.type()));
+            bookmarkRepository.delete(bookmark);
         }
     }
 
@@ -100,12 +104,13 @@ public class ReactionService implements IReactionService {
     public void removeReaction(String type, String userId, Long articleId) {
         switch(type){
             case "article":{
-
-                reactionDao.removeArticleReaction(userId, articleId);
+                var like = likeRepository.findById(articleId,UUID.fromString(userId))
+                        .orElseThrow(()->new EntityNotFoundException(ErrorKey.NOT_FOUND.type()));
+                likeRepository.delete(like);
                 break;
             }
             case "comment":{
-                break;
+                throw new UnsupportedException();
             }
             default:{
                 throw new BadRequestException();
@@ -116,7 +121,7 @@ public class ReactionService implements IReactionService {
     @Override
     public List<AuthorDto> fetchAllSubscribes(String id) {
 
-        List<Subscription> subscriptions = reactionDao.findSubscribesById(id);
+        List<Subscription> subscriptions = subscriptionRepository.fetch(id);
 
         return subscriptions.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
@@ -127,7 +132,7 @@ public class ReactionService implements IReactionService {
 
     @Override
     public List<AuthorDto> fetchAllFollowers(String id) {
-        List<Subscription> userList = reactionDao.findFollowersById(id);
+        List<Subscription> userList = subscriptionRepository.findFollowersById(id);
         return userList.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
                 .email(item.getAuthor().getEmail())
