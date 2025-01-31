@@ -19,7 +19,6 @@ import org.springframework.security.web.*;
 import org.springframework.security.web.authentication.logout.*;
 import org.springframework.security.web.authentication.www.*;
 
-import javax.sql.*;
 
 @Configuration
 @EnableWebSecurity

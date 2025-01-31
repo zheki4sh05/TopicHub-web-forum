@@ -31,7 +31,11 @@ public class ProfileController {
             String userId = customSecurityExpression.getUserId();
             switch (type) {
                 case "articles" -> {
-                    return new ResponseEntity<>(articleService.fetch(page, userId), HttpStatus.OK);
+                    ArticleFilterDto articleFilterDto = ArticleFilterDto.builder()
+                            .page(page)
+                            .userId(userId)
+                            .build();
+                    return new ResponseEntity<>(articleService.fetch(articleFilterDto), HttpStatus.OK);
                 }
                 case "profile" -> {
                     return new ResponseEntity<>(authService.findById(userId), HttpStatus.OK);

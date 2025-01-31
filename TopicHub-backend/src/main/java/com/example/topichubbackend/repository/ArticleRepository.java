@@ -5,6 +5,8 @@ import com.example.topichubbackend.model.*;
 import jakarta.persistence.*;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.Query;
+import jakarta.persistence.criteria.*;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.*;
 
@@ -136,4 +138,9 @@ public class ArticleRepository {
     }
 
 
+    public Page<Article> findByQuery(CriteriaQuery<Article> articleCriteriaQuery, Pageable pageable) {
+
+
+
+    }
 }

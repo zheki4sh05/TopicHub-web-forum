@@ -21,7 +21,7 @@ public class BookmarksController{
 
     @GetMapping("/")
     public ResponseEntity<?> fetchPage(
-                @RequestParam Integer page) throws IOException {
+                @RequestParam Integer page) {
                 var userId = customSecurityExpression.getUserId();
                  ArticleBatchDto articleBatchDto = articleService.fetchBookMarks(userId, page);
                 return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
@@ -30,14 +30,14 @@ public class BookmarksController{
     @PostMapping("/")
     public ResponseEntity<?> create(
             @RequestBody BookmarksRequestDto bookmarksRequestDto
-    ) throws IOException {
+    ){
             String userId = customSecurityExpression.getUserId();
             reactionService.manageBookmarks(1, bookmarksRequestDto.getArticle(),userId);
             return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/")
-    public void doDelete(@RequestParam("article") @NotNull String article)  throws IOException {
+    public void doDelete(@RequestParam("article") @NotNull String article){
             String userId = customSecurityExpression.getUserId();
             reactionService.manageBookmarks(-1, article,userId);
     }

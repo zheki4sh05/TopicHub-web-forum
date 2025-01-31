@@ -1,13 +1,16 @@
 package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.dto.filter.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
+import jakarta.persistence.criteria.*;
 import jakarta.transaction.*;
 import lombok.*;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import java.sql.*;
@@ -29,6 +32,8 @@ public class ArticleService implements IArticleService {
     private final ArticleMapper articleMapper;
 
     private final CommentRepository commentRepository;
+
+    private final FilterQueryFactory filterQueryFactory;
 
     public static final String DILIMITER = "|";
     @Override
@@ -60,89 +65,89 @@ public class ArticleService implements IArticleService {
 
     }
 
-    @Override
-    public ArticleBatchDto fetch(ArticleFilterDto filterDto, String userId) {
-        switch (filterDto.getParam()) {
-            case 0 -> {
-                return fetchFeed(filterDto, userId);
-            }
-            case -1 -> {
-                return fetchFromUserSubscribes(filterDto, userId);
-            }
-            default -> {
-                return fetchFromHubs(filterDto, userId);
-            }
-        }
-    }
+//    @Override
+//    public ArticleBatchDto fetch(ArticleFilterDto filterDto, String userId) {
+//        switch (filterDto.getParam()) {
+//            case 0 -> {
+//                return fetchFeed(filterDto, userId);
+//            }
+//            case -1 -> {
+//                return fetchFromUserSubscribes(filterDto, userId);
+//            }
+//            default -> {
+//                return fetchFromHubs(filterDto, userId);
+//            }
+//        }
+//    }
 
-    private ArticleBatchDto fetchFromHubs(ArticleFilterDto articleFilterDto, String userId) {
-        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        List<Hub> hubList = hubDao.findAll();
-        Optional<Hub> result = hubList.stream().filter(item->item.getId().equals(articleFilterDto.getParam())).findFirst();
-        result.ifPresentOrElse(
-                (item)->{
-                    Long totalCount = articleRepository.calcTotalEntitiesCountByHub(articleFilterDto.getParam());
-                    Integer pageCount = articleRepository.getLastPageNumber(totalCount);
-                    articleBatchDto.setPageCount(pageCount);
-                    articleBatchDto.setArticleDtoList(getArticleByType(result.get().getId(),articleFilterDto,userId));
+//    private ArticleBatchDto fetchFromHubs(ArticleFilterDto articleFilterDto, String userId) {
+//        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+//        List<Hub> hubList = hubDao.findAll();
+//        Optional<Hub> result = hubList.stream().filter(item->item.getId().equals(articleFilterDto.getParam())).findFirst();
+//        result.ifPresentOrElse(
+//                (item)->{
+//                    Long totalCount = articleRepository.calcTotalEntitiesCountByHub(articleFilterDto.getParam());
+//                    Integer pageCount = articleRepository.getLastPageNumber(totalCount);
+//                    articleBatchDto.setPageCount(pageCount);
+//                    articleBatchDto.setArticleDtoList(getArticleByType(result.get().getId(),articleFilterDto,userId));
+//
+//                },
+//                ()->{ throw new EntityNotFoundException("No hub with such name!");
+//                });
+//
+//        return articleBatchDto;
+//    }
 
-                },
-                ()->{ throw new EntityNotFoundException("No hub with such name!");
-                });
+//    private ArticleBatchDto fetchFromUserSubscribes(ArticleFilterDto articleFilterDto, String userId) {
+//        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+//        if(userId==null){
+//            articleBatchDto.setPageCount(0);
+//            articleBatchDto.setArticleDtoList(new ArrayList<>());
+//        }else{
+//            Long totalCount = articleRepository.calcTotalSubscribeEntitiesCount(userId);
+//            Integer pageCount = articleRepository.getLastPageNumber(totalCount);
+//            articleBatchDto.setPageCount(pageCount);
+//            articleBatchDto.setArticleDtoList(getSubscribesArticles(articleFilterDto,userId));
+//        }
+//        return articleBatchDto;
+//
+//    }
 
-        return articleBatchDto;
-    }
+//    private List<ArticleDto> getSubscribesArticles(ArticleFilterDto articleFilterDto, String userId) {
+//
+//        List<Article> articles = articleRepository.getSubscribeArticles(articleFilterDto,userId);
+//        return doMapping(articles,userId);
+//
+//    }
 
-    private ArticleBatchDto fetchFromUserSubscribes(ArticleFilterDto articleFilterDto, String userId) {
-        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        if(userId==null){
-            articleBatchDto.setPageCount(0);
-            articleBatchDto.setArticleDtoList(new ArrayList<>());
-        }else{
-            Long totalCount = articleRepository.calcTotalSubscribeEntitiesCount(userId);
-            Integer pageCount = articleRepository.getLastPageNumber(totalCount);
-            articleBatchDto.setPageCount(pageCount);
-            articleBatchDto.setArticleDtoList(getSubscribesArticles(articleFilterDto,userId));
-        }
-        return articleBatchDto;
+//    private ArticleBatchDto fetchFeed(ArticleFilterDto filterDto, String userId) {
+//        ArticleBatchDto articleBatchDto = createBatch();
+//        articleBatchDto.setArticleDtoList(getFeed(filterDto,userId));
+//        return articleBatchDto;
+//    }
 
-    }
+//    private List<ArticleDto> getFeed(ArticleFilterDto articleFilterDto, String userId) {
+//       List<Article> articles = articleRepository.getSortedAndPaginated(articleFilterDto);
+//        return doMapping(articles,userId);
+//    }
 
-    private List<ArticleDto> getSubscribesArticles(ArticleFilterDto articleFilterDto, String userId) {
+//    private  ArticleBatchDto createBatch(){
+//        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+//        Long totalCount = articleRepository.calcTotalEntitiesCount();
+//        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
+//        articleBatchDto.setPageCount(pageCount);
+//        return articleBatchDto;
+//    }
 
-        List<Article> articles = articleRepository.getSubscribeArticles(articleFilterDto,userId);
-        return doMapping(articles,userId);
-
-    }
-
-    private ArticleBatchDto fetchFeed(ArticleFilterDto filterDto, String userId) {
-        ArticleBatchDto articleBatchDto = createBatch();
-        articleBatchDto.setArticleDtoList(getFeed(filterDto,userId));
-        return articleBatchDto;
-    }
-
-    private List<ArticleDto> getFeed(ArticleFilterDto articleFilterDto, String userId) {
-       List<Article> articles = articleRepository.getSortedAndPaginated(articleFilterDto);
-        return doMapping(articles,userId);
-    }
-
-    private  ArticleBatchDto createBatch(){
-        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleRepository.calcTotalEntitiesCount();
-        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
-        articleBatchDto.setPageCount(pageCount);
-        return articleBatchDto;
-    }
-
-    @Override
-    public ArticleBatchDto fetch(Integer page,String userId) {
-        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleRepository.calcTotalUserArticles(userId);
-        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
-        articleBatchDto.setPageCount(pageCount);
-        articleBatchDto.setArticleDtoList(getOwnArticles(page, userId));
-        return articleBatchDto;
-    }
+//    @Override
+//    public ArticleBatchDto fetch(Integer page,String userId) {
+//        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+//        Long totalCount = articleRepository.calcTotalUserArticles(userId);
+//        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
+//        articleBatchDto.setPageCount(pageCount);
+//        articleBatchDto.setArticleDtoList(getOwnArticles(page, userId));
+//        return articleBatchDto;
+//    }
 
     @Override
     public void delete(String id, String userId) {
@@ -188,29 +193,34 @@ public class ArticleService implements IArticleService {
         return articleBatchDto;
     }
 
-    @Override
-    public ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId) {
+//    @Override
+//    public ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId) {
+//
+//        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+//        Long totalCount = articleRepository.calcTotalUserArticles(otherUserId);
+//        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
+//        articleBatchDto.setPageCount(pageCount);
+//        articleBatchDto.setArticleDtoList(gteOtherArticles(articleFilterDto.getPage(), userId,otherUserId));
+//        return articleBatchDto;
+//    }
 
-        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        Long totalCount = articleRepository.calcTotalUserArticles(otherUserId);
-        Integer pageCount = articleRepository.getLastPageNumber(totalCount);
-        articleBatchDto.setPageCount(pageCount);
-        articleBatchDto.setArticleDtoList(gteOtherArticles(articleFilterDto.getPage(), userId,otherUserId));
-        return articleBatchDto;
-    }
-
-    @Override
-    public ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, Integer page) {
-        return null;
-    }
 
     @Override
     public ArticleBatchDto fetch(ArticleFilterDto articleFilter) {
-
-
-
-        return null;
+        CriteriaQuery<Article> articleCriteriaQuery = filterQueryFactory.createQuery(articleFilter);
+        Page<Article> articlePage = articleRepository.findByQuery(
+                articleCriteriaQuery,
+                PageRequest.of(articleFilter.getPage(),articleFilter.getSize()));
+        return createBatch(articlePage);
     }
+
+    private ArticleBatchDto createBatch(Page<Article> articlePage) {
+        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
+        articleBatchDto.setPageCount(articlePage.getTotalPages());
+        articleBatchDto.setArticleDtoList(articlePage.map(articleMapper::toDto).getContent());
+        return articleBatchDto;
+    }
+
 
     @Override
     public void deleteAdmin(String targetId) {
@@ -231,25 +241,25 @@ public class ArticleService implements IArticleService {
 
     }
 
-    private List<ArticleDto> gteOtherArticles(Integer page, String userId, String otherUserId) {
-        List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.authorArticles, page,otherUserId );
-        return doMapping(articles,userId);
-
-    }
+//    private List<ArticleDto> gteOtherArticles(Integer page, String userId, String otherUserId) {
+//        List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.authorArticles, page,otherUserId );
+//        return doMapping(articles,userId);
+//
+//    }
     private List<ArticleDto> getBookmarks(Integer page, String userId) {
         List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.bookmarks, page,userId );
         return doMapping(articles,userId);
 
     }
-    private List<ArticleDto> getArticleByType(Integer id, ArticleFilterDto articleFilterDto, String userId) {
-        List<Article> articles = articleRepository.getSortedAndPaginated(articleFilterDto,id);
-        return  doMapping(articles,userId);
-    }
+//    private List<ArticleDto> getArticleByType(Integer id, ArticleFilterDto articleFilterDto, String userId) {
+//        List<Article> articles = articleRepository.getSortedAndPaginated(articleFilterDto,id);
+//        return  doMapping(articles,userId);
+//    }
 
-    private List<ArticleDto> getOwnArticles(Integer page, String userId){
-        List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.authorArticles, page,userId );
-        return doMapping(articles,userId);
-    }
+//    private List<ArticleDto> getOwnArticles(Integer page, String userId){
+//        List<Article> articles = articleRepository.getSortedAndPaginated(ArticleRepository.authorArticles, page,userId );
+//        return doMapping(articles,userId);
+//    }
 
     private List<ArticleDto> doMapping(List<Article> articles,String userId){
         List<ArticleDto> articleDtos = new ArrayList<>();

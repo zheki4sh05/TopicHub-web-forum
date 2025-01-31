@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @Controller
-@RequestMapping("/admin/article/moderation")
+@RequestMapping("/admin/article")
 @AllArgsConstructor
 public class ArticleModerationController {
 
     private final IArticleService articleService;
 
-    @GetMapping("")
+    @GetMapping("/fetch")
     public String getModeration(
             @RequestParam Map<String, String> reqParam,
             Model model

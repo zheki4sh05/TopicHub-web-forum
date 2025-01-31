@@ -1,6 +1,7 @@
 package com.example.topichubbackend.config;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.*;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.*;
@@ -49,6 +50,10 @@ public class PersistenceConfiguration {
             JpaTransactionManager txManager = new JpaTransactionManager();
             txManager.setEntityManagerFactory(entityManagerFactory);
             return txManager;
+        }
+        @Bean
+    public CriteriaBuilder createBuilder(EntityManager entityManager){
+            return entityManager.getCriteriaBuilder();
         }
     private Properties jpaProperties() {
         Properties properties = new Properties();

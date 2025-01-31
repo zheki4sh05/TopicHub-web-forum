@@ -1,11 +1,14 @@
 package com.example.topichubbackend.controller.rest;
 
 import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
+import com.example.topichubbackend.util.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.http.*;
+import org.springframework.web.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -22,22 +25,25 @@ public class ArticleController {
     @GetMapping("")
     public ResponseEntity<?> doGet(
             @RequestParam Map<String, String> reqParam)  {
-
-            String userId = reqParam.get("userId");
-            String type = reqParam.get("type");
-
-            ArticleFilterDto articleFilterDto = parseFilterParams(reqParam);
-            ArticleBatchDto articleBatchDto;
-            if(type.equals("author")){
-                String otherUserId = reqParam.get("otherUserId");
-                log.info("filter dto: {}",articleFilterDto);
-                articleBatchDto = articleService.fetch(articleFilterDto,userId,otherUserId);
+            if(!reqParam.get("status").equals(StatusDto.PUBLISH.type())){
+                throw new BadRequestException();
             }else{
-                log.info("filter dto: {}",articleFilterDto);
-                articleFilterDto.setParam(Integer.valueOf(reqParam.get("hub")));
-                 articleBatchDto = articleService.fetch(articleFilterDto,userId);
+                ArticleFilterDto articleFilterDto = HttpRequestUtils.parseFilterParams(reqParam);
+                ArticleBatchDto articleBatchDto;
+                articleBatchDto = articleService.fetch(articleFilterDto);
+                return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
             }
-            return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
+
+//            if(type.equals("author")){
+//                String otherUserId = reqParam.get("otherUserId");
+//                log.info("filter dto: {}",articleFilterDto);
+//                articleBatchDto = articleService.fetch(articleFilterDto,userId,otherUserId);
+//            }else{
+//                log.info("filter dto: {}",articleFilterDto);
+//                articleFilterDto.setParam(Integer.valueOf(reqParam.get("hub")));
+//                 articleBatchDto = articleService.fetch(articleFilterDto,userId);
+//            }
+
 
     }
 
