@@ -66,6 +66,7 @@ public class AuthController {
             @RequestBody AuthDto authDto
     ){
         var userDto = authService.login(authDto);
+        userDto.setPassword(authDto.getPassword());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 

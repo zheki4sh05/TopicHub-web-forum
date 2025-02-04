@@ -41,6 +41,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public UserDto login(AuthDto userDto) {
+        log.info("userDto:{}", userDto);
         User user = userRepository.findByEmailOrLogin(userDto.getLogin());
         return checkUser(user,userDto);
     }
@@ -132,15 +133,16 @@ public class AuthService implements IAuthService {
                 .build();
     }
     private UserDto checkUser(User isExist, AuthDto userDto) {
-        if(isExist==null){
+        System.out.println(passwordEncoder.encode(userDto.getPassword()));
+        if (isExist == null) {
             throw new InvalidCredentialsException(ErrorKey.NOT_FOUND.type());
-        }else if(isExist.getState()){
+        } else if (isExist.getStatus().equals(StatusDto.BLOCK.type())) {
             throw new UserBlockException();
-        }else {
-            if(isExist.getPassword().equals(passwordEncoder.encode(userDto.getPassword()))){
+        } else {
+            if (passwordEncoder.matches(userDto.getPassword(), isExist.getPassword())) {
                 return userMapper.toDto(isExist);
-            }else{
-                throw new InvalidCredentialsException(ErrorKey.NOT_FOUND.type());
+            } else {
+                throw new InvalidCredentialsException(ErrorKey.PASS_INCORRECT.type());
             }
         }
     }
