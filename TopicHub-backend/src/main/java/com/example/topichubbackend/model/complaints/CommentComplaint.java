@@ -4,6 +4,7 @@ import com.example.topichubbackend.model.*;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.*;
 import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +19,9 @@ public class CommentComplaint {
 
     @Column(name = "title")
     private String title;
+
+    @Column(name = "date")
+    private Timestamp date;
 
     @Column(name = "body")
     private String body;

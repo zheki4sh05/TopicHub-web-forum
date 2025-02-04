@@ -10,7 +10,7 @@ public class ImplRuntimeException extends BaseRuntimeException{
     @Override
     public String getLocalizedMessage() {
         if(messageKey!=null){
-            return BaseRuntimeException.getResourceBundle().getString(messageKey);
+            return "";
         }else{
             return "";
         }

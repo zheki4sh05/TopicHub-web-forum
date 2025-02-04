@@ -21,7 +21,7 @@ public class ReactionService implements IReactionService {
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
-    private final ArticleRepository articleRepository;
+    private final ArticleRepo articleRepository;
     @Override
     public ReactionDto check(String articleId, String authorId, String userId) {
         Boolean subscribe =subscriptionRepository.checkSubscribe(UUID.fromString(userId),UUID.fromString(authorId));
@@ -37,7 +37,7 @@ public class ReactionService implements IReactionService {
 
         switch (type) {
             case "article" -> {
-                Article article = articleRepository.findById(targetId).orElseThrow(EntityNotFoundException::new);
+                var article = articleRepository.findById(targetId).orElseThrow(EntityNotFoundException::new);
                 User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
                 Optional<Likes> reaction = likeRepository.findById(article.getId(), user.getUuid());
                 reaction.ifPresentOrElse(
@@ -59,7 +59,7 @@ public class ReactionService implements IReactionService {
         likeRepository.save(item);
     }
 
-    private void createNewReaction(Article article, User user, Integer value) {
+    private void createNewReaction(ArticleEntity article, User user, Integer value) {
         likeRepository.save(Likes.builder()
                 .uuid(UUID.randomUUID())
                 .state(value)
@@ -87,7 +87,7 @@ public class ReactionService implements IReactionService {
     @Override
     public void manageBookmarks(Integer value, String articleId, String userId) {
         User user  = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
-        Article article = articleRepository.findById(Long.valueOf(articleId)).orElseThrow(EntityNotFoundException::new);
+        var article = articleRepository.findById(Long.valueOf(articleId)).orElseThrow(EntityNotFoundException::new);
         if(value==1){
             bookmarkRepository.save(Bookmark.builder()
                             .article(article)

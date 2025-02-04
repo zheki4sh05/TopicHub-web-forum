@@ -65,7 +65,7 @@ alter sequence article_hub_seq owned by article.hub;
 create table if not exists articlepart
 (
     val     varchar                                                        not null,
-    article integer default nextval('"articlePart_article_seq"'::regclass) not null
+    articleEntity integer default nextval('"articlePart_article_seq"'::regclass) not null
     constraint articlepart_article_id_fk
     references article
     on update cascade on delete cascade,

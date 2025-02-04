@@ -1,13 +1,18 @@
 package com.example.topichubbackend.exceptions;
 
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
 import java.util.*;
 
 public abstract class BaseRuntimeException extends RuntimeException{
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("messages", Locale.getDefault());
 
-    protected static ResourceBundle getResourceBundle(){
-        return RESOURCE_BUNDLE;
-    }
+//    @Autowired
+//    private static final ResourceBundle RESOURCE_BUNDLE;
+
+//    protected static ResourceBundle getResourceBundle(){
+//        return RESOURCE_BUNDLE;
+//    }
     @Override
     public abstract String getLocalizedMessage();
 

@@ -3,8 +3,8 @@
 
 function getRequestConfig(lng){
     return {
-       withCredentials: true,
-        credentials: 'include',
+      //  withCredentials: true,
+        // credentials: 'include',
         headers: 
         {
           'Content-Type': 'application/json', 

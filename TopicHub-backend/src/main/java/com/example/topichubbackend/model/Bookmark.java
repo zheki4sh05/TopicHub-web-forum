@@ -22,6 +22,6 @@ public class Bookmark {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article")
-    private Article article;
+    private ArticleEntity article;
 
 }

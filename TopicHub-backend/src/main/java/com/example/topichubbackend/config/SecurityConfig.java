@@ -18,7 +18,10 @@ import org.springframework.security.crypto.password.*;
 import org.springframework.security.web.*;
 import org.springframework.security.web.authentication.logout.*;
 import org.springframework.security.web.authentication.www.*;
+import org.springframework.web.cors.*;
 
+import javax.sql.*;
+import java.util.*;
 
 @Configuration
 @EnableWebSecurity
@@ -40,16 +43,17 @@ public class SecurityConfig extends WebSecurityConfiguration{
                 .disable()
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests->
-                    authorizeRequests
-                          .requestMatchers("/api/v1/auth/**").permitAll()
-                            .requestMatchers("/admin/**").hasAuthority(RoleDto.ADMIN.type())
-                            .requestMatchers("/api/v1/logout").permitAll()
-                            .requestMatchers("/api/v1/article").permitAll()
-                            .requestMatchers("/api/v1/answers").permitAll()
-                            .requestMatchers("/api/v1/image").permitAll()
-                            .requestMatchers("/api/v1/hubs").permitAll()
-                            .anyRequest().authenticated()
-        )
+                        authorizeRequests
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/admin/**").hasAuthority(RoleDto.ADMIN.type())
+                                .requestMatchers("/api/v1/logout").permitAll()
+                                .requestMatchers("/api/v1/article").permitAll()
+                                .requestMatchers("/api/v1/article/**").permitAll()
+                                .requestMatchers("/api/v1/answers").permitAll()
+                                .requestMatchers("/api/v1/image").permitAll()
+                                .requestMatchers("/api/v1/hubs").permitAll()
+                                .anyRequest().authenticated()
+                )
                 .logout(
                         logout->logout.logoutUrl("/logout")
                                 .addLogoutHandler(new SecurityContextLogoutHandler())
@@ -70,6 +74,25 @@ public class SecurityConfig extends WebSecurityConfiguration{
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
+
+
+        config.setAllowedHeaders(Arrays.asList("*"));
+
+
+        config.setAllowCredentials(false);
+
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 
 }

@@ -7,8 +7,11 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="#" th:href="@{/admin}">Главная</a></li>
             <li><a class="dropdown-item" href="#" th:href="@{/admin/hub/fetch}">Хабы</a></li>
-            <li><a class="dropdown-item" href="#" th:href="@{/WEB-INF/views/admin/hub/hub.html}">Статьи</a></li>
+            <li><a class="dropdown-item" href="#" th:href="@{/admin/article/fetch(status='MODERATION', page=1)}">Статьи</a></li>
             <li><a class="dropdown-item" href="#" th:href="@{/admin/author/fetch(status='ACTIVE')}">Авторы</a></li>
+            <li><a class="dropdown-item" href="#" th:href="@{/admin/complaint/fetch/{type}(type='article', page=1)}">Жалобы</a></li>
+
+
         </ul>
     </div>
 </th:block>

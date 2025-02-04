@@ -14,16 +14,16 @@ public interface ArticleMapper{
             @Mapping(source = "hub.id", target = "hub"),
             @Mapping(source = "articlePartList", target = "list"),
             @Mapping(source = "author", target = "userDto"),
-            @Mapping(ignore = true, target = "likes"),
-            @Mapping(ignore = true, target = "dislikes"),
+            @Mapping(source = "likes", target = "likes"),
+            @Mapping(source = "dislikes", target = "dislikes"),
             @Mapping(ignore = true, target = "likeState"),
-            @Mapping(ignore = true, target = "commentsCount"),
+            @Mapping(source = "comments", target = "commentsCount"),
             @Mapping( target = "keyWords", expression = "java(getWords(item.getKeyWords()))")
     })
     ArticleDto toDto(Article item);
 
     default List<String> getWords(String words){
-        return Arrays.asList(words.split("|"));
+        return Arrays.asList(words.split("\\|"));
     }
 
 }

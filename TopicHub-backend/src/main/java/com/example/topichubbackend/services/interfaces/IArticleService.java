@@ -9,11 +9,13 @@ public interface IArticleService {
 //    ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId);
     ArticleBatchDto fetch(ArticleFilterDto articleFilter);
     void delete(String id, String userId);
-    ArticleBatchDto search(String author, String theme, String keywords,String userId);
+    ArticleBatchDto search(SearchDto searchDto);
     ArticleBatchDto fetchBookMarks(String userId, Integer page);
     void deleteAdmin(String targetId);
     void update(ArticleDto updatedArticle, String id);
     void update(ArticleStatusDto articleStatusDto);
 
+    ArticleDto findById(String id);
 
+    String getStatusNameById(String id);
 }

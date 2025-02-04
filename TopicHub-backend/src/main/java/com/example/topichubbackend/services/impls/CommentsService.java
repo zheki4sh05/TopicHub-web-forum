@@ -5,6 +5,7 @@ import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.persistence.*;
+import jakarta.transaction.*;
 import lombok.*;
 import org.springframework.stereotype.*;
 
@@ -16,10 +17,11 @@ import java.util.*;
 @AllArgsConstructor
 public class CommentsService implements ICommentsService {
     private final IEmailService emailService;
-    private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    //private final CommentMapper commentMapper;
+    private final CommentFullMapper commentFullMapper;
+    private final CommentMapper commentMapper;
+    private final ArticleRepo articleRepo;
     @Override
     public List<CommentDto> fetch(String article) {
         List<Comment> comments = commentRepository.findAllByArticleId(Long.valueOf(article));
@@ -27,8 +29,9 @@ public class CommentsService implements ICommentsService {
     }
 
     @Override
+    @Transactional
     public CommentDto create(CommentDto commentDto, String userId) {
-        Article article = articleRepository.findById(commentDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
+        var article = articleRepo.findById(commentDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
         User author = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityExistsException::new);
         Comment comment = Comment.builder()
                 .id(UUID.randomUUID())
@@ -44,8 +47,7 @@ public class CommentsService implements ICommentsService {
         }
         commentRepository.save(comment);
         emailService.sendCommentNotification(comment, article.getAuthor());
-       // return commentMapper.mapFrom(comment, article.getId(), new HashSet<>());
-        return new CommentDto();
+       return commentMapper.mapFrom(comment);
     }
 
     @Override
@@ -53,9 +55,8 @@ public class CommentsService implements ICommentsService {
         Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
             comment.setMessage(commentDto.getValue());
-            commentRepository.save(comment);
-//            return commentMapper.mapFrom(comment, commentDto.getArticleId(), new HashSet<>());
-            return new CommentDto();
+           var updated =  commentRepository.save(comment);
+            return commentMapper.mapFrom(updated);
         }else{
             throw new EntityNotFoundException();
         }
@@ -71,12 +72,16 @@ public class CommentsService implements ICommentsService {
         }
     }
 
+    @Override
+    public CommentDto findById(String targetId) {
+        return null;
+    }
+
     public List<CommentDto> mapToDtoList(List<Comment> comments,Long articleId) {
         Set<UUID> processedIds = new HashSet<>();
         List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {
-//            commentDtos.add(commentMapper.mapFrom(comment,articleId, processedIds));
-            commentDtos.add( new CommentDto());
+            commentDtos.add(commentFullMapper.mapFrom(comment,articleId, processedIds));
         }
         return commentDtos;
     }

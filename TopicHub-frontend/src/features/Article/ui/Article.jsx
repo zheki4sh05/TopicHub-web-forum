@@ -24,11 +24,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
 import { useEffect, useState } from "react";
-import { fetchHubs } from "../../../entities/hubs/api/request";
 import MainModal from "../../../shared/ConfirmModal/ui/Modal";
 import ModalCreation from "./../../../shared/Complaint/ui/ModalCreation";
 import { useTranslation } from "react-i18next";
 import { getActiveLanguage } from "../../../processes/header/model/settingsSlice";
+import { fetchHubs } from "../../../pages/Article/api/requests";
 function Article({ item = {}, mode, edit = false, handleDelete, handleEdit }) {
   const { t } = useTranslation();
   const lang = useSelector(getActiveLanguage);

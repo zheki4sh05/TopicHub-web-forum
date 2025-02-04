@@ -1,7 +1,7 @@
 package com.example.topichubbackend.model;
 
+import com.example.topichubbackend.model.*;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.*;
 
 import java.util.*;
@@ -14,19 +14,19 @@ import java.util.*;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ArticlePart {
-    @Column(name = "id")
-    private Integer id;
-
-    @Column(name = "uuid")
     @Id
     @EqualsAndHashCode.Include
+    @Column(name = "uuid")
     private UUID uuid;
+
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "type")
     private String type;
 
-    @Column(name = "val")
     @EqualsAndHashCode.Include
+    @Column(name = "val")
     private String value;
 
     @Column(name = "name")
@@ -36,7 +36,10 @@ public class ArticlePart {
     private Long created;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article")
+    @JoinColumn(name = "article", insertable = false, updatable = false)
     private Article article;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article")
+    private ArticleEntity articleEntity;
 }

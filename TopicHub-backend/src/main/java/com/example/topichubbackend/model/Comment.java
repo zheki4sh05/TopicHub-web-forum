@@ -23,7 +23,6 @@ import java.util.*;
 public class Comment {
     @Id
     @Column(name = "id")
-//    @Convert(converter = StringToUUIDConverter.class)
     private UUID id;
 
     @Column(name = "message")
@@ -34,7 +33,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article")
-    private Article article;
+    private ArticleEntity article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")

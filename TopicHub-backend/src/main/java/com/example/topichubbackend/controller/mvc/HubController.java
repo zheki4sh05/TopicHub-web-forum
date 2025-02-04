@@ -1,17 +1,11 @@
 package com.example.topichubbackend.controller.mvc;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.services.interfaces.*;
-import jakarta.annotation.security.*;
 import jakarta.validation.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
-import org.springframework.context.annotation.*;
-import org.springframework.security.access.annotation.*;
-import org.springframework.security.access.prepost.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.*;
 
 @Controller
 @RequestMapping("/admin/hub")

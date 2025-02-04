@@ -41,7 +41,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public UserDto login(AuthDto userDto) {
-        User user = userRepository.findByEmailOrLogin(userDto.getData());
+        User user = userRepository.findByEmailOrLogin(userDto.getLogin());
         return checkUser(user,userDto);
     }
 
@@ -109,6 +109,11 @@ public class AuthService implements IAuthService {
         log.info("users list by status:"+status+" {}",userList.getContent());
         return userList.map(userMapper::toDto);
     }
+
+//    @Override
+//    public UserDto authenticate(CredentialsDto credentialsDto) {
+//        return null;
+//    }
 
     private User prepareNewUser(UserDto userDto){
         UUID uuid = UUID.randomUUID();

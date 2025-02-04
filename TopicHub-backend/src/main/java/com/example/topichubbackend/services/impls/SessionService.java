@@ -1,33 +1,36 @@
 package com.example.topichubbackend.services.impls;
+
+import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
+import jakarta.servlet.http.*;
+import lombok.*;
 import lombok.extern.slf4j.*;
+import org.springframework.stereotype.*;
+
 import java.time.*;
 import java.time.chrono.*;
 import java.util.*;
 
-//@Slf4j
-//public class SessionService implements ISessionService {
-//    private final static SessionService sessionService = new SessionService();
-//    private SessionService() { }
-//    public static SessionService  getInstance(){
-//        return sessionService;
-//    }
-//
-//    private final SessionRepository sessionDao = RepositoryFactory.createSessionDao();
-//
+@Slf4j
+@Service
+@AllArgsConstructor
+public class SessionService implements ISessionService {
+
+    private final SessionRepository sessionRepository;
 //    @Override
 //    public UUID createByUser(User registeredUser) {
 //
-//        Optional<Session> sessionWrapper = sessionDao.findByUserId(registeredUser.getUuid());
+//        Optional<Session> sessionWrapper = sessionRepository.findByUserId(registeredUser.getUuid());
 //
-//        sessionWrapper.ifPresent(sessionDao::delete);
+//        sessionWrapper.ifPresent(sessionRepository::delete);
 //
 //        UUID newUUID = UUID.randomUUID();
 //
 //        Session session = new Session(newUUID, registeredUser, LocalDateTime.now().plusHours(2));
-//        sessionDao.save(session);
+//        sessionRepository.save(session);
 //
 //        return newUUID;
 //    }
@@ -35,8 +38,8 @@ import java.util.*;
 //    @Override
 //    public void delete(String value) {
 //        UUID uuid = UUID.fromString(value);
-//        Session session = sessionDao.findById(uuid).get();
-//        sessionDao.delete(session);
+//        Session session = sessionRepository.findById(uuid).get();
+//        sessionRepository.delete(session);
 //    }
 //
 //    @Override
@@ -45,7 +48,7 @@ import java.util.*;
 //        log.info("check session by id: {}",uuid);
 //        Session session = null;
 //        try {
-//            session = sessionDao.findById(uuid).orElseThrow(BadRequestException::new);
+//            session = sessionRepository.findById(uuid).orElseThrow(BadRequestException::new);
 //            log.info("session: {}",session);
 //        } catch (BadRequestException e) {
 //            return false;
@@ -53,4 +56,9 @@ import java.util.*;
 //
 //        return session.getExpiresAt().isAfter(ChronoLocalDateTime.from(LocalDateTime.now()));
 //    }
-//}
+
+    @Override
+    public UserDto findByToken(String principal) {
+        return null;
+    }
+}

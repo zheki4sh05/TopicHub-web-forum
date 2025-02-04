@@ -1,12 +1,12 @@
 package com.example.topichubbackend.controller.mvc;
 
+
 import com.example.topichubbackend.dto.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.security.core.annotation.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
-import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -15,16 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MVCAuthController {
     @GetMapping("")
-    public String welcome(Model model,
-    @AuthenticationPrincipal UserDetails user
+    public String welcome(
+            @AuthenticationPrincipal UserDetails user
     ){
-        if(user.getAuthorities()
-                .stream()
-                .anyMatch(item->item.getAuthority().equals(RoleDto.ADMIN.type()))){
-            return "redirect:/admin";
-        }else{
-            return "redirect:http://localhost:3000";
-        }
-
+            if(user.getAuthorities()
+                    .stream()
+                    .anyMatch(item->item.getAuthority().equals(RoleDto.ADMIN.type()))){
+                return "redirect:/admin";
+            }else{
+                return "redirect:http://localhost:3000";
+            }
     }
+
+
 }

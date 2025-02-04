@@ -8,6 +8,7 @@ import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
 import lombok.*;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 import java.util.*;
 import java.util.stream.*;
@@ -19,7 +20,7 @@ public class ComplaintService implements IComplaintControl {
     private final CommentComplaintRepository commentComplaintRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final ArticleRepository articleRepository;
+    private final ArticleRepo articleRepository;
     private final ComplaintMapper complaintMapper;
     private final String ARTICLE="article";
     private final String COMMENT="comment";
@@ -55,18 +56,32 @@ public class ComplaintService implements IComplaintControl {
     }
 
     @Override
-    public List<ComplaintDto> findAllByType(String type) {
+    public ComplaintDto findById(String id, String type) {
+        if(type.equals(ARTICLE)){
+          ArticleComplaint articleComplaint =   articleComplaintRepository.findById(UUID.fromString(id))
+                  .orElseThrow(EntityNotFoundException::new);
+            return complaintMapper.mapFrom(articleComplaint);
+
+        }else if(type.equals(COMMENT)){
+            CommentComplaint commentComplaint =   commentComplaintRepository.findById(UUID.fromString(id))
+                    .orElseThrow(EntityNotFoundException::new);
+            return complaintMapper.mapFrom(commentComplaint);
+        }else{
+            throw  new BadRequestException();
+        }
+    }
+
+    @Override
+    public Page findAllByType(String type, Pageable pageable) {
 
         if(type.equals(ARTICLE)){
 
-            return articleComplaintRepository.findAllArticle().stream()
-                    .map(complaintMapper::mapFrom)
-                    .collect(Collectors.toList());
+            return articleComplaintRepository.findAll(pageable)
+                    .map(complaintMapper::mapFrom);
 
         }else if(type.equals(COMMENT)){
-            return commentComplaintRepository.findAllComment().stream()
-                    .map(complaintMapper::mapFrom)
-                    .collect(Collectors.toList());
+            return commentComplaintRepository.findAllComment(pageable)
+                    .map(complaintMapper::mapFrom);
         }else{
             throw  new BadRequestException();
         }
@@ -102,7 +117,7 @@ public class ComplaintService implements IComplaintControl {
 
     private void createAndSaveArticleComplaint(ComplaintDto complaintDto, User author) {
 
-        Article article = articleRepository.findById(Long.valueOf(complaintDto.getTargetId()))
+        var article = articleRepository.findById(Long.valueOf(complaintDto.getTargetId()))
                 .orElseThrow(EntityNotFoundException::new);
 
         ArticleComplaint articleComplaint = ArticleComplaint.builder()

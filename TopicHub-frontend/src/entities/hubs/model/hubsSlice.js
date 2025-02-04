@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import DomainNames from "../../../app/store/DomainNames";
-import { createHubs, doDeleteHubs, doUpdateHubs, fetchHubs } from "../api/request";
+import { createHubs, doDeleteHubs, doUpdateHubs } from "../api/request";
+import { fetchHubs } from "../../../pages/Article/api/requests";
 //----state---
 const initialState = {
   list: [],

@@ -1,35 +1,43 @@
 package com.example.topichubbackend.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
 
-
 import java.sql.*;
 import java.util.*;
 
-
+@Immutable
+@Entity
+@Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Builder
-@Entity
-@Table(name="article")
-@NamedEntityGraph( name = "article.articlePartList",
-        attributeNodes = @NamedAttributeNode("articlePartList") )
+@Table(name="article_info")
+@NamedEntityGraph(name = "article.articlePartList", attributeNodes = @NamedAttributeNode("articlePartList"))
 public class Article {
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "theme")
     private String theme;
 
+    @Column(name = "likes")
+    private Integer likes;
+
+    @Column(name = "dislikes")
+    private Integer dislikes;
+
+    @Column(name = "comments_count")
+    private Integer comments;
+
     @Column(name = "keywords")
     private String keyWords;
+
+    @Column(name = "status")
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "hub")
@@ -42,9 +50,6 @@ public class Article {
     @Column(name = "created")
     private Timestamp created;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
     private List<ArticlePart> articlePartList;
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Likes> likesList;
 }

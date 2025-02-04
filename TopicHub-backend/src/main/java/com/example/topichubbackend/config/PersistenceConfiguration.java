@@ -1,5 +1,6 @@
 package com.example.topichubbackend.config;
 
+import com.zaxxer.hikari.*;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.*;
@@ -20,17 +21,24 @@ import java.util.*;
 public class PersistenceConfiguration {
         @Bean
         public DataSource dataSource() {
-            DriverManagerDataSource driver = new DriverManagerDataSource();
+//            DriverManagerDataSource driver = new DriverManagerDataSource();
 //            driver.setDriverClassName(System.getenv("DB_DRIVER"));
 //            driver.setUrl(System.getenv("DB_URL"));
 //            driver.setUsername(System.getenv("DB_USERNAME"));
 //            driver.setPassword(System.getenv("DB_PASSWORD"));
-            driver.setDriverClassName("org.postgresql.Driver");
-            driver.setUrl("jdbc:postgresql://localhost:5432/web_forum");
-            driver.setUsername("postgres");
-            driver.setPassword("lhs22LI=D=");
-            driver.setConnectionProperties(jpaProperties());
-            return driver;
+//            driver.setDriverClassName("org.postgresql.Driver");
+//            driver.setUrl("jdbc:postgresql://localhost:5432/web_forum");
+//            driver.setUsername("postgres");
+//            driver.setPassword("lhs22LI=D=");
+//            driver.setConnectionProperties(jpaProperties());
+                HikariConfig config = new HikariConfig();
+                config.setJdbcUrl("jdbc:postgresql://localhost:5432/web_forum");
+                config.setUsername("postgres");
+                config.setPassword("lhs22LI=D=");
+                config.setDriverClassName("org.postgresql.Driver");
+                config.setMinimumIdle(4);
+                config.setMaximumPoolSize(4);
+                return new HikariDataSource(config);
         }
 
         @Bean
@@ -57,10 +65,12 @@ public class PersistenceConfiguration {
         }
     private Properties jpaProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.hbm2ddl.auto", "none");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql", "true");
+        properties.setProperty("spring.jpa.show-sql", "true");
+        properties.setProperty("spring.jpa.properties.hibernate.format_sql", "true");
+//        properties.setProperty("hibernate.show_sql", "true");
+//        properties.setProperty("hibernate.format_sql", "true");
         return properties;
     }
 

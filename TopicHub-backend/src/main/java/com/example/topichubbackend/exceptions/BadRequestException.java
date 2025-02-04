@@ -20,13 +20,13 @@ public class BadRequestException extends ImplRuntimeException{
     public BadRequestException() {
         super(ErrorKey.WRONG_REQUEST_PARAM.type());
     }
-    public String getLocalizedMessages() {
-        String str = messages.stream().map(item->
-                BaseRuntimeException.getResourceBundle().getString(ErrorKey.valueOf(item).type())
-        ).collect(Collectors.joining(" "));
-        messages.clear();
-        return str;
-    }
+//    public String getLocalizedMessages() {
+//        String str = messages.stream().map(item->
+//                BaseRuntimeException.getResourceBundle().getString(ErrorKey.valueOf(item).type())
+//        ).collect(Collectors.joining(" "));
+//        messages.clear();
+//        return str;
+//    }
     @Override
     public Integer getCode() {
         return 400;

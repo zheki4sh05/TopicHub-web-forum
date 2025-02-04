@@ -1,13 +1,15 @@
 package com.example.topichubbackend.config;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.*;
 import org.springframework.context.annotation.*;
+import org.springframework.util.*;
+import org.springframework.validation.beanvalidation.*;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring6.*;
 import org.thymeleaf.spring6.templateresolver.*;
 import org.thymeleaf.spring6.view.*;
 import org.thymeleaf.templatemode.*;
+
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.example.topichubbackend.controller.rest")
@@ -15,15 +17,10 @@ import org.thymeleaf.templatemode.*;
 @ComponentScan(basePackages = "com.example.topichubbackend.services")
 @ComponentScan(basePackages = "com.example.topichubbackend.repository")
 @ComponentScan(basePackages = "com.example.topichubbackend.config")
+@ComponentScan(basePackages = "com.example.topichubbackend.filters")
 @ComponentScan(basePackages = "com.example.topichubbackend.mapper")
 public class SpringConfig implements WebMvcConfigurer{
 
-//    private final ApplicationContext applicationContext;
-
-//    @Autowired
-//    public SpringConfig(ApplicationContext applicationContext) {
-//        this.applicationContext = applicationContext;
-//    }
 @Bean
 public DispatcherServlet dispatcherServlet() {
 DispatcherServlet dispatcherServlet = new DispatcherServlet();
@@ -34,7 +31,6 @@ return dispatcherServlet;
     @Bean
     public SpringResourceTemplateResolver templateResolver(){
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-       // templateResolver.setApplicationContext(this.applicationContext);
         templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -57,7 +53,10 @@ return dispatcherServlet;
         resolver.setTemplateEngine(templateEngine(templateResolver()));
         resolver.setCharacterEncoding("UTF-8");
         registry.viewResolver(resolver);
+}
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
     }
-
 
 }

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Статьи</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .nav-links a {
+            margin-right: 15px;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #000;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .nav-links a.active {
+            background-color: #0056b3;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div th:insert="~{fragments/navbar.html :: navbar}" ></div>
+<div th:insert="~{fragments/menu.html :: menu}" ></div>
+<div class="container mt-4">
+    <div style="max-width: 250px;"  >
+
+        <div>
+            <h4>Выберите статус</h4>
+            <div class="nav-links d-flex justify-content-start align-items-center">
+                <a href="/admin/article/fetch?status=MODERATION&page=1"  th:classappend="${status == 'MODERATION'} ? 'active' : ''" style="white-space: nowrap">На модерации</a>
+                <a href="/admin/article/fetch?status=PUBLISH&page=1"  th:classappend="${status == 'PUBLISH'} ? 'active' : ''">Опубликованы</a>
+                <a href="/admin/article/fetch?status=BLOCK&page=1"  th:classappend="${status == 'BLOCK'} ? 'active' : ''">Заблокированы</a>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <h1>Article List</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Theme</th>
+            <th scope="col">Author</th>
+            <th scope="col">Email</th>
+            <th scope="col">Created</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <tr th:each="article : ${batch.getArticleDtoList()}">
+            <td th:text="${article.id}"></td>
+            <td th:text="${article.theme}"></td>
+            <td th:text="${article.getUserDto().login}"></td>
+            <td th:text="${article.getUserDto().getEmail()}"></td>
+            <td th:text="${#dates.format(article.getCreated(), 'dd-MM-yyyy HH:mm:ss')}"></td>
+            <td>
+                <div class="d-flex" >
+                    <a class="btn btn-primary" style="margin-right: 10px"  th:href="@{/admin/article/view(id=${article.getId()}, page=${batch.page}, status=${status})}" >Open</a>
+                    <form th:action="@{/admin/article/del}" method="post">
+                        <input type="hidden" name="id" th:value="${article.getId()}"/>
+                        <input type="hidden" name="status" th:value="${status}"/>
+                        <input type="hidden" name="page" th:value="${batch.getPage()}"/>
+                        <button class="btn btn-danger" type="submit">Удалить</button>
+                    </form>
+
+                    <form th:action="@{/admin/article/status}" method="post" modelAttribute="articleStatus">
+                        <input type="hidden" name="id" th:value="${article.getId()}"/>
+                        <div th:if="${status == 'MODERATION'}">
+                            <select name="status" onchange="this.form.submit()">
+                                <option value="">Выберите действие</option>
+                                <option value="PUBLISH">Опубликовать</option>
+                                <option value="BLOCK">Заблокировать</option>
+                            </select>
+                        </div>
+                        <div th:if="${status == 'PUBLISH'}">
+                            <select name="status" onchange="this.form.submit()">
+                                <option value="">Выберите действие</option>
+                                <option value="MODERATION">На модерацию</option>
+                                <option value="BLOCK">Заблокировать</option>
+                            </select>
+                        </div>
+                        <div th:if="${status == 'BLOCK'}">
+                            <select name="status" onchange="this.form.submit()">
+                                <option value="">Выберите действие</option>
+                                <option value="PUBLISH">Опубликовать</option>
+                                <option value="MODERATION">На модерацию</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="page" th:value="${batch.page}"/>
+                    </form>
+                </div>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Пагинация">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${batch.getPage() == 1  ? 'disabled' : ''}">
+                <a class="page-link" href="#" th:href="@{'/admin/article/fetch?status=' + ${status} + '&page=' + (${batch.getPage() - 1})}" th:text="#{pagination.previous}">Назад</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, batch.getPageCount())}" th:classappend="${i == batch.getPage()} ? 'active'">
+                <a class="page-link" th:href="@{'/admin/article/fetch?status=' + ${status} + '&page=' + ${i}}" th:text="${i}"></a>
+            </li>
+            <li class="page-item" th:classappend="${batch.getPage() == batch.getPageCount() ? 'disabled' : ''}">
+                <a class="page-link" href="#" th:href="@{'/admin/article/fetch?status=' + ${status} + '&page=' + (${batch.getPage() + 1})}" th:text="#{pagination.next}">Вперед</a>
+            </li>
+        </ul>
+    </nav>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -12,4 +12,6 @@ public interface ICommentsService {
     CommentDto update(CommentDto commentDto, String userId);
 
     void delete(String commentId, String userId);
+
+    CommentDto findById(String targetId);
 }

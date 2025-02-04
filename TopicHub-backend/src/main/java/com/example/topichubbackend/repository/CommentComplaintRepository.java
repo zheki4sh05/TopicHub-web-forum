@@ -1,5 +1,6 @@
 package com.example.topichubbackend.repository;
 import com.example.topichubbackend.model.complaints.*;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.*;
@@ -20,7 +21,7 @@ From CommentComplaint ac where ac.comment.id = :article and ac.author.uuid = :au
 From CommentComplaint  cc
 
 """)
-    List<CommentComplaint> findAllComment();
+    Page<CommentComplaint> findAllComment(Pageable pageable);
 
     @Query("""
 

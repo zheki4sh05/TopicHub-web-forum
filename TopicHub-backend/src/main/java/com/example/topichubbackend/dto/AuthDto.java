@@ -8,7 +8,7 @@ import lombok.*;
 @Data
 @Builder
 public class AuthDto {
-    private String data;
+    private String login;
 
     @NotBlank(message = "PASS_EMPTY")
     @NotEmpty(message = "PASS_EMPTY")

@@ -24,4 +24,6 @@ public interface IAuthService {
     UserDto findById(String userId);
 
     Page<UserDto> fetch(String status, Pageable page);
+
+//    UserDto authenticate(CredentialsDto credentialsDto);
 }

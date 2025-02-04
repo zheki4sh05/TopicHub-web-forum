@@ -16,12 +16,12 @@ public class ArticleDto {
     private String theme;
     private List<String> keyWords;
     private List<ArticlePartDto> list;
-    private Long likes;
-    private Long dislikes;
+    private Integer likes;
+    private Integer dislikes;
     private Timestamp created;
     private Integer hub;
     private UserDto userDto;
     private Integer likeState;
-    private Long commentsCount;
+    private Integer commentsCount;
 
 }

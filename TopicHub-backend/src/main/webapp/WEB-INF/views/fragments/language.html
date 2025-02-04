@@ -1,9 +1,19 @@
 <th:block th:fragment="language">
     <div class="d-flex align-items-center">
-        <label for="exampleSelect" class="form-label custom-label me-3" style="color: white">Язык:</label>
-        <select id="exampleSelect" class="form-select">
-            <option value="1">Русский</option>
-            <option value="2">English</option>
-        </select>
+
+<!--        <select id="exampleSelect" class="form-select">-->
+<!--            <option value="1">Русский</option>-->
+<!--            <option value="2">English</option>-->
+<!--        </select>-->
+<!--        <label for="exampleSelect" class="form-label custom-label me-3" style="color: white">Язык:</label>-->
+<!--        <form method="get" action="/">-->
+<!--            <label for="langSelect" class="form-label custom-label me-3" style="color: white"  th:text="#{language}">Язык:</label>-->
+<!--            <select name="lang" onchange="this.form.submit()" id="langSelect">-->
+<!--                <option value="en" th:text="#{english}">English</option>-->
+<!--                <option value="es" th:text="#{russian}">Русский</option>-->
+<!--            </select>-->
+<!--        </form>-->
+        <a href="?lang=en">English</a> |
+        <a href="?lang=ru">Русский</a> |
     </div>
 </th:block>

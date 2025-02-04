@@ -23,7 +23,7 @@ public class Likes {
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    private Article article;
+    private ArticleEntity article;
 
     @Column(name = "state")
     private Integer state;
