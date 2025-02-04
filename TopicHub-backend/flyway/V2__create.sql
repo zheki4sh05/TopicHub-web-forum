@@ -37,12 +37,13 @@ create table if not exists author
     constraint email_uniq
     unique,
     password varchar not null,
-    state    boolean
+    state    boolean,
+    status   varchar
 );
 
 create table if not exists article
 (
-    id        integer default nextval('article_id_seq'::regclass) not null
+    id        bigint  default nextval('article_id_seq'::regclass) not null
     constraint article_pkey
     primary key,
     theme     varchar                                             not null,
@@ -55,8 +56,12 @@ create table if not exists article
     author_id uuid
     constraint author_fk
     references author
-                        on update cascade on delete cascade
+                        on update cascade on delete cascade,
+    status    varchar
     );
+
+create index if not exists article_created
+    on article (created);
 
 alter sequence article_id_seq owned by article.id;
 
@@ -64,15 +69,15 @@ alter sequence article_hub_seq owned by article.hub;
 
 create table if not exists articlepart
 (
-    val     varchar                                                        not null,
-    articleEntity integer default nextval('"articlePart_article_seq"'::regclass) not null
+    val     varchar                                                       not null,
+    article bigint default nextval('"articlePart_article_seq"'::regclass) not null
     constraint articlepart_article_id_fk
     references article
     on update cascade on delete cascade,
-    type    varchar                                                        not null,
+    type    varchar                                                       not null,
     name    varchar,
     id      integer,
-    uuid    uuid                                                           not null
+    uuid    uuid                                                          not null
     constraint articlepart_pkey
     primary key,
     created bigint
@@ -90,28 +95,28 @@ create table if not exists role
 
 create table if not exists user_role
 (
-    id     uuid    not null
+    id     uuid not null
     constraint user_role_pkey
     primary key,
-    userid uuid    not null
+    userid uuid not null
     constraint user_fk
     references author
     on update cascade on delete cascade,
-    role   integer not null
-    constraint role_fk
-    references role
-    on update cascade on delete cascade
+    role   varchar
 );
 
 create table if not exists likes
 (
-    id         uuid    not null
+    id         uuid                                                     not null
     constraint likes_pkey
     primary key,
-    user_id    uuid    not null,
-    article_id serial,
-    state      integer not null
-);
+    user_id    uuid
+    constraint fkf6cmb748mfw6r86r78ckgser1
+    references author
+    on update set null on delete set null,
+    article_id bigint default nextval('likes_article_id_seq'::regclass) not null,
+    state      integer                                                  not null
+    );
 
 create table if not exists sessions
 (
@@ -151,7 +156,7 @@ create table if not exists comment
     parent_comment uuid
     constraint parent___fk
     references comment,
-    article        integer
+    article        bigint
     constraint article_fk
     references article
     on update cascade on delete cascade,
@@ -164,14 +169,14 @@ create table if not exists comment
 
 create table if not exists bookmark
 (
-    id      uuid    not null
+    id      uuid   not null
     constraint bookmarks_pk
     primary key,
-    article integer not null
+    article bigint not null
     constraint bookmarks_article_id_fk
     references article
     on update cascade on delete cascade,
-    author  uuid    not null
+    author  uuid   not null
     constraint bookmarks_author_id_fk
     references author
     on update cascade on delete cascade,
@@ -194,7 +199,7 @@ create table if not exists image
 
 create table if not exists complaint_article
 (
-    id      uuid    not null
+    id      uuid   not null
     constraint complaint_article_pk
     primary key,
     title   varchar,
@@ -203,10 +208,11 @@ create table if not exists complaint_article
     constraint author___fk
     references author
     on update cascade on delete cascade,
-    article integer not null
+    article bigint not null
     constraint article___fk
     references article
-    on update cascade on delete cascade
+    on update cascade on delete cascade,
+    date    timestamp with time zone
 );
 
 create table if not exists complaint_comment
@@ -222,8 +228,34 @@ create table if not exists complaint_comment
     on update cascade on delete cascade,
     comment uuid not null
     constraint comment___fk
-    references comment
+    references comment,
+    date    timestamp with time zone
 );
+
+create view article_info (id, theme, keywords, status, created, hub, author_id, likes, dislikes, comments_count) as
+SELECT a.id,
+       a.theme,
+       a.keywords,
+       a.status,
+       a.created,
+       a.hub,
+       a.author_id,
+       COALESCE(sum(
+                        CASE
+                            WHEN r.state = 1 THEN 1
+                            ELSE 0
+                            END), 0::bigint) AS likes,
+       COALESCE(sum(
+                        CASE
+                            WHEN r.state = '-1'::integer THEN 1
+                        ELSE 0
+                        END), 0::bigint) AS dislikes,
+       COALESCE(count(c.id), 0::bigint)      AS comments_count
+FROM article a
+         LEFT JOIN likes r ON a.id = r.article_id
+         LEFT JOIN comment c ON a.id = c.article
+GROUP BY a.id, a.theme, a.keywords, a.status, a.created, a.hub, a.author_id;
+
 
 
 
@@ -244,13 +276,14 @@ values ('Science','Наука');
 insert into hub (en, ru)
 values ('Sport','Спорт');
 
-insert into article (theme, keywords, created, hub, author_id)
+insert into article (theme, keywords, created, hub, author_id, status)
 values (
         'Влияние искусственного интеллекта на общество: возможности и вызовы',
         'ИИ|Умный город',
         '2024-12-19 11:36:45.321343',
         1,
-        'a904e8b8-9da8-4535-b402-9be0b78b2981'
+        'a904e8b8-9da8-4535-b402-9be0b78b2981',
+        'PUBLISH'
 );
 
 insert into articlepart (val, article, type, name, id, uuid)
