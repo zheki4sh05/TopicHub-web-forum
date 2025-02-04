@@ -13,6 +13,7 @@ import java.util.*;
 @ToString
 public class ArticleBatchDto {
     private List<ArticleDto> articleDtoList;
-    private Long pageCount;
+    private Integer pageCount;
     private Integer page;
+    private Long total;
 }

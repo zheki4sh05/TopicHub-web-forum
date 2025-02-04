@@ -44,6 +44,7 @@ public class ArticleService implements IArticleService {
                 .keyWords(String.join(DILIMITER, articleDto.getKeyWords()))
                 .created(Timestamp.valueOf(LocalDateTime.now()))
                 .author(user)
+                .status(StatusDto.MODERATION.type())
                 .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
                 .build();
 
@@ -78,7 +79,7 @@ public class ArticleService implements IArticleService {
     @Transactional
     public ArticleBatchDto search(SearchDto searchDto) {
         Pageable pageable= PageRequest.of(searchDto.getArticleFilterDto().getPage()-1,15);
-        Page<Article> articles = articleViewRepository.searchBy(searchDto.getAuthor(),
+        Page<Article> articles = articleViewRepository.searchBy(UUID.fromString(searchDto.getAuthor()),
                 searchDto.getTheme(),
                 searchDto.getKeywords(),
                  pageable);
@@ -90,9 +91,10 @@ public class ArticleService implements IArticleService {
         return createBatch(pageDto, searchDto.getArticleFilterDto().getUserId());
     }
     @Override
+    @Transactional
     public ArticleBatchDto fetchBookMarks(String userId, Integer page) {
         Pageable pageable= PageRequest.of(page-1,15);
-        Page<Article> articles = articleViewRepository.findBookmarks(userId,pageable);
+        Page<Article> articles = articleViewRepository.findBookmarks(UUID.fromString(userId),pageable);
         return createBatch(
                 PageDto.<Article>builder()
                         .content(articles.getContent())
@@ -116,7 +118,8 @@ public class ArticleService implements IArticleService {
     private ArticleBatchDto createBatch(PageDto<Article> articlePage,final String userId) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
         articleBatchDto.setPage(articlePage.getPageNumber());
-        articleBatchDto.setPageCount(articlePage.getTotal());
+        articleBatchDto.setPageCount(articlePage.getLastPage());
+        articleBatchDto.setTotal(articlePage.getTotal());
         articleBatchDto.setArticleDtoList(
              articlePage.getContent().stream()
                      .map(articleMapper::toDto)

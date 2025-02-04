@@ -1,17 +1,31 @@
 
 
 
-function getRequestConfig(lng){
+function getRequestConfig(lng,login,password){
+  if(login.length>0 && password.length>0){
     return {
-      //  withCredentials: true,
-        // credentials: 'include',
         headers: 
         {
           'Content-Type': 'application/json', 
-          'Accept-Language':lng
+          'Accept-Language':lng, 
+        'Authorization': `Basic ${btoa(`${login}:${password}`)}`
         },
+     } }
+    
+    else{
+      return {
+
+          headers: 
+          {
+            'Content-Type': 'application/json', 
+            'Accept-Language':lng, 
+          },
+      }
     }
-} 
+  }
+
+    
+
 
 export default getRequestConfig;
 

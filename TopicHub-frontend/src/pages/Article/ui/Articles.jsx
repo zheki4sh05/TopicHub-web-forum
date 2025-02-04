@@ -99,7 +99,7 @@ function Articles() {
             </Typography>
           </Button>
 
-          <Button variant="text" onClick={() => handleClick(-1)}>
+          <Button variant="text" onClick={() => handleClick(-1)} disabled={!auth}>
             <Typography
               variant="body1"
               style={{ textDecoration: select == -1 ? "none" : "underline" }}
@@ -144,7 +144,7 @@ function Articles() {
           }}
         >
           <Pagination
-            count={feed.pageCount + 1}
+            count={feed.pageCount==0? 1: feed.pageCount}
             variant="outlined"
             color="primary"
             onChange={handlePageChange}

@@ -58,6 +58,8 @@ public class ProfileController {
                 ArticleFilterDto articleFilterDto = ArticleFilterDto.builder()
                         .page(page)
                         .userId(userId)
+                        .authorId(userId)
+                        .status(StatusDto.PUBLISH.type())
                         .build();
                 return ResponseEntity.ok()
                         .contentType(MediaType.APPLICATION_JSON)

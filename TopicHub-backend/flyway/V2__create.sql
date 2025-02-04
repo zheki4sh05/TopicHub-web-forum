@@ -265,7 +265,7 @@ values (1, 'ADMIN');
 insert into role (id, name)
 values (2, 'USER');
 insert into author (id, login, email, password,state)
-values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','j8H6ZRy0j0wQZ+GUNmagU6lMlh0Dr9C+CVtEXubJ+L4=',false);
+values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','$2a$10$ge8NA/v8CxTh1QoicotF3usUM61yGkIj73eS7xLab.IMrp8aNvmui',false);
 insert into user_role (id, userid, role)
 values ('5a34fa56-e294-4602-8e7f-24e7a7832c2c', 'a904e8b8-9da8-4535-b402-9be0b78b2981',2);
 insert into user_role (id, userid, role) values ('c5086606-b949-4426-a340-2626f19f5ef2', 'a904e8b8-9da8-4535-b402-9be0b78b2981',1);

@@ -18,10 +18,20 @@ class ApiRequestCreator {
         if (withParms) {
           response = await axios.get(
             fullUrl.concat(addParams(initial)),
-            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
+            thunkAPI.getState().user.user.email,
+            thunkAPI.getState().user.user.password
+          )
           );
         } else {
-          response = await axios.get(fullUrl, getRequestConfig());
+          response = await axios.get(fullUrl, 
+          
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
+            thunkAPI.getState().user.user.email,
+            thunkAPI.getState().user.user.password
+          )
+          
+          );
         }
 
         return response.data;
@@ -34,15 +44,19 @@ class ApiRequestCreator {
     return createAsyncThunk(
       this.domainName.concat(uri),
       async (initial, thunkAPI) => {
+    
         try {
           const response = await axios.post(
             this.url.concat(uri),
             initial,
-            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
+            thunkAPI.getState().user.user.email,
+            thunkAPI.getState().user.user.password
+          )
           );
           return response.data;
         } catch (error) {
-          return thunkAPI.rejectWithValue({ error: error.response.data });
+          return thunkAPI.rejectWithValue({ error: error.response });
         }
       }
     );
@@ -55,7 +69,10 @@ class ApiRequestCreator {
       return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
         const response = await axios.delete(
           fullUrl.concat(addParams(initial)),
-          getRequestConfig(thunkAPI.getState().settings.activeLanguage)
+          getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
+          thunkAPI.getState().user.user.email,
+          thunkAPI.getState().user.user.password
+        )
         );
         return response.data;
       });
@@ -64,7 +81,10 @@ class ApiRequestCreator {
         const response = await axios.delete(
           fullUrl,
           initial,
-          getRequestConfig(thunkAPI.getState().settings.activeLanguage)
+          getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
+          thunkAPI.getState().user.email,
+          thunkAPI.getState().user.password
+        )
         );
         return response.data;
       });
@@ -77,7 +97,10 @@ class ApiRequestCreator {
       const response = await axios.patch(
         this.url.concat(uri),
         initial.data,
-        getRequestConfig(thunkAPI.getState().settings.activeLanguage)
+        getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
+        thunkAPI.getState().user.user.email,
+            thunkAPI.getState().user.user.password
+      )
       );
       return response.data;
     });
@@ -91,7 +114,10 @@ class ApiRequestCreator {
           const response = await axios.put(
             this.url.concat(uri),
             initial,
-            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
+            thunkAPI.getState().user.user.email,
+            thunkAPI.getState().user.user.password
+          )
           );
           return response.data;
         } catch (error) {

@@ -37,7 +37,7 @@ public class SubscribeController {
      * @return a ResponseEntity containing a list of AuthorDto objects and a 200 OK status if successful, or a 400 BAD REQUEST if the type is invalid.
      * @see AuthorDto
      */
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> doGet(
             @RequestParam("type") @NotNull String type
     ) {
@@ -66,7 +66,7 @@ public class SubscribeController {
      * @return a ResponseEntity with a 201 CREATED status if the subscription was successfully created.
      * @see SubscriptionRequestDto
      */
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> doPost(
             @RequestBody SubscriptionRequestDto subscriptionRequestDto
     ) {
@@ -83,7 +83,7 @@ public class SubscribeController {
      * @param author the ID of the author to unsubscribe from.
      * @return a ResponseEntity with a 200 OK status if the unsubscription was successful.
      */
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<?> doDelete(
             @RequestParam("author") @NotNull String author
     ) {

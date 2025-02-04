@@ -40,9 +40,9 @@ public class BookmarksController {
      *         A 200 OK status is returned along with the list of articles.
      * @see ArticleBatchDto
      */
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> fetchPage(
-            @RequestParam Integer page) {
+            @RequestParam("page") Integer page) {
         var userId = customSecurityExpression.getUserId();
         ArticleBatchDto articleBatchDto = articleService.fetchBookMarks(userId, page);
         return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
@@ -58,7 +58,7 @@ public class BookmarksController {
      * @return a ResponseEntity with a 201 Created status if the article was successfully added to the bookmarks.
      * @see BookmarksRequestDto
      */
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> create(
             @RequestBody BookmarksRequestDto bookmarksRequestDto
     ){
@@ -76,7 +76,7 @@ public class BookmarksController {
      * @param article the ID of the article to be removed from the bookmarks.
      * @return a ResponseEntity with a 200 OK status if the article was successfully removed from the bookmarks.
      */
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<?> doDelete(@RequestParam("article") @NotNull String article){
         String userId = customSecurityExpression.getUserId();
         reactionService.manageBookmarks(-1, article, userId);

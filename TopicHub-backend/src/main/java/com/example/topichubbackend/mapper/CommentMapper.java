@@ -14,7 +14,7 @@ public interface CommentMapper {
     @Mapping(target = "authorDto", source = "author")
     @Mapping(target = "replies", ignore = true)
     @Mapping(target = "userDto", ignore = true)
-    @Mapping(target = "parentId", expression = "java(comment.getParentComment().getId().toString())")
+    @Mapping(target = "parentId", ignore = true)
     CommentDto mapFrom(Comment comment);
 
 }

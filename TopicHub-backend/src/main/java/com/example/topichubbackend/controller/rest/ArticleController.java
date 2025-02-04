@@ -1,7 +1,6 @@
 package com.example.topichubbackend.controller.rest;
 
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
 import jakarta.validation.constraints.*;
@@ -27,7 +26,6 @@ public class ArticleController {
 
     private final IArticleService articleService;
     private final ICommentsService commentsService;
-
     /**
      * Fetches a batch of articles based on the provided filter parameters.
      *
@@ -47,7 +45,9 @@ public class ArticleController {
 
     @GetMapping("")
     public ResponseEntity<?> doGet(
-            @RequestParam Map<String, String> reqParam)  {
+            @RequestParam Map<String, String> reqParam
+
+    )  {
                 reqParam.put("status", StatusDto.PUBLISH.type());
                 ArticleFilterDto articleFilterDto = HttpRequestUtils.parseFilterParams(reqParam);
                 ArticleBatchDto articleBatchDto;

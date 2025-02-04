@@ -11,11 +11,9 @@ import java.util.*;
 public interface SubscriptionRepository extends JpaRepository<Subscription, UUID> {
 
     @Query("""
-SELECT COUNT(s) > 0 FROM Subscription s WHERE s.author.uuid = :authorId AND s.follower.id = :subscriberId
-
-
+SELECT COUNT(s) > 0 FROM Subscription s WHERE s.author.uuid = :authorId AND s.follower.uuid = :userId
 """)
-    Boolean checkSubscribe(@Param("userId") UUID userId, @Param("userId") UUID authorId);
+    Boolean checkSubscribe(@Param("userId") UUID userId, @Param("authorId") UUID authorId);
 
     @Query("""
 
@@ -33,10 +31,10 @@ FROM Subscription s where s.follower.uuid = :id
     @Query("""
 FROM Subscription s where s.author.uuid = :id
 """)
-    List<Subscription> findFollowersById(@Param("id") String id);
+    List<Subscription> findFollowersById(@Param("id") UUID id);
 
     @Query("""
 FROM Subscription s where s.follower.uuid = :id
 """)
-    List<Subscription> fetch(@Param("id") String id);
+    List<Subscription> fetch(@Param("id") UUID id);
 }

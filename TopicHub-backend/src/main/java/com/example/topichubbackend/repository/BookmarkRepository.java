@@ -12,7 +12,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, UUID> {
             SELECT COUNT(b) > 0 FROM Bookmark b WHERE b.author.uuid = :authorId AND b.article.id = :articleId
        
             """)
-     Boolean checkMarked(@Param("userId") String userId,@Param("articleId") Long articleId);
+     Boolean checkMarked(@Param("authorId") UUID userId,@Param("articleId") Long articleId);
 
     @Query(
             """
