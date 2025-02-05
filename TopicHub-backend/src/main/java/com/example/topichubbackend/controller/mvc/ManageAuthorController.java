@@ -10,6 +10,8 @@ import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.*;
 
+import static com.example.topichubbackend.util.HttpRequestUtils.getClientUrl;
+
 @RequestMapping("admin/author")
 @Controller
 @AllArgsConstructor
@@ -31,12 +33,14 @@ public class ManageAuthorController {
             model.addAttribute("page", userListPage);
             model.addAttribute("status", status);
             model.addAttribute("size", size);
+            model.addAttribute("returnLink",getClientUrl());
             return "admin/author";
         }else{
             ErrorDto errorDto = ErrorDto.builder()
                     .message("GET: admin/author ")
                     .build();
             model.addAttribute("error", errorDto);
+            model.addAttribute("returnLink",getClientUrl());
             return "error/400";
         }
     }
@@ -45,8 +49,10 @@ public class ManageAuthorController {
         @RequestParam("id") String id,
         @RequestParam(value = "status", defaultValue = "ACTIVE") String status,
         @RequestParam(value = "page", defaultValue = "1") String number,
-        @RequestParam(value = "size", defaultValue = "10") String size
+        @RequestParam(value = "size", defaultValue = "10") String size,
+        Model model
     ){
+        model.addAttribute("returnLink",getClientUrl());
         String redirectUrl = UriComponentsBuilder
                 .fromUriString("/admin/author/fetch")
                 .queryParam("page", number)
@@ -65,6 +71,7 @@ public class ManageAuthorController {
             @RequestParam(value = "size", defaultValue = "10") String size,
             Model model
     ){
+        model.addAttribute("returnLink",getClientUrl());
         if(HttpRequestUtils.contains(status)){
             String redirectUrl = UriComponentsBuilder
                     .fromUriString("/admin/author/fetch")

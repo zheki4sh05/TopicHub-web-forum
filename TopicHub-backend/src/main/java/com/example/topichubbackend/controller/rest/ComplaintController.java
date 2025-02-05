@@ -10,7 +10,7 @@ import lombok.extern.slf4j.*;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.*;
 /**
  * REST Controller for managing user complaints.
  * Provides endpoints for creating, retrieving, and deleting complaints.
@@ -39,7 +39,7 @@ public class ComplaintController {
      * @return a ResponseEntity with a 201 Created status indicating the complaint was successfully created.
      * @see ComplaintDto
      */
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> doPost(@RequestBody ComplaintDto complaintDto)  {
         log.info("new complaint: {}", complaintDto);
         String userId = customSecurityExpression.getUserId();
@@ -57,7 +57,7 @@ public class ComplaintController {
      * @return a ResponseEntity containing a page of complaints of the specified type.
      * @see ComplaintDto
      */
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> doGet(@RequestParam("type") @NonNull String type)  {
         Pageable pageable = PageRequest.of(1, 15); // Default page size 15
         Page<ComplaintDto> complaintDtoList = complaintControl.findAllByType(type, pageable);
@@ -73,7 +73,7 @@ public class ComplaintController {
      * @param type the type of the complaint.
      * @return a ResponseEntity with the complaint ID and a 200 OK status indicating the complaint was successfully deleted.
      */
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<?> doDelete(
             @RequestParam("id") @NonNull String complaintId,
             @RequestParam("type") @NotNull String type

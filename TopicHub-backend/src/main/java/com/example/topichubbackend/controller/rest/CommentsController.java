@@ -37,13 +37,13 @@ public class CommentsController {
      * @return a ResponseEntity with a 201 Created status indicating the comment was successfully created.
      * @see CommentDto
      */
-    @PostMapping("/")
+    @PostMapping("")
     public  ResponseEntity<?> doPost(@RequestBody CommentDto commentDto) {
         String userId = customSecurityExpression.getUserId();
         log.info("new comment: {}", commentDto);
         CommentDto created = commentsService.create(commentDto, userId);
         log.info("created comment: {}", created);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     /**
@@ -56,13 +56,13 @@ public class CommentsController {
      * @return a ResponseEntity with a 200 OK status indicating the comment was successfully updated.
      * @see CommentDto
      */
-    @PutMapping("/")
+    @PutMapping("")
     public  ResponseEntity<?> doPut(@RequestBody CommentDto commentDto){
         String userId = customSecurityExpression.getUserId();
         log.info("updated comment: {}", commentDto);
         CommentDto updated = commentsService.update(commentDto, userId);
         log.info("updated comment: {}", updated);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(updated,HttpStatus.OK);
     }
 
     /**
@@ -74,11 +74,11 @@ public class CommentsController {
      * @param commentId the ID of the comment to be deleted.
      * @return a ResponseEntity with a 200 OK status indicating the comment was successfully deleted.
      */
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public  ResponseEntity<?> doDelete(@RequestParam("commentId") String commentId) {
         String userId = customSecurityExpression.getUserId();
         log.info("delete comment id: {}", commentId);
         commentsService.delete(commentId, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(commentId, HttpStatus.OK);
     }
 }

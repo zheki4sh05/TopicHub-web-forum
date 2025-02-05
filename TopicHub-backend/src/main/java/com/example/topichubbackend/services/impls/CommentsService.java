@@ -22,6 +22,8 @@ public class CommentsService implements ICommentsService {
     private final CommentFullMapper commentFullMapper;
     private final CommentMapper commentMapper;
     private final ArticleRepo articleRepo;
+
+    @Transactional
     @Override
     public List<CommentDto> fetch(String article) {
         List<Comment> comments = commentRepository.findAllByArticleId(Long.valueOf(article));
@@ -42,29 +44,31 @@ public class CommentsService implements ICommentsService {
                 .build();
         if(commentDto.getParentId()!=null){
             comment.setParentComment(
-                    commentRepository.findById(commentDto.getParentId()).orElseThrow(EntityNotFoundException::new)
+                    commentRepository.findById(UUID.fromString(commentDto.getParentId())).orElseThrow(EntityNotFoundException::new)
             );
         }
         commentRepository.save(comment);
         emailService.sendCommentNotification(comment, article.getAuthor());
-       return commentMapper.mapFrom(comment);
+       return commentFullMapper.mapFrom(comment, article.getId(), new HashSet<>());
     }
 
     @Override
+    @Transactional
     public CommentDto update(CommentDto commentDto, String userId) {
-        Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(UUID.fromString(commentDto.getId())).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
             comment.setMessage(commentDto.getValue());
            var updated =  commentRepository.save(comment);
-            return commentMapper.mapFrom(updated);
+            return commentFullMapper.mapFrom(comment, updated.getArticle().getId(), new HashSet<>());
         }else{
             throw new EntityNotFoundException();
         }
     }
 
     @Override
+    @Transactional
     public void delete(String commentId, String userId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(UUID.fromString(commentId)).orElseThrow(EntityNotFoundException::new);
         if(comment.getAuthor().getUuid().toString().equals(userId)){
             commentRepository.delete(comment);
         }else{

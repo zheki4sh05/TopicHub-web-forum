@@ -16,7 +16,7 @@ public interface ArticleComplaintRepository extends JpaRepository<ArticleComplai
 From ArticleComplaint ac where ac.article.id = :article and ac.author.uuid = :author
 
 """)
-     Optional<ArticleComplaint> findByArticleUserId(@Param("article") String targetId, @Param("author") String userId);
+     Optional<ArticleComplaint> findByArticleUserId(@Param("article") Long targetId, @Param("author") UUID userId);
 
 
     @Query("""

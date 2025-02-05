@@ -34,14 +34,19 @@ public interface UserMapper {
     }
 
     @Mappings({
-            @Mapping(target = "id",expression = "java(UUID.randomUUID())"),
+            @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID())"),
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "login", source = "login"),
-            @Mapping(target = "status",expression = "java(StatusDto.ACTIVE.type())"),
+            @Mapping(target = "status",expression = "java(com.example.topichubbackend.dto.StatusDto.ACTIVE.type())"),
             @Mapping(target = "state", ignore = true),
             @Mapping(target = "password",  qualifiedByName = "hash"),
     })
-    User mapFrom(AuthDto user);
+    User mapFrom(SignUpDto user);
+
+    @Named("uuid")
+    default UUID uuid() {
+       return UUID.randomUUID();
+    }
 
     @Named("hash")
     default String hash(String password) {

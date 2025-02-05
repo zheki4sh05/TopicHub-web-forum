@@ -16,7 +16,6 @@ import jakarta.transaction.*;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
-import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -32,7 +31,7 @@ public class AuthenticationServiceImpl {
     private final UserRoleMapper userRoleMapper;
     private final UserRoleRepository userRoleRepository;
     @Transactional
-    public AuthenticationResponse register(AuthDto authDto) {
+    public AuthenticationResponse register(SignUpDto authDto) {
 
         Optional<User> isExist = repository.findByEmailOrLogin(authDto.getLogin());
         if(isExist.isPresent()) {

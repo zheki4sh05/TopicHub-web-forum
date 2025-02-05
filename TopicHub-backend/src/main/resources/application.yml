@@ -1,5 +1,8 @@
 
 spring:
+  config:
+    import:
+      optional:file:.env[.properties]
   application:
     name: topichub
   datasource:
@@ -22,3 +25,8 @@ application:
       secret-key: ${SECRET_KEY}
       accessTokenExpire: 86400000
       refresh-token-expiration: 604800000
+logging:
+  level:
+    root: INFO
+    com:
+      example: INFO

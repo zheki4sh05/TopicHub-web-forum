@@ -6,15 +6,12 @@ import jakarta.persistence.*;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
 @Repository
 public class ArticleRepository {
-
 
     @PersistenceContext
     private final EntityManager em;

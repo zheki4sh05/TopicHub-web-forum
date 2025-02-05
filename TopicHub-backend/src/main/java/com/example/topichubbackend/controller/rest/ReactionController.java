@@ -1,6 +1,5 @@
 package com.example.topichubbackend.controller.rest;
 
-
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
@@ -71,6 +70,7 @@ public class ReactionController {
      *
      * @param articleId the ID of the article to check the reaction for.
      * @param authorId the ID of the article's author.
+     * @param authorId the ID of the article's author.
      * @return a ResponseEntity containing the reaction data and a 200 OK status.
      * @see ReactionDto
      */
@@ -79,9 +79,11 @@ public class ReactionController {
             @RequestParam("articleId") @NotNull String articleId,
             @RequestParam("authorId") @NotNull String authorId
     ) {
-        String userId = customSecurityExpression.getUserId();
-        ReactionDto reactionDto = reactionService.check(articleId, authorId, userId);
+        String userAuthId = customSecurityExpression.getUserId();
+        ReactionDto reactionDto = reactionService.check(articleId, authorId, userAuthId);
         return new ResponseEntity<>(reactionDto, HttpStatus.OK);
+
+
     }
 }
 

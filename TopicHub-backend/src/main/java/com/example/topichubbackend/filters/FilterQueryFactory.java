@@ -3,6 +3,7 @@ package com.example.topichubbackend.filters;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.dto.filter.*;
 import com.example.topichubbackend.model.*;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.*;
@@ -10,10 +11,13 @@ import org.springframework.stereotype.*;
 
 import java.util.*;
 
-@Service
+@Component
 public class FilterQueryFactory {
+//
+//    @PersistenceContext
+    private EntityManager em;
 
-    @Autowired
+
     private CriteriaBuilder criteriaBuilder;
 
     private Predicate createLikesPredicate(Root<Article> articleRoot, Double rating){

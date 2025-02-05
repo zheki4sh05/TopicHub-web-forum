@@ -16,21 +16,26 @@ import javax.crypto.*;
 import java.util.*;
 import java.util.function.*;
 
+
 @Service
-@AllArgsConstructor
 @PropertySource("classpath:application.yml")
 public class JwtService {
 
-    @Value("${application:security:jwt.secret-key}")
+    @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${application.security.jwt.access-token-expiration}")
-    private long accessTokenExpire;
+    @Value("${application.security.jwt.accessTokenExpire}")
+    private Long accessTokenExpire;
 
     @Value("${application.security.jwt.refresh-token-expiration}")
-    private long refreshTokenExpire;
+    private Long refreshTokenExpire;
 
-    private final TokenRepository tokenRepository;
+    public JwtService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
+    @Autowired
+    private TokenRepository tokenRepository;
 
 
     public String extractUsername(String token) {

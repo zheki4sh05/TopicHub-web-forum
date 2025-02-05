@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.*;
 import java.util.*;
 
 
-public interface CommentRepository extends JpaRepository<Comment, String> {
+public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     @Query("""
 SELECT COUNT(c.id) FROM Comment c WHERE c.article.id= :id

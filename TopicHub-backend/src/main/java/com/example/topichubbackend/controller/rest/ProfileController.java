@@ -58,6 +58,8 @@ public class ProfileController {
                 ArticleFilterDto articleFilterDto = ArticleFilterDto.builder()
                         .page(page)
                         .userId(userId)
+                        .authorId(userId)
+                        .status(StatusDto.PUBLISH.type())
                         .build();
                 return ResponseEntity.ok()
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,7 +104,7 @@ public class ProfileController {
                 return new ResponseEntity<>(userId, HttpStatus.OK);
             }
             default -> {
-                return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("", HttpStatus.OK);
             }
         }
     }

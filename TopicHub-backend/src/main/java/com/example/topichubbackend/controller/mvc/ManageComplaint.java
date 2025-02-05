@@ -12,6 +12,8 @@ import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.*;
 
+import static com.example.topichubbackend.util.HttpRequestUtils.getClientUrl;
+
 @Controller
 @RequestMapping("/admin/complaint")
 @AllArgsConstructor
@@ -34,6 +36,7 @@ public class ManageComplaint {
      model.addAttribute("page", complaintDtos.getNumber());
      model.addAttribute("total", complaintDtos.getTotalPages());
      model.addAttribute("type", type);
+        model.addAttribute("returnLink",getClientUrl());
      return "admin/complaint/index";
     }
     @GetMapping("/view/{type}")
@@ -44,20 +47,12 @@ public class ManageComplaint {
             @RequestParam(value = "id") String id,
             Model model
     ){
-//        if(type.equals("article")){
-//            ArticleDto articleDto = articleService.findById(targetId);
-//            model.addAttribute("target", articleDto);
-//        }else if(type.equals("comment")){
-//            CommentDto commentDto = commentsService.findById(targetId);
-//            model.addAttribute("target", commentDto);
-//        }else{
-//            return "error/400";
-//        }
         ComplaintDto complaintDto = complaintControl.findById(id,type);
         model.addAttribute("complaint", complaintDto);
         model.addAttribute("page", page);
         model.addAttribute("total",size);
         model.addAttribute("type", type);
+        model.addAttribute("returnLink",getClientUrl());
         return "admin/complaint/overview";
     }
     @PostMapping ("/del/{type}")
@@ -68,19 +63,11 @@ public class ManageComplaint {
             @RequestParam(value = "id") String id,
             Model model
     ){
-//        if(type.equals("article")){
-//            ArticleDto articleDto = articleService.findById(targetId);
-//            model.addAttribute("target", articleDto);
-//        }else if(type.equals("comment")){
-//            CommentDto commentDto = commentsService.findById(targetId);
-//            model.addAttribute("target", commentDto);
-//        }else{
-//            return "error/400";
-//        }
          complaintControl.deleteById(id,type);
         model.addAttribute("page", page);
         model.addAttribute("total",size);
         model.addAttribute("type", type);
+        model.addAttribute("returnLink",getClientUrl());
         return back(page, type);
     }
     private String back(Integer page, String type){

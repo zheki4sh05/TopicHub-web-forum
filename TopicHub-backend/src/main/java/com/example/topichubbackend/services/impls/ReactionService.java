@@ -25,7 +25,7 @@ public class ReactionService implements IReactionService {
     @Override
     public ReactionDto check(String articleId, String authorId, String userId) {
         Boolean subscribe =subscriptionRepository.checkSubscribe(UUID.fromString(userId),UUID.fromString(authorId));
-        Boolean marked = bookmarkRepository.checkMarked(userId, Long.valueOf(articleId));
+        Boolean marked = bookmarkRepository.checkMarked(UUID.fromString(userId), Long.valueOf(articleId));
         return ReactionDto.builder()
                 .isMarked(marked)
                 .isSubscribe(subscribe)
@@ -89,10 +89,12 @@ public class ReactionService implements IReactionService {
         User user  = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
         var article = articleRepository.findById(Long.valueOf(articleId)).orElseThrow(EntityNotFoundException::new);
         if(value==1){
-            bookmarkRepository.save(Bookmark.builder()
-                            .article(article)
-                            .author(user)
-                    .build());
+            var entity = Bookmark.builder()
+                    .id(UUID.randomUUID())
+                    .article(article)
+                    .author(user)
+                    .build();
+            bookmarkRepository.save(entity);
         }else{
             var bookmark = bookmarkRepository.findByUserIdArticleId(UUID.fromString(userId),Long.valueOf(articleId))
                     .orElseThrow(()-> new EntityNotFoundException(ErrorKey.NOT_FOUND.type()));
@@ -121,7 +123,7 @@ public class ReactionService implements IReactionService {
     @Override
     public List<AuthorDto> fetchAllSubscribes(String id) {
 
-        List<Subscription> subscriptions = subscriptionRepository.fetch(id);
+        List<Subscription> subscriptions = subscriptionRepository.fetch(UUID.fromString(id));
 
         return subscriptions.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
@@ -132,7 +134,7 @@ public class ReactionService implements IReactionService {
 
     @Override
     public List<AuthorDto> fetchAllFollowers(String id) {
-        List<Subscription> userList = subscriptionRepository.findFollowersById(id);
+        List<Subscription> userList = subscriptionRepository.findFollowersById(UUID.fromString(id));
         return userList.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
                 .email(item.getAuthor().getEmail())

@@ -6,7 +6,6 @@ import com.example.topichubbackend.exceptions.EntityNotFoundException;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
-import com.example.topichubbackend.security.dto.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.persistence.RollbackException;
 import jakarta.transaction.*;
@@ -85,5 +84,6 @@ public class AuthService implements IAuthorService {
         log.info("users list by status:"+status+" {}",userList.getContent());
         return userList.map(userMapper::toDto);
     }
+
 
 }

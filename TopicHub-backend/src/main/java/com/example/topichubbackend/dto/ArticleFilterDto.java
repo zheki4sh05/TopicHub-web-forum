@@ -6,7 +6,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
 public class ArticleFilterDto implements IBusinessLogicFilterSupplier, IFactoryFilterDataSupplier {
     private String month;
     private String year;
@@ -14,6 +13,11 @@ public class ArticleFilterDto implements IBusinessLogicFilterSupplier, IFactoryF
     private Integer page;
 
     private Integer size = 15;
+
+    public String getStatus() {
+        return status;
+    }
+
     private String status;
     private String userId;
     private Integer param;
@@ -23,7 +27,12 @@ public class ArticleFilterDto implements IBusinessLogicFilterSupplier, IFactoryF
 
     @Override
     public Integer getParam() {
-        return param;
+        return hub;
+    }
+
+    @Override
+    public String getAuthorId() {
+        return authorId;
     }
 
     @Override
@@ -37,5 +46,21 @@ public class ArticleFilterDto implements IBusinessLogicFilterSupplier, IFactoryF
     }
     public Integer size() {
         return size;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

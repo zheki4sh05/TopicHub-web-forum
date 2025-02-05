@@ -1,4 +1,6 @@
 package com.example.topichubbackend.controller.rest;
+
+
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
@@ -6,6 +8,9 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.*;
+
 
 /**
  * REST Controller for managing user bookmarks.
@@ -36,9 +41,9 @@ public class BookmarksController {
      *         A 200 OK status is returned along with the list of articles.
      * @see ArticleBatchDto
      */
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> fetchPage(
-            @RequestParam Integer page) {
+            @RequestParam("page") Integer page) {
         var userId = customSecurityExpression.getUserId();
         ArticleBatchDto articleBatchDto = articleService.fetchBookMarks(userId, page);
         return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
@@ -54,7 +59,7 @@ public class BookmarksController {
      * @return a ResponseEntity with a 201 Created status if the article was successfully added to the bookmarks.
      * @see BookmarksRequestDto
      */
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> create(
             @RequestBody BookmarksRequestDto bookmarksRequestDto
     ){
@@ -72,7 +77,7 @@ public class BookmarksController {
      * @param article the ID of the article to be removed from the bookmarks.
      * @return a ResponseEntity with a 200 OK status if the article was successfully removed from the bookmarks.
      */
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<?> doDelete(@RequestParam("article") @NotNull String article){
         String userId = customSecurityExpression.getUserId();
         reactionService.manageBookmarks(-1, article, userId);

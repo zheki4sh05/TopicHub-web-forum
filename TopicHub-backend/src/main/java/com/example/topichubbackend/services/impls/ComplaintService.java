@@ -33,7 +33,7 @@ public class ComplaintService implements IComplaintControl {
 
         if(complaintDto.getType().equals(ARTICLE)){
 
-            Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(complaintDto.getTargetId(), userId);
+            Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(Long.valueOf(complaintDto.getTargetId()), UUID.fromString(userId));
             if(complaint.isEmpty()){
 
                 createAndSaveArticleComplaint(complaintDto, user);
@@ -103,7 +103,7 @@ public class ComplaintService implements IComplaintControl {
     }
 
     private void createAndSaveCommentComplaint(ComplaintDto complaintDto, User author) {
-        Comment comment = commentRepository.findById(complaintDto.getTargetId())
+        Comment comment = commentRepository.findById(UUID.fromString(complaintDto.getTargetId()))
                 .orElseThrow(EntityNotFoundException::new);
         CommentComplaint complaint = CommentComplaint.builder()
                 .id(UUID.randomUUID())
