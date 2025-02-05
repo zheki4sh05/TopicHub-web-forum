@@ -12,6 +12,8 @@ import org.springframework.web.util.*;
 
 import java.util.*;
 
+import static com.example.topichubbackend.util.HttpRequestUtils.getClientUrl;
+
 @Controller
 @RequestMapping("/admin/article")
 @AllArgsConstructor
@@ -33,6 +35,7 @@ public class ArticleModerationController {
         log.debug("found articles:{}", articles.getArticleDtoList());
         model.addAttribute("batch", articles);
         model.addAttribute("status", articleFilter.getStatus());
+        model.addAttribute("returnLink",getClientUrl());
         return "admin/article/index";
     }
     @GetMapping("/view")
@@ -42,6 +45,7 @@ public class ArticleModerationController {
     ){
         ArticleDto articleDto = articleService.findById(articleStatusDto.getId());
         List<HubDto> hubDtos = hubService.findAll();
+        model.addAttribute("returnLink",getClientUrl());
         model.addAttribute("article", articleDto);
         model.addAttribute("hub", hubDtos.stream()
                 .filter(item->item.getId().equals(articleDto.getHub().toString()

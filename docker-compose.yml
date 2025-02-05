@@ -36,6 +36,7 @@ services:
       MN_URL: http://192.168.0.5:9000
       MN_BUCKET: image
       FRONT: localhost
+      FRONT_HOST: 3000
   db:
     image: postgres:latest
     container_name: db

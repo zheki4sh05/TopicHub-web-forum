@@ -93,19 +93,17 @@ const Header  = memo(function Header() {
             >
               {auth && user.roles.includes(statusTypes.admin) ? (
                 <Box sx={{ marginRight: "15px" }}>
-                  <Link
-                    style={{ textDecoration: "none" }}
-                    to={{ pathname: PathConstants.MANAGE_ARTICLES }}
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      style={{ color: "white", textDecoration: "underline" }}
+                
+                    <a href={PathConstants.ADMIN_PANEL} 
+                                
                     >
+                      <Typography style={{ color: "white", textDecoration: "underline" }} >
                       {t('link_admin')}
-                    </Typography>
-                  </Link>
+                      </Typography>
+                    
+                    </a>
                
-          
+
                 </Box>
               ) : null}
 

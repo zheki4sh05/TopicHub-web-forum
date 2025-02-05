@@ -13,7 +13,7 @@
 </head>
 
 <body>
-<div th:insert="~{fragments/navbar.html :: navbar}"></div>
+<div th:insert="~{fragments/navbar.html :: navbar(${returnLink})}" ></div>
 <div th:insert="~{fragments/menu.html :: menu}"></div>
 <div style="display: flex; flex-direction: column; max-width:1200px; margin: 0 auto; margin-top: 30px">
     <div class="dropdown">

@@ -50,4 +50,8 @@ public class HttpRequestUtils {
         return false;
     }
 
+    public static String getClientUrl(){
+        return "http://"+System.getenv("FRONT")+":"+System.getenv("FRONT_HOST");
+    }
+
 }

@@ -33,7 +33,7 @@ public class ComplaintService implements IComplaintControl {
 
         if(complaintDto.getType().equals(ARTICLE)){
 
-            Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(complaintDto.getTargetId(), userId);
+            Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(Long.valueOf(complaintDto.getTargetId()), UUID.fromString(userId));
             if(complaint.isEmpty()){
 
                 createAndSaveArticleComplaint(complaintDto, user);

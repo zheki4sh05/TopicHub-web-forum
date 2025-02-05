@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<div th:insert="~{fragments/navbar.html :: navbar}" ></div>
+<div th:insert="~{fragments/navbar.html :: navbar(${returnLink})}" ></div>
 <div th:insert="~{fragments/menu.html :: menu}" ></div>
 <div class="container mt-5">
     <a th:action="@{/admin/complaint/fetch/{type}(type='article', page=${page})}" class="btn btn-primary btn-lg">

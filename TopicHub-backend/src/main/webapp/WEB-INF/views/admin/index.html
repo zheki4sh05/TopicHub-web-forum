@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <div th:insert="~{fragments/navbar.html :: navbar}" ></div>
+    <div th:insert="~{fragments/navbar.html :: navbar(${returnLink})}" ></div>
     <div th:insert="~{fragments/menu.html :: menu}" ></div>
 
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 20px">
