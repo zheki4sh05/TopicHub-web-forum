@@ -12,7 +12,6 @@ FROM tomcat:latest
 
 
 COPY --from=build /app/target/TopicHub-backend-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
-COPY tomcat/conf/context.xml /usr/local/tomcat/conf/
 
 CMD ["catalina.sh", "run"]
 

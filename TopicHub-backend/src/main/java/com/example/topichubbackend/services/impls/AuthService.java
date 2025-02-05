@@ -123,6 +123,7 @@ public class AuthService implements IAuthService {
                 .state(false)
                 .email(userDto.getEmail())
                 .login(userDto.getLogin())
+                .status(StatusDto.ACTIVE.type())
                 .password(passwordEncoder.encode(userDto.getPassword())).build();
     }
     private UserRole prepareUserRole(){

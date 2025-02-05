@@ -11,9 +11,9 @@
     </Appenders>
     <Loggers>
         <!-- Root logger referring to console appender -->
-<!--        <Logger name="com.example.topichubbackend" level="debug" additivity = "false">-->
-<!--            <AppenderRef ref="LogToFile"/>-->
-<!--        </Logger>-->
+        <!--        <Logger name="com.example.topichubbackend" level="debug" additivity = "false">-->
+        <!--            <AppenderRef ref="LogToFile"/>-->
+        <!--        </Logger>-->
         <Logger name="org.hibernate.SQL" level="info" additivity="false">
             <AppenderRef ref="console"/>
         </Logger>

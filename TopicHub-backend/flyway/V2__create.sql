@@ -14,6 +14,13 @@ create sequence article_hub_seq
     as integer
     start with 1;
 
+create sequence likes_article_id_seq
+    as integer;
+
+
+
+
+
 create table if not exists hub
 (
     id integer default nextval('hub_id_seq'::regclass) not null
@@ -85,38 +92,33 @@ create table if not exists articlepart
 
 alter sequence "articlePart_article_seq" owned by articlepart.article;
 
-create table if not exists role
-(
-    id   integer not null
-    constraint "Role_pkey"
-    primary key,
-    name varchar not null
-);
 
-create table if not exists user_role
+create table user_role
 (
     id     uuid not null
-    constraint user_role_pkey
-    primary key,
+        primary key,
     userid uuid not null
-    constraint user_fk
-    references author
-    on update cascade on delete cascade,
+        constraint user_fk
+            references author
+            on update cascade on delete cascade,
     role   varchar
 );
 
-create table if not exists likes
+create table likes
 (
     id         uuid                                                     not null
-    constraint likes_pkey
-    primary key,
+        primary key,
     user_id    uuid
-    constraint fkf6cmb748mfw6r86r78ckgser1
-    references author
-    on update set null on delete set null,
+        constraint fkf6cmb748mfw6r86r78ckgser1
+            references author
+            on update set null on delete set null,
     article_id bigint default nextval('likes_article_id_seq'::regclass) not null,
     state      integer                                                  not null
-    );
+);
+
+
+alter table likes
+    owner to postgres;
 
 create table if not exists sessions
 (
@@ -256,19 +258,11 @@ FROM article a
          LEFT JOIN comment c ON a.id = c.article
 GROUP BY a.id, a.theme, a.keywords, a.status, a.created, a.hub, a.author_id;
 
-
-
-
-
-insert into role (id, name)
-values (1, 'ADMIN');
-insert into role (id, name)
-values (2, 'USER');
-insert into author (id, login, email, password,state)
-values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','$2a$10$ge8NA/v8CxTh1QoicotF3usUM61yGkIj73eS7xLab.IMrp8aNvmui',false);
+insert into author (id, login, email, password,state,status)
+values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','$2a$10$ge8NA/v8CxTh1QoicotF3usUM61yGkIj73eS7xLab.IMrp8aNvmui',false, 'ACTIVE');
 insert into user_role (id, userid, role)
-values ('5a34fa56-e294-4602-8e7f-24e7a7832c2c', 'a904e8b8-9da8-4535-b402-9be0b78b2981',2);
-insert into user_role (id, userid, role) values ('c5086606-b949-4426-a340-2626f19f5ef2', 'a904e8b8-9da8-4535-b402-9be0b78b2981',1);
+values ('5a34fa56-e294-4602-8e7f-24e7a7832c2c', 'a904e8b8-9da8-4535-b402-9be0b78b2981','USER');
+insert into user_role (id, userid, role) values ('c5086606-b949-4426-a340-2626f19f5ef2', 'a904e8b8-9da8-4535-b402-9be0b78b2981','ADMIN');
 insert into hub (en, ru)
 values ('Programming','Программирование');
 insert into hub (en, ru)
