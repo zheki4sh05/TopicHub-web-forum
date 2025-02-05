@@ -116,7 +116,8 @@ public class ArticleService implements IArticleService {
     private ArticleBatchDto createBatch(PageDto<Article> articlePage,final String userId) {
         ArticleBatchDto articleBatchDto = new ArticleBatchDto();
         articleBatchDto.setPage(articlePage.getPageNumber());
-        articleBatchDto.setPageCount(articlePage.getTotal());
+        articleBatchDto.setPageCount(articlePage.getLastPage());
+        articleBatchDto.setTotal(a);
         articleBatchDto.setArticleDtoList(
              articlePage.getContent().stream()
                      .map(articleMapper::toDto)

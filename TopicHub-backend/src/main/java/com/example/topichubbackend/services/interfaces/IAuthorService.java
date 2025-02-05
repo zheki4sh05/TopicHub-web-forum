@@ -6,12 +6,7 @@ import org.springframework.data.domain.*;
 
 import java.util.*;
 
-public interface IAuthService {
-    UserDto register(UserDto userDto);
-
-    UserDto login(AuthDto userDto);
-
-    List<UserRole> getUserRole(UUID id);
+public interface IAuthorService {
 
     void updateUser(UserDto userDto, String userId);
 
@@ -25,5 +20,4 @@ public interface IAuthService {
 
     Page<UserDto> fetch(String status, Pageable page);
 
-//    UserDto authenticate(CredentialsDto credentialsDto);
 }

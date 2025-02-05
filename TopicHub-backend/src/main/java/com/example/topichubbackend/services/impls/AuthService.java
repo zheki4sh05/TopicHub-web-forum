@@ -6,6 +6,7 @@ import com.example.topichubbackend.exceptions.EntityNotFoundException;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
+import com.example.topichubbackend.security.dto.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.persistence.RollbackException;
 import jakarta.transaction.*;
@@ -20,37 +21,11 @@ import java.util.stream.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService implements IAuthService {
+public class AuthService implements IAuthorService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
-    @Override
-    @Transactional
-    public UserDto register(UserDto userDto) {
-        User newUser = prepareNewUser(userDto);
-        log.info("prepared new user: {}", newUser);
-        UserRole userRole = prepareUserRole();
-        log.info("user role: {}",userRole);
-        User saved = userRepository.save(newUser);
-        userRole.setUser(saved);
-        saved.setRoles(List.of(userRoleRepository.save(userRole)));
-        return userMapper.toDto(saved);
-    }
-
-    @Override
-    public UserDto login(AuthDto userDto) {
-        log.info("userDto:{}", userDto);
-        User user = userRepository.findByEmailOrLogin(userDto.getLogin());
-        return checkUser(user,userDto);
-    }
-
-    @Override
-    public List<UserRole> getUserRole(UUID id){
-        return  userRoleRepository.findUserRole(id);
-    }
-
     @Override
     public void updateUser(UserDto userDto, String userId) {
         try{
@@ -111,39 +86,4 @@ public class AuthService implements IAuthService {
         return userList.map(userMapper::toDto);
     }
 
-//    @Override
-//    public UserDto authenticate(CredentialsDto credentialsDto) {
-//        return null;
-//    }
-
-    private User prepareNewUser(UserDto userDto){
-        UUID uuid = UUID.randomUUID();
-        return  User.builder()
-                .uuid(uuid)
-                .state(false)
-                .email(userDto.getEmail())
-                .login(userDto.getLogin())
-                .password(passwordEncoder.encode(userDto.getPassword())).build();
-    }
-    private UserRole prepareUserRole(){
-
-        return UserRole.builder()
-                .role(RoleDto.USER.type())
-                .uuid(UUID.randomUUID())
-                .build();
-    }
-    private UserDto checkUser(User isExist, AuthDto userDto) {
-        System.out.println(passwordEncoder.encode(userDto.getPassword()));
-        if (isExist == null) {
-            throw new InvalidCredentialsException(ErrorKey.NOT_FOUND.type());
-        } else if (isExist.getStatus().equals(StatusDto.BLOCK.type())) {
-            throw new UserBlockException();
-        } else {
-            if (passwordEncoder.matches(userDto.getPassword(), isExist.getPassword())) {
-                return userMapper.toDto(isExist);
-            } else {
-                throw new InvalidCredentialsException(ErrorKey.PASS_INCORRECT.type());
-            }
-        }
-    }
 }

@@ -17,7 +17,7 @@ select u
 from User u 
 where u.email=:data or u.login=:data
 """)
-    User findByEmailOrLogin(@Param("data") String data);
+    Optional<User> findByEmailOrLogin(@Param("data") String data);
 
     @Query("""
 

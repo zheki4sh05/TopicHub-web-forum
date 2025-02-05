@@ -2,13 +2,19 @@ package com.example.topichubbackend.mapper;
 
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.security.dto.*;
+import com.example.topichubbackend.util.*;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.crypto.bcrypt.*;
+import org.springframework.security.crypto.password.*;
 
 import java.util.*;
 import java.util.stream.*;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+
     @Mappings({
             @Mapping(target = "id", expression = "java(user.getUuid().toString())"),
             @Mapping(source = "email", target = "email"),
@@ -26,4 +32,20 @@ public interface UserMapper {
                 .map(UserRole::getRole)
                 .collect(Collectors.toList());
     }
+
+    @Mappings({
+            @Mapping(target = "id",expression = "java(UUID.randomUUID())"),
+            @Mapping(target = "email", source = "email"),
+            @Mapping(target = "login", source = "login"),
+            @Mapping(target = "status",expression = "java(StatusDto.ACTIVE.type())"),
+            @Mapping(target = "state", ignore = true),
+            @Mapping(target = "password",  qualifiedByName = "hash"),
+    })
+    User mapFrom(AuthDto user);
+
+    @Named("hash")
+    default String hash(String password) {
+        return new PasswordEncoderWrapper().hash(password);
+    }
+
 }

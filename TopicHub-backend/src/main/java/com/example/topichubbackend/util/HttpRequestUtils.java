@@ -6,20 +6,9 @@ import java.util.*;
 
 public class HttpRequestUtils {
 
-//    private static String getStatusByNumber(String number){
-//        switch (number){
-//            case "1"->{
-//                return StatusDto.MODERATION.type();
-//            }
-//            case "3"->{
-//                return StatusDto.REJECT.type();
-//            }
-//            default -> {
-//                return StatusDto.PUBLISH.type();
-//            }
-//
-//        }
-//    }
+    private HttpRequestUtils() {
+    }
+
     public static ArticleFilterDto parseFilterParams(Map<String, String> reqParam) {
         return ArticleFilterDto.builder()
                 .month(reqParam.get("month"))

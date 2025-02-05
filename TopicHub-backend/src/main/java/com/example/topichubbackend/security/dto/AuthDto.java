@@ -1,4 +1,4 @@
-package com.example.topichubbackend.dto;
+package com.example.topichubbackend.security.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

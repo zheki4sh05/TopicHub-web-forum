@@ -1,7 +1,7 @@
 package com.example.topichubbackend.controller.rest;
 
-import com.example.topichubbackend.config.*;
 import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -30,7 +30,7 @@ import java.io.*;
 @AllArgsConstructor
 public class ProfileController {
     private final IArticleService articleService;
-    private final IAuthService authService;
+    private final IAuthorService authService;
     private final IImageService imageService;
     private final CustomSecurityExpression customSecurityExpression;
 
@@ -102,7 +102,7 @@ public class ProfileController {
                 return new ResponseEntity<>(userId, HttpStatus.OK);
             }
             default -> {
-                return new ResponseEntity<>("", HttpStatus.OK);
+                return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
             }
         }
     }

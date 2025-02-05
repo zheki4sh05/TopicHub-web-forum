@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
-import org.checkerframework.checker.units.qual.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;

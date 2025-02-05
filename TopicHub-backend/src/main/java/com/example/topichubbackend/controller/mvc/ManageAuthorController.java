@@ -15,7 +15,7 @@ import org.springframework.web.util.*;
 @AllArgsConstructor
 public class ManageAuthorController {
 
-    private final IAuthService authService;
+    private final IAuthorService authService;
 
     @GetMapping("/fetch")
     public String getAuthor(
