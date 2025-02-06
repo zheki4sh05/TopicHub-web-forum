@@ -10,18 +10,22 @@ import com.example.topichubbackend.security.dto.AuthDto;
 import com.example.topichubbackend.security.model.*;
 import com.example.topichubbackend.security.repository.*;
 import com.example.topichubbackend.security.service.*;
+import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.util.*;
 import jakarta.servlet.http.*;
 import jakarta.transaction.*;
 import lombok.*;
+import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AuthenticationServiceImpl {
     private final UserRepository repository;
     private final JwtService jwtService;
@@ -50,15 +54,14 @@ public class AuthenticationServiceImpl {
 
     @Transactional
     public AuthenticationResponse authenticate(AuthDto request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getLogin(),
-                        request.getPassword()
-                )
-        );
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getLogin(),
+                            request.getPassword()
+                    )
+            );
 
-        User user = repository.findByEmailOrLogin(request.getLogin())
-                .orElseThrow(()->new EntityNotFoundException());
+        User user = repository.getByEmailOrLogin(request.getLogin());
         UserDto userDto = checkUser(user, request);
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);

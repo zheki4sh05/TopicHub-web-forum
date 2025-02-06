@@ -18,7 +18,6 @@ import java.util.function.*;
 
 
 @Service
-@PropertySource("classpath:application.yml")
 public class JwtService {
 
     @Value("${application.security.jwt.secret-key}")

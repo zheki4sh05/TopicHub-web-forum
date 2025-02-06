@@ -1,9 +1,11 @@
 package com.example.topichubbackend.repository;
 
 import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.model.User;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -15,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 select u 
 from User u 
-where u.email=:data or u.login=:data
+where u.email= :data or u.login= :data
 """)
     Optional<User> findByEmailOrLogin(@Param("data") String data);
 
@@ -28,5 +30,11 @@ FROM User u where u.uuid != :id
 
     Page<User> findByStatus(String status, Pageable pageable);
 
+    @Query("""
 
+select u 
+from User u 
+where u.email=:data or u.login=:data
+""")
+    User getByEmailOrLogin(@Param("data") String username);
 }

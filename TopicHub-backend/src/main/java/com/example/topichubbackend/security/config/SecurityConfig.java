@@ -15,6 +15,7 @@ import org.springframework.orm.jpa.*;
 import org.springframework.orm.jpa.vendor.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.*;
+import org.springframework.security.config.*;
 import org.springframework.security.config.annotation.authentication.configuration.*;
 import org.springframework.security.config.annotation.method.configuration.*;
 import org.springframework.security.config.annotation.web.builders.*;
@@ -42,11 +43,14 @@ public class SecurityConfig{
 //
     private final CustomLogoutHandler logoutHandler;
 
+    private final UserDetailsService userDetailsService;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
          http
+                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                  .authorizeHttpRequests(authorizeRequests->
                          authorizeRequests
@@ -58,16 +62,21 @@ public class SecurityConfig{
                                  .requestMatchers("/api/v1/answers").permitAll()
                                  .requestMatchers("/api/v1/image").permitAll()
                                  .requestMatchers("/api/v1/hubs").permitAll()
+                                 .requestMatchers("/swagger-ui/**",
+                                         "/swagger-resources/*",
+                                         "/v3/api-docs/**")
+                                 .permitAll()
                                  .anyRequest().authenticated()
                  )
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                 .authenticationProvider(authenticationProvider(userDetailsService))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(
-                        e->e.accessDeniedHandler(
-                                        (request, response, accessDeniedException)->response.setStatus(403)
-                                )
-                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.BAD_REQUEST)))
+//                .exceptionHandling(
+//                        e->e.accessDeniedHandler(
+//                                        (request, response, accessDeniedException)->response.setStatus(403)
+//                                )
+//                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.BAD_REQUEST)))
                 .logout(l->l
                         .logoutUrl("/logout")
                         .addLogoutHandler(logoutHandler)
