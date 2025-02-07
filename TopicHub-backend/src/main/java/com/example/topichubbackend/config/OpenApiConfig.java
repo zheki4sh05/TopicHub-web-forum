@@ -1,4 +1,4 @@
-package com.example.topichubbackend.controller.config;
+package com.example.topichubbackend.config;
 
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.enums.*;

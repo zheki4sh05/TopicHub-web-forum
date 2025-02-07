@@ -14,14 +14,9 @@ import java.util.*;
 public class ArticleRepository {
 
     @PersistenceContext
-    private final EntityManager em;
+    private EntityManager em;
 
     private final Integer BATCH_SIZE  = 15;
-
-    public ArticleRepository(EntityManager entityManager) {
-        this.em = entityManager;
-    }
-
 
     public Long calcTotalEntitiesCount(){
         String countQ = "SELECT COUNT(a.id) FROM Article a";

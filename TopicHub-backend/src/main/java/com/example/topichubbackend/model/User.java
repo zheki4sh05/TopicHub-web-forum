@@ -1,7 +1,9 @@
 package com.example.topichubbackend.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
@@ -36,7 +38,8 @@ public class User implements UserDetails {
     private String status;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    @OneToMany(mappedBy = "user")
     private List<UserRole> roles;
 
 

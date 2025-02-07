@@ -21,7 +21,6 @@ public class Token {
 
     @Column(name = "refresh_token")
     private String refreshToken;
-
     public Boolean getLoggedOut() {
         return loggedOut;
     }
@@ -29,7 +28,7 @@ public class Token {
     @Column(name = "is_logged_out")
     private Boolean loggedOut;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

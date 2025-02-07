@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 select u 
 from User u 
+join fetch u.roles
 where u.email= :data or u.login= :data
 """)
     Optional<User> findByEmailOrLogin(@Param("data") String data);
@@ -34,6 +35,7 @@ FROM User u where u.uuid != :id
 
 select u 
 from User u 
+join fetch u.roles
 where u.email=:data or u.login=:data
 """)
     User getByEmailOrLogin(@Param("data") String username);

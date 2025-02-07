@@ -30,13 +30,12 @@ public class ArticleService implements IArticleService {
     private final ArticleMapper articleMapper;
     private final ArticleRepo articleRepo;
     private final ArticleViewRepository articleViewRepository;
-    @Autowired
-    private FilterQueryFactory filterQueryFactory;
+    private final FilterQueryFactory filterQueryFactory;
 
-    public static final String DILIMITER = "|";
     @Override
     @Transactional
     public void create(ArticleDto articleDto, String id) {
+        final String DILIMITER = "|";
         List<Hub> hubList = hubDao.findAll();
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(EntityNotFoundException::new);
         final var article = ArticleEntity.builder()
@@ -79,13 +78,14 @@ public class ArticleService implements IArticleService {
     @Transactional
     public ArticleBatchDto search(SearchDto searchDto) {
         Pageable pageable= PageRequest.of(searchDto.getArticleFilterDto().getPage()-1,15);
-        Page<Article> articles = articleViewRepository.searchBy(UUID.fromString(searchDto.getAuthor()),
+        Page<Article> articles = articleViewRepository.searchBy(searchDto.getAuthor(),
                 searchDto.getTheme(),
                 searchDto.getKeywords(),
                  pageable);
         PageDto<Article> pageDto = PageDto.<Article>builder()
                 .pageNumber(articles.getNumber())
                 .total((long) articles.getTotalPages())
+                .lastPage(articles.getTotalPages())
                 .content(articles.getContent())
                 .build();
         return createBatch(pageDto, searchDto.getArticleFilterDto().getUserId());

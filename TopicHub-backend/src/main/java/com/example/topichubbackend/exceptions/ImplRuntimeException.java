@@ -14,9 +14,7 @@ public class ImplRuntimeException extends BaseRuntimeException{
         }else{
             return "";
         }
-
     }
-
     @Override
     public Integer getCode() {
         return 500;

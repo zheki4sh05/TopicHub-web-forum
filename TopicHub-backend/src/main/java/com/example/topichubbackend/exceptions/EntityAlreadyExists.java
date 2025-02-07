@@ -1,7 +1,8 @@
 package com.example.topichubbackend.exceptions;
 
 
-public class EntityAlreadyExists extends ImplRuntimeException{
+public class EntityAlreadyExists extends RuntimeException
+{
     public EntityAlreadyExists() {
         super(ErrorKey.CONFLICT.type());
     }
@@ -9,8 +10,4 @@ public class EntityAlreadyExists extends ImplRuntimeException{
         super(message);
     }
 
-    @Override
-    public Integer getCode() {
-        return 409;
-    }
 }

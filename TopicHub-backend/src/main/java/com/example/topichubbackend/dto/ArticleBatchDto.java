@@ -10,7 +10,6 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class ArticleBatchDto {
     private List<ArticleDto> articleDtoList;
     public Integer getPageCount() {

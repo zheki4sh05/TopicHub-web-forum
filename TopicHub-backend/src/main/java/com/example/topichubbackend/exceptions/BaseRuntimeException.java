@@ -1,18 +1,19 @@
 package com.example.topichubbackend.exceptions;
 
+import com.example.topichubbackend.config.i18n.*;
+import lombok.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
-import java.util.*;
-
+@Component
 public abstract class BaseRuntimeException extends RuntimeException{
 
-//    @Autowired
-//    private static final ResourceBundle RESOURCE_BUNDLE;
+    @Autowired
+    private I18nUtil i18nUtil;
 
-//    protected static ResourceBundle getResourceBundle(){
-//        return RESOURCE_BUNDLE;
-//    }
+    protected I18nUtil getResourceBundle(){
+        return i18nUtil;
+    }
     @Override
     public abstract String getLocalizedMessage();
 

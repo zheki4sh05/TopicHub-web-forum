@@ -3,19 +3,13 @@ package com.example.topichubbackend.security.config;
 
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.security.filters.*;
-import com.example.topichubbackend.services.impls.*;
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
+import com.example.topichubbackend.util.*;
 import lombok.*;
-import org.hibernate.jpa.boot.spi.*;
-import org.springframework.boot.autoconfigure.orm.jpa.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.http.*;
-import org.springframework.orm.jpa.*;
-import org.springframework.orm.jpa.vendor.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.*;
-import org.springframework.security.config.*;
 import org.springframework.security.config.annotation.authentication.configuration.*;
 import org.springframework.security.config.annotation.method.configuration.*;
 import org.springframework.security.config.annotation.web.builders.*;
@@ -25,12 +19,10 @@ import org.springframework.security.config.http.*;
 import org.springframework.security.core.context.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.*;
-import org.springframework.security.crypto.password.*;
 import org.springframework.security.web.*;
 import org.springframework.security.web.authentication.*;
 import org.springframework.web.cors.*;
 
-import javax.sql.*;
 import java.util.*;
 
 @Configuration
@@ -45,12 +37,18 @@ public class SecurityConfig{
 
     private final UserDetailsService userDetailsService;
 
+    @Value("${client.hostName}")
+    private String clientHostName;
+
+    @Value("${client.port}")
+    private String clientPort;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
          http
-                 .cors(AbstractHttpConfigurer::disable)
+                 .cors(cors ->  cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                  .authorizeHttpRequests(authorizeRequests->
                          authorizeRequests
@@ -59,6 +57,7 @@ public class SecurityConfig{
                                  .requestMatchers("/api/v1/logout").permitAll()
                                  .requestMatchers("/api/v1/article").permitAll()
                                  .requestMatchers("/api/v1/article/**").permitAll()
+                                 .requestMatchers("/api/v1/search/**").permitAll()
                                  .requestMatchers("/api/v1/answers").permitAll()
                                  .requestMatchers("/api/v1/image").permitAll()
                                  .requestMatchers("/api/v1/hubs").permitAll()
@@ -72,11 +71,11 @@ public class SecurityConfig{
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .authenticationProvider(authenticationProvider(userDetailsService))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//                .exceptionHandling(
-//                        e->e.accessDeniedHandler(
-//                                        (request, response, accessDeniedException)->response.setStatus(403)
-//                                )
-//                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.BAD_REQUEST)))
+                .exceptionHandling(
+                        e->e.accessDeniedHandler(
+                                        (request, response, accessDeniedException)->response.setStatus(401)
+                                )
+                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .logout(l->l
                         .logoutUrl("/logout")
                         .addLogoutHandler(logoutHandler)
@@ -99,7 +98,7 @@ public class SecurityConfig{
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        config.setAllowedOrigins(Arrays.asList(HttpRequestUtils.getClientUrl(clientHostName, clientPort)));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(false);

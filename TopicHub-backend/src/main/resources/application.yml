@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  messages:
+    basename: messages
   config:
     import:
       optional:file:.env[.properties]
@@ -30,4 +32,11 @@ logging:
   level:
     root: INFO
     com:
-      example: INFO
+      example:
+        topichubbackend: INFO
+client:
+  hostName:
+    ${CLIENT_HOST}
+  port:
+    ${CLIENT_PORT}
+

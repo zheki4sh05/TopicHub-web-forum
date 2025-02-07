@@ -42,5 +42,9 @@ public class HttpRequestUtils {
     public static String getClientUrl(){
         return "http://"+System.getenv("FRONT")+":"+System.getenv("FRONT_HOST");
     }
+    public static String getClientUrl(String host, String port){
+        return "http://"+host+":"+port;
+    }
+
 
 }

@@ -13,11 +13,12 @@ import java.util.*;
 
 @Component
 public class FilterQueryFactory {
-//
-//    @PersistenceContext
-    private EntityManager em;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
+    @Autowired
     private CriteriaBuilder criteriaBuilder;
 
     private Predicate createLikesPredicate(Root<Article> articleRoot, Double rating){

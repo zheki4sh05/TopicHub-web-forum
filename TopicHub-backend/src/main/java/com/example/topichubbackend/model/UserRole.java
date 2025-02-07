@@ -23,7 +23,6 @@ public class UserRole implements GrantedAuthority {
     @ToString.Exclude
     private User user;
 
-
     @Column(name = "role")
     private String role;
 

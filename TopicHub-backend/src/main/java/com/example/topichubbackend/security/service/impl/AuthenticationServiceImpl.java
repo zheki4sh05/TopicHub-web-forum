@@ -1,5 +1,6 @@
 package com.example.topichubbackend.security.service.impl;
 
+import com.example.topichubbackend.config.i18n.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
@@ -37,9 +38,10 @@ public class AuthenticationServiceImpl {
     @Transactional
     public AuthenticationResponse register(SignUpDto authDto) {
 
+
         Optional<User> isExist = repository.findByEmailOrLogin(authDto.getLogin());
         if(isExist.isPresent()) {
-            return new AuthenticationResponse(null, null,"User already exist",null);
+            throw new EntityAlreadyExists(ErrorKey.CONFLICT.type());
         }
         var user  = userMapper.mapFrom(authDto);
         user = repository.save(user);
@@ -54,12 +56,12 @@ public class AuthenticationServiceImpl {
 
     @Transactional
     public AuthenticationResponse authenticate(AuthDto request) {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getLogin(),
-                            request.getPassword()
-                    )
-            );
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            request.getLogin(),
+//                            request.getPassword()
+//                    )
+//            );
 
         User user = repository.getByEmailOrLogin(request.getLogin());
         UserDto userDto = checkUser(user, request);
