@@ -26,7 +26,7 @@ select a
 from Article a 
 where a.author.login like :author or a.theme like :theme or a.keyWords like :keywords
 """)
-    Page<Article> searchBy(@Param("author") UUID author,
+    Page<Article> searchBy(@Param("author") String author,
                            @Param("theme") String theme,
                            @Param("keywords") String keywords,
                            Pageable pageable
