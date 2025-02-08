@@ -15,7 +15,7 @@ function Signin({onTogglePage}) {
    
       
       dispatch(signin({
-        data:data.login,
+        login:data.login,
         password:data.password
       }))
   

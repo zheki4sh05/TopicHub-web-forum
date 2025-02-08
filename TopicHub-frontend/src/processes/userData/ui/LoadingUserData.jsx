@@ -12,13 +12,14 @@ function LoadingUserData() {
     // useEffect(()=>{
     //     dispatch(checkCookie())
     // },[])
-    useEffect(()=>{
-        if(auth){
-            dispatch(userData({
-                type:"profile"
-            }))
-        }
-    },[auth])
+    // useEffect(()=>{
+    //     if(auth){
+    //         dispatch(userData({
+    //             type:"profile",
+    //             page:1
+    //         }))
+    //     }
+    // },[auth])
       useEffect(()=>{
       
           if(hubs.length==0){

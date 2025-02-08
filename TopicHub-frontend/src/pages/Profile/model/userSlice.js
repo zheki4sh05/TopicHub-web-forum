@@ -11,7 +11,7 @@ const initialState = {
     id:0,
     login:"",
     email:"",
-
+    password:""
   },
   activeUser:{
     roles:[],
@@ -97,11 +97,12 @@ const userSlice = createSlice({
       state.user = action.payload
       state.auth = true;
       state.error=null
+
     })
     .addCase(signin.rejected, (state, action) => {
       state.status = "failed";
       state.auth = false;
-      state.error = action.payload.error;
+      state.error = action.error;
     })
   //----------------------------------------
       //---проверка cookies-------------
@@ -110,7 +111,7 @@ const userSlice = createSlice({
       })
       .addCase(checkCookie.fulfilled, (state, action) => {
         state.status = "succeeded";
-        console.log(action.payload)
+
         if(action.payload==1){
           state.auth = true;
         }else{

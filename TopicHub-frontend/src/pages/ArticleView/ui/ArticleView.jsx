@@ -61,9 +61,8 @@ function ArticleView() {
     if(auth){
       dispatch(
         checkReactions({
-          article: article.id,
-          author: article.userDto.id,
-          user: user.id,
+          articleId: article.id,
+          authorId: article.userDto.id,
         })
       );
     }

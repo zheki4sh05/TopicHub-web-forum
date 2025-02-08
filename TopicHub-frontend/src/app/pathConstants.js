@@ -1,3 +1,4 @@
+const BACKEND_HOST = import.meta.env.VITE_APP_BACKEND_ADDRESS
 export const PathConstants = {
     HOME: "/",
     LOGIN:"/login",
@@ -11,5 +12,6 @@ export const PathConstants = {
     MANAGE_HUBS:"/admin/hubs",
     PROFILE_ARTICLE:"/profile/article",
     SEARCH:"/search",
-    EDIT:"/article/edit"
+    EDIT:"/article/edit",
+    ADMIN_PANEL:"http://"+BACKEND_HOST+"/auth"
 }
