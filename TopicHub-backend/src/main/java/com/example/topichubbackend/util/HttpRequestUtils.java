@@ -1,13 +1,19 @@
 package com.example.topichubbackend.util;
 
 import com.example.topichubbackend.dto.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
 import java.util.*;
 
+@Component
 public class HttpRequestUtils {
 
-    private HttpRequestUtils() {
-    }
+    @Value("client.hostName")
+    private String host;
+
+    @Value("client:port")
+    private String port;
 
     public static ArticleFilterDto parseFilterParams(Map<String, String> reqParam) {
         return ArticleFilterDto.builder()
@@ -38,13 +44,10 @@ public class HttpRequestUtils {
         }
         return false;
     }
-
-    public static String getClientUrl(){
-        return "http://"+System.getenv("FRONT")+":"+System.getenv("FRONT_HOST");
-    }
-    public static String getClientUrl(String host, String port){
+    public String getClientUrl(){
         return "http://"+host+":"+port;
     }
+
 
 
 }

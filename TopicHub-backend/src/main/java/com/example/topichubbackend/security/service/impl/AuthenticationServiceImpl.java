@@ -1,6 +1,5 @@
 package com.example.topichubbackend.security.service.impl;
 
-import com.example.topichubbackend.config.i18n.*;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
@@ -11,7 +10,6 @@ import com.example.topichubbackend.security.dto.AuthDto;
 import com.example.topichubbackend.security.model.*;
 import com.example.topichubbackend.security.repository.*;
 import com.example.topichubbackend.security.service.*;
-import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.util.*;
 import jakarta.servlet.http.*;
 import jakarta.transaction.*;
@@ -19,9 +17,7 @@ import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
-import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
-
 import java.util.*;
 
 @Service

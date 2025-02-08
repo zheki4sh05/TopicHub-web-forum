@@ -19,5 +19,4 @@ public class ArticleBatchDto {
     private Integer page;
     private Long total;
 
-
 }

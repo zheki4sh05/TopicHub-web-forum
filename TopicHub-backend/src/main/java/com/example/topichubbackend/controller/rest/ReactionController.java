@@ -83,7 +83,6 @@ public class ReactionController {
         ReactionDto reactionDto = reactionService.check(articleId, authorId, userAuthId);
         return new ResponseEntity<>(reactionDto, HttpStatus.OK);
 
-
     }
 }
 

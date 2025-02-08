@@ -22,6 +22,7 @@ public class ComplaintService implements IComplaintControl {
     private final CommentRepository commentRepository;
     private final ArticleRepo articleRepository;
     private final ComplaintMapper complaintMapper;
+
     private final String ARTICLE="article";
     private final String COMMENT="comment";
 
@@ -72,16 +73,15 @@ public class ComplaintService implements IComplaintControl {
     }
 
     @Override
-    public Page findAllByType(String type, Pageable pageable) {
+    public PageResponse<ComplaintDto> findAllByType(String type, Pageable pageable) {
 
         if(type.equals(ARTICLE)){
-
-            return articleComplaintRepository.findAll(pageable)
-                    .map(complaintMapper::mapFrom);
+            var result = articleComplaintRepository.findAll(pageable);
+            return PageResponse.map(complaintMapper::mapFrom, result);
 
         }else if(type.equals(COMMENT)){
-            return commentComplaintRepository.findAllComment(pageable)
-                    .map(complaintMapper::mapFrom);
+            var result = commentComplaintRepository.findAllComment(pageable);
+            return PageResponse.map(complaintMapper::mapFrom, result);
         }else{
             throw  new BadRequestException();
         }

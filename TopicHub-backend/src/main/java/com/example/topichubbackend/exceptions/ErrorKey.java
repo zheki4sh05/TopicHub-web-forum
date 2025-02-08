@@ -14,7 +14,9 @@ public enum ErrorKey {
     NOT_FOUND("error.not_found"),
     PASS_EMPTY("error.pass_empty"),
     IMAGE_LOAD_ERROR("error.image_load"),
+    UNIQUE("error.unique"),
     PASS_INCORRECT("error.pass_incorrect");
+
 
     private String key;
 

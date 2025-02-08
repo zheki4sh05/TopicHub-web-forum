@@ -11,4 +11,14 @@ public class PageDto<T> {
     private Long total;
     private Integer pageNumber;
     private Integer lastPage;
+
+    @Override
+    public String toString() {
+        return "PageDto{" +
+                "content size=" + content.size() +
+                ", total=" + total +
+                ", pageNumber=" + pageNumber +
+                ", lastPage=" + lastPage +
+                '}';
+    }
 }

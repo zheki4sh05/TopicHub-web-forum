@@ -46,12 +46,10 @@ public class ArticleController {
     @GetMapping("")
     public ResponseEntity<?> doGet(
             @RequestParam Map<String, String> reqParam
-
     )  {
                 reqParam.put("status", StatusDto.PUBLISH.type());
                 ArticleFilterDto articleFilterDto = HttpRequestUtils.parseFilterParams(reqParam);
-                ArticleBatchDto articleBatchDto;
-                articleBatchDto = articleService.fetch(articleFilterDto);
+                ArticleBatchDto articleBatchDto = articleService.fetch(articleFilterDto);
                 return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
     }
 

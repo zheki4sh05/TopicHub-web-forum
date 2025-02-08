@@ -41,27 +41,9 @@ public class ComplaintController {
      */
     @PostMapping("")
     public ResponseEntity<?> doPost(@RequestBody ComplaintDto complaintDto)  {
-        log.info("new complaint: {}", complaintDto);
         String userId = customSecurityExpression.getUserId();
         complaintControl.create(userId, complaintDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    /**
-     * Retrieves complaints based on the complaint type.
-     *
-     * <p>This endpoint allows users to retrieve complaints of a specific type. The type of the complaint
-     * should be provided as a request parameter. Results are paginated, with a default page size of 15 items per page.
-     *
-     * @param type the type of the complaint to filter by.
-     * @return a ResponseEntity containing a page of complaints of the specified type.
-     * @see ComplaintDto
-     */
-    @GetMapping("")
-    public ResponseEntity<?> doGet(@RequestParam("type") @NonNull String type)  {
-        Pageable pageable = PageRequest.of(1, 15); // Default page size 15
-        Page<ComplaintDto> complaintDtoList = complaintControl.findAllByType(type, pageable);
-        return new ResponseEntity<>(complaintDtoList, HttpStatus.OK);
     }
 
     /**

@@ -8,7 +8,7 @@ public interface IComplaintControl {
 
     ComplaintDto findById(String id, String type);
 
-    Page findAllByType(String type, Pageable of);
+    PageResponse<ComplaintDto> findAllByType(String type, Pageable of);
 
     void deleteById(String complaintId,String type);
 }

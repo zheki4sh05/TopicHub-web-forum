@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
  * on the comments and utilizes custom security expressions for user identification.
  *
  */
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/comment")
 @AllArgsConstructor
@@ -40,9 +39,7 @@ public class CommentsController {
     @PostMapping("")
     public  ResponseEntity<?> doPost(@RequestBody CommentDto commentDto) {
         String userId = customSecurityExpression.getUserId();
-        log.info("new comment: {}", commentDto);
         CommentDto created = commentsService.create(commentDto, userId);
-        log.info("created comment: {}", created);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
@@ -59,9 +56,7 @@ public class CommentsController {
     @PutMapping("")
     public  ResponseEntity<?> doPut(@RequestBody CommentDto commentDto){
         String userId = customSecurityExpression.getUserId();
-        log.info("updated comment: {}", commentDto);
         CommentDto updated = commentsService.update(commentDto, userId);
-        log.info("updated comment: {}", updated);
         return new ResponseEntity<>(updated,HttpStatus.OK);
     }
 
@@ -77,7 +72,6 @@ public class CommentsController {
     @DeleteMapping("")
     public  ResponseEntity<?> doDelete(@RequestParam("commentId") String commentId) {
         String userId = customSecurityExpression.getUserId();
-        log.info("delete comment id: {}", commentId);
         commentsService.delete(commentId, userId);
         return new ResponseEntity<>(commentId, HttpStatus.OK);
     }

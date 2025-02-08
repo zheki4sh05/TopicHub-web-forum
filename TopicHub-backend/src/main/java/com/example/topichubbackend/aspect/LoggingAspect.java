@@ -17,13 +17,16 @@ public class LoggingAspect {
     public void controllerRestLog(){}
     @Pointcut("execution(public * com.example.topichubbackend.controller.mvc.*.*(..))")
     public void controllerMVCLog(){}
+
+    @Pointcut("execution(public * com.example.topichubbackend.controller.rest.admin.*.*(..))")
+    public void controllerAdminLog(){}
     @Pointcut("execution(public * com.example.topichubbackend.security.controller.*.*(..))")
     public void controllerAuthLog(){}
 
     @Pointcut("execution(public * com.example.topichubbackend.services.impls.*.*(..))")
     public void serviceLog(){}
 
-    @Before("controllerRestLog() || controllerAuthLog() || controllerMVCLog()")
+    @Before("controllerRestLog() || controllerAuthLog() || controllerMVCLog() || controllerAdminLog()")
     public void doBeforeController(JoinPoint jp){
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request;
@@ -51,19 +54,19 @@ public class LoggingAspect {
                 className, methodName, argsString);
     }
 
-    @AfterReturning(returning = "returnObject", pointcut = "controllerRestLog() || controllerAuthLog() || controllerMVCLog()")
+    @AfterReturning(returning = "returnObject", pointcut = "controllerRestLog() || controllerAuthLog() || controllerMVCLog() || controllerAdminLog()")
     public void doAfterReturning(Object returnObject){
         log.info("Return value: {}", returnObject);
     }
 
-    @After("controllerRestLog() || controllerAuthLog() || controllerMVCLog()")
+    @After("controllerRestLog() || controllerAuthLog() || controllerMVCLog() || controllerAdminLog()")
     public void doAfter(JoinPoint jp){
         log.info("Controller Method executed successfully: {}.{}",
                 jp.getSignature().getDeclaringTypeName(),
                 jp.getSignature().getName());
     }
 
-    @Around("controllerRestLog() || controllerAuthLog() || controllerMVCLog()")
+    @Around("controllerRestLog() || controllerAuthLog() || controllerMVCLog() || controllerAdminLog()")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         Object proceed = joinPoint.proceed();
@@ -79,7 +82,7 @@ public class LoggingAspect {
     }
 
 
-    @AfterThrowing(throwing = "ex", pointcut = "controllerRestLog() || controllerAuthLog() || controllerMVCLog()")
+    @AfterThrowing(throwing = "ex", pointcut = "controllerRestLog() || controllerAuthLog() || controllerMVCLog() || controllerAdminLog()")
     public void throwsException(JoinPoint jp, Exception ex){
         String methodName = jp.getSignature().getName();
         String className = jp.getTarget().getClass().getSimpleName();

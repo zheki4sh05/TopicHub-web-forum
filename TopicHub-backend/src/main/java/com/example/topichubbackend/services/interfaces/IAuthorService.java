@@ -18,6 +18,6 @@ public interface IAuthorService {
 
     UserDto findById(String userId);
 
-    Page<UserDto> fetch(String status, Pageable page);
+    PageResponse<UserDto> fetch(String status, Pageable page);
 
 }

@@ -6,18 +6,18 @@ import jakarta.persistence.*;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
+import lombok.extern.slf4j.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
 @Repository
+@Slf4j
 public class ArticleRepository {
 
     @PersistenceContext
     private EntityManager em;
-
-    private final Integer BATCH_SIZE  = 15;
-
+    private final Integer BATCH_SIZE = 15;
     public Long calcTotalEntitiesCount(){
         String countQ = "SELECT COUNT(a.id) FROM Article a";
         Query countQuery = this.em.createQuery(countQ, Long.class);
@@ -25,10 +25,11 @@ public class ArticleRepository {
     }
 
     public Integer getPageNumber(Long count, Integer pageSize){
-        return (int) (Math.ceil(count / pageSize));
+        return (int) (Math.ceil((double) count / pageSize));
     }
 
     public Integer getLastPageNumber(Long count){
+
         return getPageNumber(count, BATCH_SIZE);
     }
 
@@ -37,16 +38,20 @@ public class ArticleRepository {
         Query query = em.createQuery(articleCriteriaQuery);
         Long total = calcTotalEntitiesCount();
         EntityGraph entityGraph = em.createEntityGraph("article.articlePartList");
-        query.setFirstResult(pageable.getPageNumber()-1);
-        query.setMaxResults(15);
+        query.setFirstResult((pageable.getPageNumber()-1)*BATCH_SIZE);
+        query.setMaxResults(BATCH_SIZE);
         query.setHint("jakarta.persistence.fetchgraph", entityGraph);
         List<Article> result = query.getResultList();
-        return PageDto.<Article>builder()
+        var page  = PageDto.<Article>builder()
                 .content(result)
                 .lastPage(getLastPageNumber(total))
                 .total(total)
                 .pageNumber(pageable.getPageNumber())
                 .build();
+
+
+        log.debug("ARTICLE REPO PAGE INFO:{}",page );
+        return page;
 
     }
 }

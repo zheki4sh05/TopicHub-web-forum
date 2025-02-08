@@ -32,10 +32,12 @@ import java.util.*;
 public class SecurityConfig{
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtCookieAuthenticationFilter jwtCookieAuthenticationFilter;
 //
     private final CustomLogoutHandler logoutHandler;
 
     private final UserDetailsService userDetailsService;
+    private final HttpRequestUtils httpRequestUtils;
 
     @Value("${client.hostName}")
     private String clientHostName;
@@ -52,8 +54,11 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                  .authorizeHttpRequests(authorizeRequests->
                          authorizeRequests
+                                 .requestMatchers("/").permitAll()
+                                 .requestMatchers("/auth").permitAll()
                                  .requestMatchers("/api/v1/auth/**").permitAll()
                                  .requestMatchers("/admin/**").hasAuthority(RoleDto.ADMIN.type())
+                                 .requestMatchers("/api/v1/admin/**").hasAuthority(RoleDto.ADMIN.type())
                                  .requestMatchers("/api/v1/logout").permitAll()
                                  .requestMatchers("/api/v1/article").permitAll()
                                  .requestMatchers("/api/v1/article/**").permitAll()
@@ -70,7 +75,8 @@ public class SecurityConfig{
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                  .authenticationProvider(authenticationProvider(userDetailsService))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                 .addFilterBefore(jwtCookieAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtAuthenticationFilter, JwtCookieAuthenticationFilter.class)
                 .exceptionHandling(
                         e->e.accessDeniedHandler(
                                         (request, response, accessDeniedException)->response.setStatus(401)
@@ -98,7 +104,7 @@ public class SecurityConfig{
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList(HttpRequestUtils.getClientUrl(clientHostName, clientPort)));
+        config.setAllowedOrigins(Arrays.asList(httpRequestUtils.getClientUrl()));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(false);

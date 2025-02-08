@@ -79,10 +79,9 @@ public class AuthService implements IAuthorService {
     }
 
     @Override
-    public Page<UserDto> fetch(String status, Pageable page) {
+    public PageResponse<UserDto> fetch(String status, Pageable page) {
       Page<User> userList = userRepository.findByStatus(status,page);
-        log.info("users list by status:"+status+" {}",userList.getContent());
-        return userList.map(userMapper::toDto);
+        return PageResponse.map(userMapper::toDto, userList);
     }
 
 

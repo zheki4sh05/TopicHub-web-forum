@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Статьи</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div th:insert="~{fragments/navbar.html :: navbar(${returnLink})}" ></div>
+<div th:insert="~{fragments/menu.html :: menu}" ></div>
+<div class="container mt-5">
+    <a th:href="@{/admin/article/fetch(page=${page}, status=${status})}" class="btn btn-primary btn-lg">
+        <i class="fas fa-arrow-left"></i> Назад
+    </a>
+</div>
+<div class=" container" style="display: flex; justify-content: flex-end;flex-direction: row; align-items: center">
+
+    <form class="delete-form" th:action="@{/admin/article/del}" method="post">
+        <input type="hidden" class="id" name="id" th:value="${article.getId()}"/>
+        <input type="hidden" class="status" name="status" th:value="${status}"/>
+        <input type="hidden" class="page" name="page" th:value="${page}"/>
+        <button class="btn btn-danger" type="submit">Удалить</button>
+    </form>
+
+    <form id="statusForm" th:action="@{/admin/article/status}" method="post" modelAttribute="articleStatus">
+        <input type="hidden" id="id" name="id" th:value="${article.getId()}"/>
+        <div th:if="${status == 'MODERATION'}">
+            <select name="status" onchange="submitForm(this)">
+                <option value="">Выберите действие</option>
+                <option value="PUBLISH">Опубликовать</option>
+                <option value="BLOCK">Заблокировать</option>
+            </select>
+        </div>
+        <div th:if="${status == 'PUBLISH'}">
+            <select name="status" onchange="submitForm(this)">
+                <option value="">Выберите действие</option>
+                <option value="MODERATION">На модерацию</option>
+                <option value="BLOCK">Заблокировать</option>
+            </select>
+        </div>
+        <div th:if="${status == 'BLOCK'}">
+            <select name="status" onchange="submitForm(this)">
+                <option value="">Выберите действие</option>
+                <option value="PUBLISH">Опубликовать</option>
+                <option value="MODERATION">На модерацию</option>
+            </select>
+        </div>
+        <input type="hidden" id="page" name="page" th:value="${page}"/>
+    </form>
+
+
+</div>
+<div class="container mt-4">
+    <div>
+        <h1 th:text="${article.theme}">Article Theme</h1>
+        <p><strong>Created:</strong> <span th:text="${#dates.format(article.created, 'dd-MM-yyyy HH:mm:ss')}">01-01-2022 00:00:00</span></p>
+        <p><strong>User:</strong> <span th:text="${article.userDto.login}">Username</span></p>
+        <p><strong>Likes:</strong> <span th:text="${article.likes}">0</span></p>
+        <p><strong>Dislikes:</strong> <span th:text="${article.dislikes}">0</span></p>
+        <p><strong>Comments:</strong> <span th:text="${article.commentsCount}">0</span></p>
+        <div>
+            <strong>Hub:</strong>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>RU</th>
+                    <th>EN</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${hub.id}">1</td>
+                    <td th:text="${hub.ru}">русский</td>
+                    <td th:text="${hub.en}">english</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p><strong>Like State:</strong> <span th:text="${article.likeState}">0</span></p>
+        <div>
+            <strong>Keywords:</strong>
+            <ul>
+                <li th:each="keyword : ${article.keyWords}" th:text="${keyword}">Keyword</li>
+            </ul>
+        </div>
+        <div>
+            <div th:each="part : ${article.list}">
+                <div th:if="${part.type == 'paragraph'}">
+                    <p th:text="${part.getValue()}">Part Content</p>
+                </div>
+                <div th:if="${part.type == 'img'}">
+                    <img th:src="${part.getValue()}" alt="Image Content"/>
+                </div>
+                <div th:if="${part.type == 'chapter'}">
+                    <h3 th:text="${part.getValue()}">Part Title</h3>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <span id="message" style="display: none; margin-top: 10px;"></span>
+</div>
+<script>
+    document.querySelectorAll('.delete-form').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const id = form.querySelector('.id').value;
+            const status = form.querySelector('.status').value;
+            const page = form.querySelector('.page').value;
+            const url = `/api/v1/admin/article/del?id=${encodeURIComponent(id)}`;
+
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => {
+                            const messageElem = document.getElementById('message');
+                            messageElem.textContent = `Ошибка: ${error.message}, Код: ${error.code}`;
+                            messageElem.style.color = 'red';
+                            messageElem.style.display = 'block';
+                            setTimeout(() => {
+                                messageElem.style.display = 'none';
+                            }, 9000);
+                            throw new Error();
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const baseURL = '/admin/article/fetch';
+                    const url = `${baseURL}?status=${encodeURIComponent(status)}&page=${encodeURIComponent(page)}`;
+                    window.location.replace(window.location.origin+url);
+                })
+                .catch(error => {
+                    const messageElem = document.getElementById('message');
+                    messageElem.textContent = `Что-то пошло не так...`;
+                    messageElem.style.color = 'red';
+                    messageElem.style.display = 'block';
+                    setTimeout(() => {
+                        messageElem.style.display = 'none';
+                    }, 9000);
+                });
+        });
+    });
+
+    function submitForm(selectElement) {
+        const form = selectElement.form;
+        const formData = new FormData(form);
+
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        fetch("/api/v1/admin/article/status", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(error => {
+                        const messageElem = document.getElementById('message');
+                        messageElem.textContent = `Ошибка: ${error.message}, Код: ${error.code}`;
+                        messageElem.style.color = 'red';
+                        messageElem.style.display = 'block';
+                        setTimeout(() => {
+                            messageElem.style.display = 'none';
+                        }, 9000);
+                        throw new Error();
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                const messageElem = document.getElementById('message');
+                messageElem.textContent = 'Статус изменен успешно!';
+                messageElem.style.color = 'green';
+                messageElem.style.display = 'block';
+                setTimeout(() => {
+                    messageElem.style.display = 'none';
+                }, 2000);
+                deleteRowById(data.id)
+            })
+            .catch(error => {
+            });
+
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -19,6 +19,11 @@ public class ArticleDto {
     private Integer likes;
     private Integer dislikes;
     private Timestamp created;
+
+    public Integer getHub() {
+        return hub==null ? 0 : hub;
+    }
+
     private Integer hub;
     private UserDto userDto;
     private Integer likeState;

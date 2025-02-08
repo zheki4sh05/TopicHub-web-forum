@@ -33,7 +33,7 @@ logging:
     root: INFO
     com:
       example:
-        topichubbackend: INFO
+        topichubbackend: DEBUG
 client:
   hostName:
     ${CLIENT_HOST}
