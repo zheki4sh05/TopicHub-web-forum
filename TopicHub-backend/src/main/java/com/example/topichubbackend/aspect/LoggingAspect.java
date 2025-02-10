@@ -54,6 +54,11 @@ public class LoggingAspect {
                 className, methodName, argsString);
     }
 
+    @AfterReturning(returning = "returnObject", pointcut = "serviceLog()")
+    public void doAfterReturningService(Object returnObject){
+        log.info("Return value from service: {}", returnObject);
+    }
+
     @AfterReturning(returning = "returnObject", pointcut = "controllerRestLog() || controllerAuthLog() || controllerMVCLog() || controllerAdminLog()")
     public void doAfterReturning(Object returnObject){
         log.info("Return value: {}", returnObject);

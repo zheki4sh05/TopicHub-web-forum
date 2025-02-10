@@ -1,7 +1,6 @@
 package com.example.topichubbackend.services.interfaces;
 
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.model.*;
 import org.springframework.data.domain.*;
 
 import java.util.*;
@@ -19,5 +18,7 @@ public interface IAuthorService {
     UserDto findById(String userId);
 
     PageResponse<UserDto> fetch(String status, Pageable page);
+
+   PageResponse<UserDto> search(String login, String email, Integer page, Boolean isAdmin);
 
 }

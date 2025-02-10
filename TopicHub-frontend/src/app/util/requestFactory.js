@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import getRequestConfig from "./requestConfig";
 import addParams from "./paramsConfig";
+import api from "./api";
 
 
 class ApiRequestCreator {
@@ -16,20 +16,14 @@ class ApiRequestCreator {
     return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
         let response;
         if (withParms) {
-          response = await axios.get(
+          response = await api.get(
             fullUrl.concat(addParams(initial)),
-            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
-            thunkAPI.getState().user.user.email,
-            thunkAPI.getState().user.user.password
-          )
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
           );
         } else {
-          response = await axios.get(fullUrl, 
+          response = await api.get(fullUrl, 
           
-            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
-            thunkAPI.getState().user.user.email,
-            thunkAPI.getState().user.user.password
-          )
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
           
           );
         }
@@ -46,13 +40,10 @@ class ApiRequestCreator {
       async (initial, thunkAPI) => {
     
         try {
-          const response = await axios.post(
+          const response = await api.post(
             this.url.concat(uri),
             initial,
-            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
-            thunkAPI.getState().user.user.email,
-            thunkAPI.getState().user.user.password
-          )
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
           );
           return response.data;
         } catch (error) {
@@ -67,24 +58,18 @@ class ApiRequestCreator {
     let fullUrl = this.url.concat(uri);
     if (withParms) {
       return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
-        const response = await axios.delete(
+        const response = await api.delete(
           fullUrl.concat(addParams(initial)),
-          getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
-          thunkAPI.getState().user.user.email,
-          thunkAPI.getState().user.user.password
-        )
+          getRequestConfig(thunkAPI.getState().settings.activeLanguage)
         );
         return response.data;
       });
     } else {
       return createAsyncThunk(this.domainName.concat(uri), async (initial,thunkAPI) => {
-        const response = await axios.delete(
+        const response = await api.delete(
           fullUrl,
           initial,
-          getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
-          thunkAPI.getState().user.email,
-          thunkAPI.getState().user.password
-        )
+          getRequestConfig(thunkAPI.getState().settings.activeLanguage)
         );
         return response.data;
       });
@@ -94,13 +79,10 @@ class ApiRequestCreator {
   createPatchRequest(uri) {
     
     return createAsyncThunk(this.domainName.concat(uri), async (initial, thunkAPI) => {
-      const response = await axios.patch(
+      const response = await api.patch(
         this.url.concat(uri),
         initial.data,
-        getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
-        thunkAPI.getState().user.user.email,
-            thunkAPI.getState().user.user.password
-      )
+        getRequestConfig(thunkAPI.getState().settings.activeLanguage)
       );
       return response.data;
     });
@@ -111,13 +93,10 @@ class ApiRequestCreator {
       this.domainName.concat(uri),
       async (initial, thunkAPI) => {
         try {
-          const response = await axios.put(
+          const response = await api.put(
             this.url.concat(uri),
             initial,
-            getRequestConfig(thunkAPI.getState().settings.activeLanguage, 
-            thunkAPI.getState().user.user.email,
-            thunkAPI.getState().user.user.password
-          )
+            getRequestConfig(thunkAPI.getState().settings.activeLanguage)
           );
           return response.data;
         } catch (error) {

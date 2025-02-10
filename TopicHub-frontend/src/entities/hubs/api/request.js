@@ -3,10 +3,6 @@ import api from "../../../app/util/apiPath";
 import ApiRequestCreator from "../../../app/util/requestFactory";
 
 
-// const apiFactory = new ApiRequestCreator(DomainNames.article, api.article.url);
-// export const fetchHubs = apiFactory.createGetRequest(api.article.hubs,false);
-
-
 const apiFactory2 = new ApiRequestCreator(DomainNames.hubs+"/create", api.hubs.url);
 export const createHubs = apiFactory2.createPostRequest("");
 

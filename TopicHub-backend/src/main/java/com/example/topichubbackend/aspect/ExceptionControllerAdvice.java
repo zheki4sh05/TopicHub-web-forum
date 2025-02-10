@@ -23,18 +23,21 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler(EntityAlreadyExists.class)
-//    public ResponseEntity<?> exceptionSuchEntityAlreadyExists(EntityAlreadyExists e) {
-//        var code = HttpStatus.CONFLICT;
-//        ErrorDto errorDto = ErrorDto.builder()
-//                .code(code.value())
-//                .message(e.getMessage())
-//                .localDate(LocalDate.now().toString())
-//                .build();
-//        return new ResponseEntity<>(errorDto, code);
-//    }
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?>  handleIllegalArgumentException(BadRequestException e, WebRequest request) {
+        Locale locale = request.getLocale();
+        String errorMessage = i18nUtil.getMessage(ErrorKey.WRONG_REQUEST_PARAM.type(), locale, null);
+        var code = HttpStatus.BAD_REQUEST;
+        ErrorDto errorDto = ErrorDto.builder()
+                .code(code.value())
+                .message(errorMessage)
+                .localDate(LocalDate.now().toString())
+                .build();
+        return new ResponseEntity<>(errorDto, code);
+    }
 
-    @ExceptionHandler(EntityAlreadyExists.class)
+        @ExceptionHandler(EntityAlreadyExists.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<?>  handleIllegalArgumentException(EntityAlreadyExists e, WebRequest request) {
         Locale locale = request.getLocale();

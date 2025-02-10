@@ -84,5 +84,7 @@
   "auth_warn2": "Passwords do not match!",
   "auth_warn3": "Password is too short! Minimum: 6 characters, Maximum: 12",
   "auth_warn4": "Login should contain only Latin letters and _",
-  "auth_warn5": "Password should contain only Latin letters or digits and #!? "
+  "auth_warn5": "Password should contain only Latin letters or digits and #!? ",
+  "logout":"Logout",
+   "login":"login"
 }

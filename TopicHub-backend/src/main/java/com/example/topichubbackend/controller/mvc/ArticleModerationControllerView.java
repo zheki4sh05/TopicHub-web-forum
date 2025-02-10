@@ -30,7 +30,7 @@ public class ArticleModerationControllerView {
             ){
         var articleFilter = HttpRequestUtils.parseFilterParams(reqParam);
         articleFilter.setUserId(customSecurityExpression.getUserId());
-        ArticleBatchDto articles = articleService.fetch(articleFilter);
+        PageResponse<ArticleDto> articles = articleService.fetch(articleFilter);
         model.addAttribute("batch", articles);
         model.addAttribute("status", articleFilter.getStatus());
         model.addAttribute("returnLink",httpRequestUtils.getClientUrl());

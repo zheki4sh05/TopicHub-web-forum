@@ -26,7 +26,7 @@ public class ArticleModerationController {
     ){
         var articleFilter = HttpRequestUtils.parseFilterParams(reqParam);
         articleFilter.setUserId(customSecurityExpression.getUserId());
-        ArticleBatchDto articles = articleService.fetch(articleFilter);
+        PageResponse<ArticleDto> articles = articleService.fetch(articleFilter);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 

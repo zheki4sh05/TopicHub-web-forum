@@ -59,10 +59,10 @@ public class SecurityConfig{
                                  .requestMatchers("/api/v1/auth/**").permitAll()
                                  .requestMatchers("/admin/**").hasAuthority(RoleDto.ADMIN.type())
                                  .requestMatchers("/api/v1/admin/**").hasAuthority(RoleDto.ADMIN.type())
-                                 .requestMatchers("/api/v1/logout").permitAll()
                                  .requestMatchers("/api/v1/article").permitAll()
                                  .requestMatchers("/api/v1/article/**").permitAll()
                                  .requestMatchers("/api/v1/search/**").permitAll()
+                                 .requestMatchers("/api/v1/profile/search/**").permitAll()
                                  .requestMatchers("/api/v1/answers").permitAll()
                                  .requestMatchers("/api/v1/image").permitAll()
                                  .requestMatchers("/api/v1/hubs").permitAll()
@@ -83,7 +83,7 @@ public class SecurityConfig{
                                 )
                                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .logout(l->l
-                        .logoutUrl("/logout")
+                        .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()
                         ));

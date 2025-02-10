@@ -1,6 +1,7 @@
 package com.example.topichubbackend.security.filters;
 
 import com.example.topichubbackend.security.service.*;
+import com.example.topichubbackend.util.*;
 import jakarta.servlet.*;
 import lombok.*;
 import org.springframework.security.authentication.*;
@@ -17,10 +18,9 @@ import java.io.*;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
-
+    private final SecurityService securityService;
+    private final HttpRequestUtils httpRequestUtils;
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -30,10 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (request.getServletPath().contains("/api/v1/auth")
-                || request.getServletPath().contains("/admin")
-                || request.getServletPath().contains("/api/v1/admin")
-        ) {
+        if (httpRequestUtils.isPublic(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -45,25 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         String username = jwtService.extractUsername(token);
-
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if(jwtService.isValid(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-        }
+        securityService.check(username, token, request);
         filterChain.doFilter(request, response);
-
-
     }
 }

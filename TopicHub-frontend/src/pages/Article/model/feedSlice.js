@@ -9,8 +9,10 @@ import statusTypes from "../../../app/util/statusTypes";
 const initialState = {
   list: {
 
-    articleDtoList:[],
-    pageCount:0
+    items:[],
+    page:0,
+    total:0,
+    maxPage:0
 
   },
 
@@ -49,7 +51,7 @@ const feedSlice = createSlice({
         
        const {targetId, value}= action.payload
 
-       const article = state.list.articleDtoList.find(item => item.id == targetId);
+       const article = state.list.items.find(item => item.id == targetId);
     
        if (article) { 
         if(value==1){

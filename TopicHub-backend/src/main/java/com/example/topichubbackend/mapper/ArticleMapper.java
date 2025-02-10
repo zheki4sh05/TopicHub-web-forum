@@ -13,11 +13,11 @@ public interface ArticleMapper{
             @Mapping(target = "id", source = "id"),
             @Mapping(source = "hub.id", target = "hub"),
             @Mapping(source = "articlePartList", target = "list"),
-            @Mapping(source = "author", target = "userDto"),
+            @Mapping(source = "author", target = "userDto", qualifiedByName = "toAuthor"),
             @Mapping(source = "likes", target = "likes"),
             @Mapping(source = "dislikes", target = "dislikes"),
-            @Mapping(ignore = true, target = "likeState"),
             @Mapping(source = "comments", target = "commentsCount"),
+            @Mapping(source = "state", target = "likeState"),
             @Mapping( target = "keyWords", expression = "java(getWords(item.getKeyWords()))")
     })
     ArticleDto toDto(Article item);

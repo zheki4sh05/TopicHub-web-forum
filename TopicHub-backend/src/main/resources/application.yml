@@ -1,8 +1,14 @@
 server:
   port: 8080
 spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      additional-paths: src/main/resources
   messages:
     basename: messages
+    encoding: UTF-8
   config:
     import:
       optional:file:.env[.properties]

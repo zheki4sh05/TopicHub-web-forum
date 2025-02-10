@@ -7,10 +7,10 @@ public interface IArticleService {
 //    ArticleBatchDto fetch(ArticleFilterDto param,String userId);
 //    ArticleBatchDto fetch(Integer page,String userId);
 //    ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId);
-    ArticleBatchDto fetch(ArticleFilterDto articleFilter);
+    PageResponse<ArticleDto> fetch(ArticleFilterDto articleFilter);
     void delete(String id, String userId);
-    ArticleBatchDto search(SearchDto searchDto);
-    ArticleBatchDto fetchBookMarks(String userId, Integer page);
+    PageResponse<ArticleDto> search(SearchDto searchDto);
+    PageResponse<ArticleDto> fetchBookMarks(String userId, Integer page);
     void deleteAdmin(String targetId);
     void update(ArticleDto updatedArticle, String id);
     void update(ArticleStatusDto articleStatusDto);

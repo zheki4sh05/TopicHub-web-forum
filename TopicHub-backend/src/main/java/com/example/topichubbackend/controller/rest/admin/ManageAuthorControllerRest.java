@@ -1,4 +1,5 @@
 package com.example.topichubbackend.controller.rest.admin;
+import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
@@ -49,6 +50,20 @@ public class ManageAuthorControllerRest {
             return new ResponseEntity<>(id, HttpStatus.OK);
         }else{
            throw new BadRequestException();
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(
+            @RequestParam(value = "login",required = false,defaultValue="") String login,
+            @RequestParam(value = "email",required = false,defaultValue="") String email,
+            @RequestParam(value = "page",defaultValue = "1") Integer page
+    ){
+        if(login.isEmpty() && email.isEmpty()){
+            throw new BadRequestException();
+        }else{
+            PageResponse<UserDto> authorDtoPageResponse = authService.search(login, email,page,true);
+            return new ResponseEntity<>(authorDtoPageResponse, HttpStatus.OK);
         }
     }
 

@@ -39,6 +39,13 @@ public class Article {
     @Column(name = "status")
     private String status;
 
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    @Transient
+    private Integer state;
+
     @ManyToOne
     @JoinColumn(name = "hub")
     private Hub hub;

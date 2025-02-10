@@ -1,18 +1,8 @@
 
 
 
-function getRequestConfig(lng,login,password){
-  if(login.length>0 && password.length>0){
-    return {
-        headers: 
-        {
-          'Content-Type': 'application/json', 
-          'Accept-Language':lng, 
-        'Authorization': `Basic ${btoa(`${login}:${password}`)}`
-        },
-     } }
+function getRequestConfig(lng){
     
-    else{
       return {
 
           headers: 
@@ -21,7 +11,7 @@ function getRequestConfig(lng,login,password){
             'Accept-Language':lng, 
           },
       }
-    }
+
   }
 
     

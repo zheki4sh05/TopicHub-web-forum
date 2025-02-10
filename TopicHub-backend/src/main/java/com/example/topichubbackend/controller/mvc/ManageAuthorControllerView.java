@@ -15,7 +15,6 @@ import org.springframework.web.util.*;
 @Controller
 @AllArgsConstructor
 public class ManageAuthorControllerView {
-
     private final IAuthorService authService;
     private final HttpRequestUtils httpRequestUtils;
     @GetMapping("/fetch")

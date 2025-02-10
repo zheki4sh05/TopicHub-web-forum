@@ -59,7 +59,7 @@ function UserArticles({ edit }) {
 
   return (
     <>
-      {articles.articleDtoList.length > 0 ? (
+      {articles.items.length > 0 ? (
         <Stack direction={"column"}>
           <ArticlesList
             status={status}

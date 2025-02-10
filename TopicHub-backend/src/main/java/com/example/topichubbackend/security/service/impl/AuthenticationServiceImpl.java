@@ -17,6 +17,7 @@ import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
 import java.util.*;
 
@@ -102,6 +103,7 @@ public class AuthenticationServiceImpl {
         tokenRepository.save(token);
     }
 
+    @Transactional
     public ResponseEntity<?> refreshToken(
             HttpServletRequest request,
             HttpServletResponse response) {

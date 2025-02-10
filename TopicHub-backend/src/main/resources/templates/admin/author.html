@@ -16,10 +16,12 @@
 <div th:insert="~{fragments/navbar.html :: navbar(${returnLink})}" ></div>
 <div th:insert="~{fragments/menu.html :: menu}"></div>
 <div style="display: flex; flex-direction: column; max-width:1200px; margin: 0 auto; margin-top: 30px">
+    <input type="hidden" id="status" name="status" th:value="${authors[0].status}">
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{dropdown.select}">
             Выбрать
         </button>
+
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li>
                 <a class="dropdown-item" th:href="@{'/admin/author/fetch?status='+'ACTIVE'}" th:text="#{status.active}">Активные</a>
@@ -30,7 +32,21 @@
         </ul>
     </div>
 
-    <table class="table table-striped">
+    <form id="searchForm">
+        <div class="form-group">
+            <label for="login">Login:</label>
+            <input type="text" class="form-control" id="login" name="login" placeholder="Enter login">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a  href="#" th:href="@{/admin/author/fetch(status=${authors[0].status},page=${page.getPage()})}">Сбросить</a>
+        <input id="page" type="hidden" name="page" value="1">
+    </form>
+
+    <table class="table table-striped" id="resultsTable">
         <thead>
         <tr>
             <th scope="col" th:text="#{table.login}">Логин</th>
@@ -45,6 +61,7 @@
             <td th:text="${user.email}">Почта</td>
             <td th:text="${user.status}">Статус</td>
             <td>
+
                 <div class="dropdown d-inline">
                     <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{dropdown.select_small}">
                         Выбрать
@@ -53,7 +70,7 @@
                         <li>
                             <form action="/admin/author/status" method="POST">
                                 <input type="hidden" name="id" th:value="${user.id}">
-                                <input type="hidden" name="page" th:value="${page.getNumber()+1}">
+                                <input type="hidden" name="page" th:value="${page.getPage()+1}">
                                 <input type="hidden" name="size" th:value="${size}">
                                 <input type="hidden" name="status" value="ACTIVE">
                                 <button type="submit" class="dropdown-item hover-underline-animation" style="background: none; border: none; text-align: left;" th:text="#{actions.unlock}">Разблокировать</button>
@@ -62,7 +79,7 @@
                         <li>
                             <form action="/admin/author/status" method="POST">
                                 <input type="hidden" name="id" th:value="${user.id}">
-                                <input type="hidden" name="page" th:value="${page.getNumber()+1}">
+                                <input type="hidden" name="page" th:value="${page.getPage()+1}">
                                 <input type="hidden" name="size" th:value="${size}">
                                 <input type="hidden" name="status" value="BLOCK">
                                 <button type="submit" class="dropdown-item hover-underline-animation" style="background: none; border: none; text-align: left;" th:text="#{actions.block}">Заблокировать</button>
@@ -71,7 +88,7 @@
                         <li>
                             <form action="/admin/author/delete" method="POST">
                                 <input type="hidden" name="id" th:value="${user.id}">
-                                <input type="hidden" name="page" th:value="${page.getNumber()+1}">
+                                <input type="hidden" name="page" th:value="${page.getPage()+1}">
                                 <input type="hidden" name="size" th:value="${size}">
                                 <input type="hidden" name="status" th:value="${status}">
                                 <button type="submit" class="dropdown-item hover-underline-animation" style="background: none; border: none; text-align: left;" th:text="#{actions.delete}">Удалить</button>
@@ -84,22 +101,108 @@
         </tbody>
     </table>
 
-    <nav aria-label="Пагинация">
+    <nav aria-label="Пагинация" id="pagination">
         <ul class="pagination">
-            <li class="page-item" th:classappend="${page.getNumber() == 0 } ? 'disabled'">
-                <a class="page-link" href="#" th:href="@{'/admin/author/fetch?status=' + ${status} + '&page=' + ${page.number == 0 ? page.totalPages : page.number - 1}}" th:text="#{pagination.previous}">Назад</a>
+            <li class="page-item" th:classappend="${page.getPage() == 0 } ? 'disabled'">
+                <a class="page-link" href="#" th:href="@{'/admin/author/fetch?status=' + ${status} + '&page=' + ${page.getPage() == 0 ? page.getMaxPage() : page.getPage() - 1}}" th:text="#{pagination.previous}">Назад</a>
             </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, page.getTotalPages())}"
-                th:classappend="${i == page.number} ? 'active'">
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, page.getMaxPage()-1)}"
+                th:classappend="${i == page.getPage} ? 'active'">
                 <a class="page-link" th:href="@{'/admin/author/fetch?status=' + ${status} + '&page=' + ${i+1}}" th:text="${i+1}"></a>
             </li>
-            <li class="page-item" th:classappend="${page.getNumber() -1  == page.totalPages} ? 'disabled'">
-                <a class="page-link" href="#" th:href="@{'/admin/author/fetch?status=' + ${status} + '&page=' + ${page.number == page.totalPages ? page.number : page.number + 2}}" th:text="#{pagination.next}">Вперед</a>
+            <li class="page-item" th:classappend="${page.getPage()  == page.getMaxPage()-1} ? 'disabled'">
+                <a class="page-link" href="#" th:href="@{'/admin/author/fetch?status=' + ${status} + '&page=' + ${page.getPage() == page.getMaxPage() ? page.getPage() : page.getPage() + 2}}" th:text="#{pagination.next}">Вперед</a>
             </li>
         </ul>
     </nav>
 </div>
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let login = document.getElementById('login').value;
+        let email = document.getElementById('email').value;
+        let status = document.getElementById('status').value;
+        let page = document.getElementById('page').value;
 
+        let url = `/api/v1/admin/author/search?login=${encodeURIComponent(login)}&email=${encodeURIComponent(email)}&status=${encodeURIComponent(status)}&page=${page}`;
+
+        fetch(url, {
+            method: 'GET'
+        })
+            .then(response => response.json())
+            .then(data => {
+                let resultsTable = document.getElementById('resultsTable');
+                let pagination = document.getElementById('pagination');
+                resultsTable.innerHTML = '';
+                pagination.innerHTML = '';
+
+                data.items.forEach(user => {
+                    let row = document.createElement('tr');
+                    row.innerHTML = `
+                <td>${user.login}</td>
+                <td>${user.email}</td>
+                <td>${user.status}</td>
+                <td>
+                    <div class="dropdown d-inline">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                            Выбрать
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                            <li>
+                                <form action="/admin/author/status" method="POST">
+                                    <input type="hidden" name="id" value="${user.id}">
+                                    <input type="hidden" name="page" value="${page}">
+                                    <input type="hidden" name="status" value="ACTIVE">
+                                    <button type="submit" class="dropdown-item" style="background: none; border: none; text-align: left;">Разблокировать</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="/admin/author/status" method="POST">
+                                    <input type="hidden" name="id" value="${user.id}">
+                                    <input type="hidden" name="page" value="${page}">
+                                    <input type="hidden" name="status" value="BLOCK">
+                                    <button type="submit" class="dropdown-item" style="background: none; border: none; text-align: left;">Заблокировать</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="/admin/author/delete" method="POST">
+                                    <input type="hidden" name="id" value="${user.id}">
+                                    <input type="hidden" name="page" value="${page}">
+                                    <button type="submit" class="dropdown-item" style="background: none; border: none; text-align: left;">Удалить</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            `;
+                    resultsTable.appendChild(row);
+                });
+
+
+                if (data.maxPage > 1) {
+                    for (let i = 0; i < data.maxPage; i++) {
+                        let pageItem = document.createElement('li');
+                        pageItem.className = `page-item ${i === parseInt(page) ? 'active' : ''}`;
+
+                        let pageLink = document.createElement('a');
+                        pageLink.className = 'page-link';
+                        pageLink.href = `#`;
+                        pageLink.textContent = i + 1;
+                        pageLink.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            document.getElementById('page').value = i;
+                            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+                        });
+
+                        pageItem.appendChild(pageLink);
+                        pagination.appendChild(pageItem);
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

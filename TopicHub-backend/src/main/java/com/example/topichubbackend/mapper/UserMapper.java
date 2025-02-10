@@ -53,4 +53,14 @@ public interface UserMapper {
         return new PasswordEncoderWrapper().hash(password);
     }
 
+
+    @Mapping(target = "id", expression = "java(user.getUuid().toString())")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "login", target = "login")
+    @Mapping(target = "password",ignore = true)
+    @Mapping(target = "roles",ignore = true)
+    @Mapping(target = "state",ignore = true)
+    @Mapping(target = "status",ignore = true)
+    @Named("toAuthor")
+    UserDto toAuthor(User user);
 }

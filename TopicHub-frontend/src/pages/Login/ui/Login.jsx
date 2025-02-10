@@ -2,6 +2,7 @@ import MenuWrapper from "../../../widgets/menu/ui/MenuWrapper";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearUserError,
   controlUserStatus,
   getUser,
   getUserError,
@@ -61,7 +62,7 @@ function Login() {
         navigate(PathConstants.PROFILE);
       }
     } else if (status == statusTypes.failed) {
-      setOpen({ state: true, message: error.message, type: "error" });
+      setOpen({ state: true, message: error.data.message, type: "error" });
     }
     dispatch(controlUserStatus(statusTypes.idle));
   }, [status]);
@@ -72,6 +73,7 @@ function Login() {
     }
 
     setOpen({ state: false, message: "", type: "" });
+    dispatch(clearUserError())
   };
 
   return (

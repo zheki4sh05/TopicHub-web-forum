@@ -37,14 +37,14 @@ function Articles() {
   const getRequestBody = (select, page) => {
     if (auth) {
       return {
-        type: "articles",
+      
         page: page,
         hub: select,
         userId: user.id,
       };
     } else {
       return {
-        type: "articles",
+     
         page: page,
         hub: select,
       };
@@ -144,7 +144,7 @@ function Articles() {
           }}
         >
           <Pagination
-            count={feed.pageCount==0? 1: feed.pageCount}
+            count={feed.page==0? 1: feed.page}
             variant="outlined"
             color="primary"
             onChange={handlePageChange}

@@ -17,8 +17,13 @@ public class HttpResponseUtils {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    private HttpResponseUtils(){}
+    public HttpResponseUtils(){}
 
+    public HttpResponseUtils(Long accessTokenExpire, Long refreshTokenExpire, String applicationName) {
+        this.accessTokenExpire = accessTokenExpire;
+        this.refreshTokenExpire = refreshTokenExpire;
+        this.applicationName = applicationName;
+    }
 
     public String accessCookie(){
         return applicationName+"_access";

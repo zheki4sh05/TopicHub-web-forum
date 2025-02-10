@@ -1,18 +1,27 @@
 package com.example.topichubbackend.security.controller;
 
+import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.model.User;
 import com.example.topichubbackend.security.dto.*;
 import com.example.topichubbackend.security.service.impl.*;
+import com.example.topichubbackend.security.util.*;
 import lombok.*;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.*;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.security.*;
+
 @RestController
 @RequestMapping("api/v1/auth")
 @AllArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationServiceImpl authService;
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(
@@ -28,6 +37,8 @@ public class AuthenticationController {
        var response =  authService.authenticate(request);
         return ResponseEntity.ok(response);
     }
+
+
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(
             HttpServletRequest request,

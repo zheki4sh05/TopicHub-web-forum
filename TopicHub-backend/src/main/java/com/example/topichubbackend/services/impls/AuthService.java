@@ -8,11 +8,9 @@ import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.persistence.RollbackException;
-import jakarta.transaction.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.data.domain.*;
-import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.*;
 import java.util.*;
 import java.util.stream.*;
@@ -25,6 +23,7 @@ public class AuthService implements IAuthorService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserMapper userMapper;
+    private final AuthorMapper authorMapper;
     @Override
     public void updateUser(UserDto userDto, String userId) {
         try{
@@ -83,6 +82,17 @@ public class AuthService implements IAuthorService {
       Page<User> userList = userRepository.findByStatus(status,page);
         return PageResponse.map(userMapper::toDto, userList);
     }
+
+    @Override
+    public PageResponse<UserDto> search(String login, String email, Integer page, Boolean isAdmin) {
+        Page<User> userList = userRepository.searchByLoginOrEmail(login,email, PageRequest.of(page-1,15));
+        if(isAdmin){
+            return PageResponse.map(userMapper::toDto, userList);
+        }else{
+            return PageResponse.map(userMapper::toAuthor, userList);
+        }
+    }
+
 
 
 }

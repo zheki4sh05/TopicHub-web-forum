@@ -2,7 +2,9 @@ package com.example.topichubbackend.security.config;
 
 import com.example.topichubbackend.security.model.*;
 import com.example.topichubbackend.security.repository.*;
+import com.example.topichubbackend.security.service.*;
 import jakarta.servlet.http.*;
+import jakarta.transaction.*;
 import lombok.*;
 import org.springframework.context.annotation.*;
 import org.springframework.security.core.*;
@@ -14,8 +16,8 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     private final TokenRepository tokenRepository;
 
-
     @Override
+    @Transactional
     public void logout(HttpServletRequest request,
                        HttpServletResponse response,
                        Authentication authentication) {
@@ -27,10 +29,8 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         String token = authHeader.substring(7);
         Token storedToken = tokenRepository.findByAccessToken(token).orElse(null);
+        var tokens = tokenRepository.findAllAccessTokensByUser(storedToken.getUser().getUuid());
+        tokenRepository.deleteAll(tokens);
 
-        if(storedToken != null) {
-            storedToken.setLoggedOut(true);
-            tokenRepository.save(storedToken);
-        }
     }
 }

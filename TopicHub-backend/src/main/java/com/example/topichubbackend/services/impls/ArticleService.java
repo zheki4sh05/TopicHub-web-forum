@@ -76,67 +76,39 @@ public class ArticleService implements IArticleService {
 
     @Override
     @Transactional
-    public ArticleBatchDto search(SearchDto searchDto) {
+    public PageResponse<ArticleDto> search(SearchDto searchDto) {
         Pageable pageable= PageRequest.of(searchDto.getArticleFilterDto().getPage()-1,15);
         Page<Article> articles = articleViewRepository.searchBy(searchDto.getAuthor(),
                 searchDto.getTheme(),
                 searchDto.getKeywords(),
                  pageable);
-        PageDto<Article> pageDto = PageDto.<Article>builder()
-                .pageNumber(articles.getNumber())
-                .total((long) articles.getTotalPages())
-                .lastPage(articles.getTotalPages())
-                .content(articles.getContent())
-                .build();
-        return createBatch(pageDto, searchDto.getArticleFilterDto().getUserId());
+        PageResponse<Article> pageResponse = PageResponse.map(articles);
+        checkLike(searchDto.getUserId(), pageResponse);
+        return PageResponse.map(articleMapper::toDto, articles);
+
     }
     @Override
     @Transactional
-    public ArticleBatchDto fetchBookMarks(String userId, Integer page) {
+    public PageResponse<ArticleDto> fetchBookMarks(String userId, Integer page) {
         Pageable pageable= PageRequest.of(page-1,15);
         Page<Article> articles = articleViewRepository.findBookmarks(UUID.fromString(userId),pageable);
-        return createBatch(
-                PageDto.<Article>builder()
-                        .content(articles.getContent())
-                        .total((long) articles.getTotalPages())
-                        .pageNumber(articles.getNumber())
-                        .build(),
-                userId
-        );
+        PageResponse<Article> pageResponse = PageResponse.map(articles);
+        checkLike(userId, pageResponse);
+        return PageResponse.map(articleMapper::toDto, articles);
     }
+
+
 
     @Override
     @Transactional
-    public ArticleBatchDto fetch(ArticleFilterDto articleFilter) {
+    public PageResponse<ArticleDto> fetch(ArticleFilterDto articleFilter) {
         CriteriaQuery<Article> articleCriteriaQuery = filterQueryFactory.createQuery(articleFilter);
-        PageDto<Article> articlePage = articleRepository.findByQuery(
+        PageResponse<Article> articlePage = articleRepository.findByQuery(
                 articleCriteriaQuery,
                 PageRequest.of(articleFilter.getPage(),15));
-        return createBatch(articlePage,articleFilter.getUserId());
+        checkLike(articleFilter.getUserId(), articlePage);
+        return PageResponse.map(articleMapper::toDto, articlePage);
     }
-
-    private ArticleBatchDto createBatch(PageDto<Article> articlePage,final String userId) {
-        ArticleBatchDto articleBatchDto = new ArticleBatchDto();
-        articleBatchDto.setPage(articlePage.getPageNumber());
-        articleBatchDto.setPageCount(articlePage.getLastPage());
-        articleBatchDto.setTotal(articlePage.getTotal());
-        articleBatchDto.setArticleDtoList(
-             articlePage.getContent().stream()
-                     .map(articleMapper::toDto)
-                     .toList()
-        );
-        if(userId!=null){
-            articleBatchDto.getArticleDtoList().stream()
-                    .map(item->likeRepository.userLikeState(
-                            UUID.fromString(userId),
-                            item.getId()
-                    ))
-                    .toList();
-        }
-        return articleBatchDto;
-    }
-
-
     @Override
     public void deleteAdmin(String targetId) {
         var article = articleRepo.findById(Long.parseLong(targetId)).orElseThrow(EntityNotFoundException::new);
@@ -172,6 +144,17 @@ public class ArticleService implements IArticleService {
     public String getStatusNameById(String id) {
         return articleViewRepository.getStatus(id);
     }
+
+    private void checkLike(String userId, PageResponse<Article> pageResponse){
+        if(userId!=null){
+            pageResponse.getItems().forEach(item->item.setState(
+                    likeRepository.userLikeState(
+                            UUID.fromString(userId),
+                            item.getId()
+                    )));
+        }
+    }
+
 
 
 }

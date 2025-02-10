@@ -45,7 +45,7 @@ public class BookmarksController {
     public ResponseEntity<?> fetchPage(
             @RequestParam("page") Integer page) {
         var userId = customSecurityExpression.getUserId();
-        ArticleBatchDto articleBatchDto = articleService.fetchBookMarks(userId, page);
+        PageResponse<ArticleDto> articleBatchDto = articleService.fetchBookMarks(userId, page);
         return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
     }
 

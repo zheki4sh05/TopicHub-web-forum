@@ -3,15 +3,19 @@ import DomainNames from "../../../app/store/DomainNames";
 import { signin, signup } from "../../Login/api/requests";
 import { delUserArticle, fetchUserFollowers, fetchUserSubscriptions, logoutUser, updateUserData } from "../api/requests";
 import { checkCookie, userData } from "../../../processes/userData/api/request";
+import { logout } from './../../../features/Logout/api/request';
+const base = {
+  roles:[],
+  id:0,
+  login:"",
+  email:"",
+  password:""
+}
 
 //----state---
 const initialState = {
   user:{
-    roles:[],
-    id:0,
-    login:"",
-    email:"",
-    password:""
+    ...base
   },
   activeUser:{
     roles:[],
@@ -28,6 +32,8 @@ const initialState = {
     articleDtoList:[],
     pageCount:0
   },
+  token:"no",
+  refresh:"",
   subscribes:[],
   followers:[],
   others:{},
@@ -67,6 +73,15 @@ const userSlice = createSlice({
     deleteBookmark(state,action){
       state.bookMarksList.articleDtoList =  state.bookMarksList.articleDtoList.filter((item)=>item.id!=action.payload)
     },
+    setToken(state,action){
+      state.token = action.payload;
+    },
+    setRefresh(state,action){
+      state.refresh = action.payload;
+    },
+    clearUserError(state,action){
+      state.error=null
+    }
   
     
   },
@@ -94,7 +109,9 @@ const userSlice = createSlice({
     })
     .addCase(signin.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.user = action.payload
+      // state.user = action.payload
+      state.token = action.payload.access_token;
+      state.refresh = action.payload.refresh_token;
       state.auth = true;
       state.error=null
 
@@ -225,6 +242,22 @@ const userSlice = createSlice({
             //   state.status = "failed";
             //   state.error = action.error;
             // })
+            //---выход из системы-------------
+            .addCase(logout.pending, (state, action) => {
+              state.status = "loading";
+            })
+            .addCase(logout.fulfilled, (state, action) => {
+              state.status = "succeeded";
+              state.user ={...base}
+              state.token="no"
+              state.refresh=""
+              state.auth=false
+            })
+            .addCase(logout.rejected, (state, action) => {
+              state.status = "failed";
+              state.error = action.error;
+            })
+                    
    
  
 
@@ -263,8 +296,23 @@ export function getUserSubscribes(state){
 export function getUserFollowers(state){
   return state[DomainNames.user].followers;
 }
+export function getToken(state){
+  return state[DomainNames.user].token;
+}
+export function getRefresh(state){
+  return state[DomainNames.user].refresh;
+}
 
 
-export const { controlUserStatus,controlResetError, setActiveUser,cleareUserData,pushBookmark,deleteBookmark } = userSlice.actions;
+export const { controlUserStatus,
+  controlResetError, 
+  setActiveUser,
+  cleareUserData,
+  pushBookmark,
+  deleteBookmark,
+  setToken,
+  setRefresh,
+  clearUserError
+} = userSlice.actions;
 
 export default userSlice.reducer;

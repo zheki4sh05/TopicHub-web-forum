@@ -74,6 +74,7 @@ public class ReactionService implements IReactionService {
         User author = userRepository.findById(UUID.fromString(authorId)).orElseThrow(EntityNotFoundException::new);
        if(value==1){
            subscriptionRepository.save(Subscription.builder()
+                           .id(UUID.randomUUID())
                            .author(author)
                            .follower(user)
                    .build());

@@ -8,6 +8,7 @@ import com.example.topichubbackend.util.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
+import org.hibernate.query.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +48,7 @@ public class SearchController {
             @RequestParam Map<String, String> reqParam
     ) {
         SearchDto searchDto = HttpRequestUtils.parseSearchParams(reqParam);
-        ArticleBatchDto articleBatchDto = articleService.search(searchDto);
+        PageResponse<ArticleDto> articleBatchDto = articleService.search(searchDto);
         return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
     }
 }

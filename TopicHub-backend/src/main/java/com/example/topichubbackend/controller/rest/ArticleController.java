@@ -49,7 +49,7 @@ public class ArticleController {
     )  {
                 reqParam.put("status", StatusDto.PUBLISH.type());
                 ArticleFilterDto articleFilterDto = HttpRequestUtils.parseFilterParams(reqParam);
-                ArticleBatchDto articleBatchDto = articleService.fetch(articleFilterDto);
+                PageResponse<ArticleDto> articleBatchDto = articleService.fetch(articleFilterDto);
                 return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);
     }
 

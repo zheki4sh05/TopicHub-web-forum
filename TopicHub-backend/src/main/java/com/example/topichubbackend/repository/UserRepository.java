@@ -39,4 +39,11 @@ join fetch u.roles
 where u.email=:data or u.login=:data
 """)
     User getByEmailOrLogin(@Param("data") String username);
+
+    @Query("""
+select u 
+from User u 
+where u.login like :login or u.email like :email
+""")
+    Page<User> searchByLoginOrEmail(@Param("login") String login, @Param("email") String email, Pageable pageable);
 }

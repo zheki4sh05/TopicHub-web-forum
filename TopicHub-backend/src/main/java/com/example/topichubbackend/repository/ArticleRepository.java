@@ -34,7 +34,7 @@ public class ArticleRepository {
     }
 
 
-    public PageDto<Article> findByQuery(CriteriaQuery<Article> articleCriteriaQuery, Pageable pageable) {
+    public PageResponse<Article> findByQuery(CriteriaQuery<Article> articleCriteriaQuery, Pageable pageable) {
         Query query = em.createQuery(articleCriteriaQuery);
         Long total = calcTotalEntitiesCount();
         EntityGraph entityGraph = em.createEntityGraph("article.articlePartList");
@@ -42,15 +42,19 @@ public class ArticleRepository {
         query.setMaxResults(BATCH_SIZE);
         query.setHint("jakarta.persistence.fetchgraph", entityGraph);
         List<Article> result = query.getResultList();
-        var page  = PageDto.<Article>builder()
-                .content(result)
-                .lastPage(getLastPageNumber(total))
+//        var page  = PageDto.<Article>builder()
+//                .content(result)
+//                .lastPage(getLastPageNumber(total))
+//                .total(total)
+//                .pageNumber(pageable.getPageNumber())
+//                .build();
+
+        PageResponse<Article> page  = PageResponse.<Article>builder()
+                .page(pageable.getPageNumber())
+                .maxPage(getLastPageNumber(total))
+                .items(result)
                 .total(total)
-                .pageNumber(pageable.getPageNumber())
                 .build();
-
-
-        log.debug("ARTICLE REPO PAGE INFO:{}",page );
         return page;
 
     }

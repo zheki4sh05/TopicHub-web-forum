@@ -38,7 +38,7 @@ function UserMarks() {
 
   return (
     <>
-      {articles.articleDtoList.length > 0 ? (
+      {articles.items.length > 0 ? (
         <Stack direction={"column"}>
           <ArticlesList
             status={status}
@@ -57,7 +57,7 @@ function UserMarks() {
             >
               <Pagination
                 count={
-                  articles.articleDtoList.length != 0 ? articles.pageCount : 0
+                  articles.items.length != 0 ? articles.maxPage : 0
                 }
                 variant="outlined"
                 color="primary"

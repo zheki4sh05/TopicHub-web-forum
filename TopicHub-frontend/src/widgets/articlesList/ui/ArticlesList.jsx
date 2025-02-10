@@ -12,10 +12,10 @@ function ArticlesList({ status, batch, makeRequest, edit = false }) {
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
-      ) : status == statusTypes.succeeded || batch.articleDtoList.length > 0 ? (
+      ) : status == statusTypes.succeeded || batch.items.length > 0 ? (
         <>
           <Box sx={{ maxWidth: "820px", margin: "0 auto" }}>
-            {batch.articleDtoList.map((item) => (
+            {batch.items.map((item) => (
               <Box key={item.id} sx={{ marginBottom: "10px" }}>
                 <Article
                   key={item.id}

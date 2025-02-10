@@ -1,6 +1,7 @@
 package com.example.topichubbackend.controller.rest;
 
 import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.validation.constraints.*;
@@ -34,6 +35,20 @@ public class ProfileController {
     private final IImageService imageService;
     private final CustomSecurityExpression customSecurityExpression;
 
+    @GetMapping("/search")
+    public ResponseEntity<?> search(
+            @RequestParam(value = "login",required = false,defaultValue="") String login,
+            @RequestParam(value = "email",required = false,defaultValue="") String email,
+            @RequestParam(value = "page",defaultValue = "1") Integer page
+    ){
+        if(login.isEmpty() && email.isEmpty()){
+            throw new BadRequestException();
+        }else{
+            PageResponse<UserDto> authorDtoPageResponse = authService.search(login, email,page, false);
+            return new ResponseEntity<>(authorDtoPageResponse, HttpStatus.OK);
+        }
+    }
+
     /**
      * Retrieves profile or articles based on the provided type and page.
      *
@@ -49,8 +64,8 @@ public class ProfileController {
      */
     @GetMapping("")
     public ResponseEntity<?> doGet(
-            @RequestParam("type") @NotNull String type,
-            @RequestParam("page") Integer page
+            @RequestParam("type")  String type,
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
     )  {
         String userId = customSecurityExpression.getUserId();
         switch (type) {

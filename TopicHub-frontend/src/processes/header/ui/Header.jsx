@@ -9,6 +9,7 @@ import statusTypes from "../../../app/util/statusTypes";
 import {memo} from 'react'
 import LanguageSelect from "../../../features/Language/ui/LanguageSelect";
 import { useTranslation } from "react-i18next";
+import LogoutBtn from "../../../features/Logout/ui/LogoutBtn";
 const Header  = memo(function Header() {
   const location = useLocation();
   const {t} = useTranslation()
@@ -135,6 +136,9 @@ const Header  = memo(function Header() {
               </Box>
               <UserSettings />
               <LanguageSelect/>
+              <Box sx={{marginLeft:"15px"}}>
+              <LogoutBtn/>
+              </Box> 
             </Box>
           </Box>
         </Grid2>

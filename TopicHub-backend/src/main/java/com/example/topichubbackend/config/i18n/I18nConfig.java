@@ -9,6 +9,7 @@ import java.util.*;
 
 @Configuration
 public class I18nConfig implements WebMvcConfigurer {
+    
 
     @Bean
     public AcceptHeaderLocaleResolver localeResolver() {

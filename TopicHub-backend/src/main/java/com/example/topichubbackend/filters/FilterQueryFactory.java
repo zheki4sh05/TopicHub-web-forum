@@ -3,7 +3,6 @@ package com.example.topichubbackend.filters;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.dto.filter.*;
 import com.example.topichubbackend.model.*;
-import jakarta.persistence.*;
 import jakarta.persistence.criteria.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.*;
@@ -11,12 +10,8 @@ import org.springframework.stereotype.*;
 
 import java.util.*;
 
-@Component
+@Service
 public class FilterQueryFactory {
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
 
     @Autowired
     private CriteriaBuilder criteriaBuilder;
@@ -58,10 +53,21 @@ public class FilterQueryFactory {
         }
         List<Predicate> joins = createJoins(articleFilterDto, criteriaQuery, articleRoot);
         predicates.addAll(joins);
+
+        if(articleFilterDto.getAuthorId()!=null
+                && articleFilterDto.getUserId()!=null
+                &&  articleFilterDto.getAuthorId().equals(articleFilterDto.getUserId())){
+            predicates.add(createOwnPredicate(criteriaBuilder, articleRoot, articleFilterDto.getAuthorId()));
+        }
         criteriaQuery.select(articleRoot)
                 .where(predicates.toArray(Predicate[]::new))
                 .orderBy(criteriaBuilder.asc(articleRoot.get("created")));
         return criteriaQuery;
+    }
+
+    private Predicate createOwnPredicate(CriteriaBuilder criteriaBuilder, Root<Article> articleRoot, String authorId) {
+        Join<Article, User> authorJoin = articleRoot.join("author", JoinType.INNER);
+        return criteriaBuilder.equal(authorJoin.get("uuid"), UUID.fromString(authorId));
     }
 
     private Predicate createStatusPredicate(CriteriaBuilder criteriaBuilder, Root<Article> articleRoot, String value) {
@@ -73,20 +79,21 @@ public class FilterQueryFactory {
         if(articleFilter.getParam() == null){
             return new ArrayList<>();
         }
-        if( articleFilter.getParam()==-1){
+        if( articleFilter.getParam()==-1 && articleFilter.getUserId()!=null){
             Root<Subscription> subscription = criteriaQuery.from(Subscription.class);
+            var id = articleFilter.getUserId();
             Predicate joinCondition = criteriaBuilder.and(
-                    criteriaBuilder.equal(subscription.get("author").get("id"), articleRoot.get("author").get("id")),
-                    criteriaBuilder.equal(subscription.get("follower").get("id"), "1")
+                    criteriaBuilder.equal(subscription.get("author").get("uuid"), articleRoot.get("author").get("uuid")),
+                    criteriaBuilder.equal(subscription.get("follower").get("uuid"), UUID.fromString(id))
             );
             predicates.add(joinCondition);
-        }else if (articleFilter.getParam()==0){
-
-        }else{
-
+        }else if(articleFilter.getParam()>0){
+            Join<Article, Hub> hubJoin = articleRoot.join("hub", JoinType.INNER);
+            Predicate hubPredicate = criteriaBuilder.equal(hubJoin.get("id"), articleFilter.getParam());
+            predicates.add(hubPredicate);
         }
-
-
-        return new ArrayList<>();
+        return predicates;
     }
+
+
 }
