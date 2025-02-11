@@ -52,7 +52,7 @@ client:
 minio:
   url: ${MN_URL}
   bucket:
-    name: ${BUCKET_NAME}
+    name: ${MN_BUCKET}
   access:
     name: ${MN_LOGIN}
     secret: ${MN_PASS}

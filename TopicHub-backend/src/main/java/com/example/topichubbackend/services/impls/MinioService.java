@@ -14,7 +14,7 @@ import java.util.*;
 @Service
 @Slf4j
 public class MinioService implements IFileStorage {
-    private final MinioClient minioClient;
+    private  MinioClient minioClient;
 
     @Value("${minio.bucket.name}")
     private  String BUCKET_NAME;
@@ -29,11 +29,15 @@ public class MinioService implements IFileStorage {
     private String url;
 
     public MinioService(){
-
+    try{
         this.minioClient = MinioClient.builder()
                 .endpoint(url)
                 .credentials(login, password)
                 .build();
+    }catch (RuntimeException e){
+        log.error("minio:{}", e.getMessage());
+    }
+
 
     }
 
