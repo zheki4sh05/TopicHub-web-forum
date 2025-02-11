@@ -42,13 +42,6 @@ public class ArticleRepository {
         query.setMaxResults(BATCH_SIZE);
         query.setHint("jakarta.persistence.fetchgraph", entityGraph);
         List<Article> result = query.getResultList();
-//        var page  = PageDto.<Article>builder()
-//                .content(result)
-//                .lastPage(getLastPageNumber(total))
-//                .total(total)
-//                .pageNumber(pageable.getPageNumber())
-//                .build();
-
         PageResponse<Article> page  = PageResponse.<Article>builder()
                 .page(pageable.getPageNumber())
                 .maxPage(getLastPageNumber(total))
