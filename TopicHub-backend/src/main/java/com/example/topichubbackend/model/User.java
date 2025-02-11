@@ -1,6 +1,7 @@
 package com.example.topichubbackend.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -39,7 +40,7 @@ public class User implements UserDetails {
 
     @ToString.Exclude
     @Fetch(FetchMode.JOIN)
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserRole> roles;
 
 

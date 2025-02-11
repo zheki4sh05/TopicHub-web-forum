@@ -57,4 +57,8 @@ public class ArticleRepository {
                 .setParameter("id", savedId)
                 .getSingleResult();
     }
+
+    public void deleteAll() {
+        em.createQuery("DELETE FROM Article").executeUpdate();
+    }
 }

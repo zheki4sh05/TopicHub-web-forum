@@ -14,32 +14,39 @@ import java.util.*;
 @Service
 @Slf4j
 public class MinioService implements IFileStorage {
+
+    @Autowired
     private  MinioClient minioClient;
 
-    @Value("${minio.bucket.name}")
+    @Value("${minio.bucket}")
     private  String BUCKET_NAME;
 
-    @Value("${minio.access.name}")
-    private  String login;
+//    @Value("${minio.access.name}")
+//    private  String login;
+//
+//    @Value("${minio.access.secret}")
+//    private  String password;
+//
+//    @Value("${minio.url}")
+//    private String url;
 
-    @Value("${minio.access.secret}")
-    private  String password;
-
-    @Value("${minio.url}")
-    private String url;
-
-    public MinioService(){
-    try{
-        this.minioClient = MinioClient.builder()
-                .endpoint(url)
-                .credentials(login, password)
-                .build();
-    }catch (RuntimeException e){
-        log.error("minio:{}", e.getMessage());
-    }
-
-
-    }
+//    public MinioService(){
+//        log.info("BUCKET_NAME {}", BUCKET_NAME);
+//        log.info("login {}", login);
+//        log.info("password {}", password);
+//        log.info("url {}", url);
+//
+//    try{
+//        this.minioClient = MinioClient.builder()
+//                .endpoint(url)
+//                .credentials(login, password)
+//                .build();
+//    }catch (RuntimeException e){
+//        log.error("minio:{}", e.getMessage());
+//    }
+//
+//
+//    }
 
     @Override
     public boolean save(InputStream fileContent, String path) {
@@ -52,6 +59,7 @@ public class MinioService implements IFileStorage {
                             .build());
             return true;
         } catch (MinioException | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+            log.error("minio service {}", e.getMessage());
             return false;
         }
 

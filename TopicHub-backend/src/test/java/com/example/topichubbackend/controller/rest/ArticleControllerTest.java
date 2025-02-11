@@ -41,12 +41,14 @@ class ArticleControllerTest {
 
 
 
+
     @Autowired
     private MockMvc mockMvc;
 
     @BeforeEach
     @Transactional
     void setUp() {
+
         Hub hub = Hub.builder()
                 .ruName("Хаб")
                 .enName("Hub")
@@ -58,8 +60,8 @@ class ArticleControllerTest {
 
         User user1 = User.builder()
                 .uuid(id1)
-                .login("login")
-                .email("email@mail.ru")
+                .login("login2")
+                .email("email2@mail.ru")
                 .password("123456")
                 .build();
 
@@ -102,6 +104,7 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.items").isArray());
 
     }
+
 
 
 }

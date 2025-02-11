@@ -58,6 +58,6 @@ public class Article {
     @Column(name = "created")
     private Timestamp created;
 
-    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ArticlePart> articlePartList;
 }

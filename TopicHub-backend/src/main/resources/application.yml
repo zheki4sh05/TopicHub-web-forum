@@ -49,14 +49,11 @@ client:
     ${CLIENT_HOST}
   port:
     ${CLIENT_PORT}
+
 minio:
   url: ${MN_URL}
-  bucket:
-    name: ${MN_BUCKET}
-  access:
-    name: ${MN_LOGIN}
-    secret: ${MN_PASS}
-
-
+  access-key: ${MN_LOGIN}
+  secret-key: ${MN_PASS}
+  bucket: ${MN_BUCKET}
 
 
