@@ -33,9 +33,12 @@ services:
       DB_DRIVER: org.postgresql.Driver
       MN_LOGIN: minioadmin
       MN_PASS: minioadmin
-      MN_URL: http://192.168.0.5:9000
+      MN_URL: http://192.168.0.5:9001
       MN_BUCKET: image
       FRONT: localhost
+      FRONT_HOST: 3000
+      SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+
   db:
     image: postgres:latest
     container_name: db
@@ -47,33 +50,7 @@ services:
       - '5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
-    
-  migrations:
-    image: redgate/flyway
-    volumes:
-      - ./TopicHub-backend/flyway:/flyway/sql
-    environment:
-      - FLYWAY_URL=jdbc:postgresql://db:5432/web_forum
-      - FLYWAY_USER=postgres
-      - FLYWAY_PASSWORD=lhs22LI=D=
-      - FLYWAY_VALIDATE_MIGRATION_NAMING=true
-    command: migrate
-    depends_on:
-      - db
 
-  # minio:
-  #   image: minio/minio
-  #   container_name: minio
-  #   environment:
-  #     MINIO_ACCESS_KEY: "minioaccesskey" 
-  #     MINIO_SECRET_KEY: "miniosecretkey"
-  #   volumes:
-  #     - /path/to/minio/data:/data 
-  #   ports:
-  #     - "192.168.1.100:9000:9000" 
-  #     - "192.168.1.100:9001:9001"  
-  #   command: server /data  
-  #   restart: unless-stopped
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -81,7 +58,7 @@ services:
       - "MINIO_ACCESS_KEY=minioadmin"
       - "MINIO_SECRET_KEY=minioadmin"
     ports:
-      - "192.168.0.5:9000:9000" 
+      - "192.168.0.5:9001:9001" 
     volumes:
       - minio_data:/data  
     command: minio server /data

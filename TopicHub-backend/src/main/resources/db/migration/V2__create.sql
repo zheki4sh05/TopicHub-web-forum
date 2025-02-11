@@ -281,140 +281,140 @@ values ('a904e8b8-9da8-4535-b402-9be0b78b2981', 'admin','admin@mail.ru','$2a$10$
 insert into user_role (id, userid, role)
 values ('5a34fa56-e294-4602-8e7f-24e7a7832c2c', 'a904e8b8-9da8-4535-b402-9be0b78b2981','USER');
 insert into user_role (id, userid, role) values ('c5086606-b949-4426-a340-2626f19f5ef2', 'a904e8b8-9da8-4535-b402-9be0b78b2981','ADMIN');
--- insert into hub (en, ru)
--- values ('Programming','Программирование');
--- insert into hub (en, ru)
--- values ('Science','Наука');
--- insert into hub (en, ru)
--- values ('Sport','Спорт');
---
--- insert into article (theme, keywords, created, hub, author_id, status)
--- values (
---            'Влияние искусственного интеллекта на общество: возможности и вызовы',
---            'ИИ|Умный город',
---            '2024-12-19 11:36:45.321343',
---            1,
---            'a904e8b8-9da8-4535-b402-9be0b78b2981',
---            'PUBLISH'
---        );
---
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Введение',
---            1,
---            'chapter',
---            'Заголовок',
---            3,
---            uuid_generate_v4()
---        );
---
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Краткий обзор развития искусственного интеллекта (ИИ). Основные области применения ИИ в современном мире.',
---            1,
---            'paragraph',
---            'Aбзац',
---            1,
---            uuid_generate_v4()
---        );
---
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Основная часть:',
---            1,
---            'chapter',
---            'Заголовок',
---            3,
---            uuid_generate_v4()
---        );
---
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Преимущества ИИ:',
---            1,
---            'chapter',
---            'Заголовок',
---            3,
---            uuid_generate_v4()
---        );
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Повышение эффективности и продуктивности в различных секторах (медицина, транспорт, производство).
---        Новые возможности для научных исследований и технологических инноваций.
---        Улучшение качества жизни за счет умных технологий (умные дома, персональные ассистенты).',
---            1,
---            'paragraph',
---            'Aбзац',
---            1,
---            uuid_generate_v4()
---        );
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'https://content.timeweb.com/assets/2ee2c8e4-93ec-4e4e-a9c3-dc74e12e63c3?width=860&height=573',
---            1,
---            'img',
---            'Изображение',
---            4,
---            uuid_generate_v4()
---        );
---
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Вызовы и риски:',
---            1,
---            'chapter',
---            'Заголовок',
---            3,
---            uuid_generate_v4()
---        );
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Вопросы безопасности и конфиденциальности данных.
---        Потеря рабочих мест из-за автоматизации.
---        Этические и правовые аспекты использования ИИ.',
---            1,
---            'paragraph',
---            'Aбзац',
---            1,
---            uuid_generate_v4()
---        );
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Социальное влияние:',
---            1,
---            'chapter',
---            'Заголовок',
---            3,
---            uuid_generate_v4()
---        );
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Изменения в социальной структуре и образе жизни людей.
---        Влияние на образование и требования к профессиональным навыкам.
---        Вопросы неравенства и доступности технологий.',
---            1,
---            'paragraph',
---            'Aбзац',
---            1,
---            uuid_generate_v4()
---        );
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Заключение:',
---            1,
---            'chapter',
---            'Заголовок',
---            3,
---            uuid_generate_v4()
---        );
--- insert into articlepart (val, article, type, name, id, uuid)
--- values (
---            'Перспективы развития ИИ в будущем.
---        Необходимость балансировки между преимуществами и рисками использования ИИ.
---        Роль общества и правительства в формировании безопасного и справедливого использования ИИ.',
---            1,
---            'paragraph',
---            'Aбзац',
---            1,
---            uuid_generate_v4()
---        );
+insert into hub (en, ru)
+values ('Programming','Программирование');
+insert into hub (en, ru)
+values ('Science','Наука');
+insert into hub (en, ru)
+values ('Sport','Спорт');
+
+insert into article (theme, keywords, created, hub, author_id, status)
+values (
+           'Влияние искусственного интеллекта на общество: возможности и вызовы',
+           'ИИ|Умный город',
+           '2024-12-19 11:36:45.321343',
+           1,
+           'a904e8b8-9da8-4535-b402-9be0b78b2981',
+           'PUBLISH'
+       );
+
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Введение',
+           1,
+           'chapter',
+           'Заголовок',
+           3,
+           uuid_generate_v4()
+       );
+
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Краткий обзор развития искусственного интеллекта (ИИ). Основные области применения ИИ в современном мире.',
+           1,
+           'paragraph',
+           'Aбзац',
+           1,
+           uuid_generate_v4()
+       );
+
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Основная часть:',
+           1,
+           'chapter',
+           'Заголовок',
+           3,
+           uuid_generate_v4()
+       );
+
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Преимущества ИИ:',
+           1,
+           'chapter',
+           'Заголовок',
+           3,
+           uuid_generate_v4()
+       );
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Повышение эффективности и продуктивности в различных секторах (медицина, транспорт, производство).
+       Новые возможности для научных исследований и технологических инноваций.
+       Улучшение качества жизни за счет умных технологий (умные дома, персональные ассистенты).',
+           1,
+           'paragraph',
+           'Aбзац',
+           1,
+           uuid_generate_v4()
+       );
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'https://content.timeweb.com/assets/2ee2c8e4-93ec-4e4e-a9c3-dc74e12e63c3?width=860&height=573',
+           1,
+           'img',
+           'Изображение',
+           4,
+           uuid_generate_v4()
+       );
+
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Вызовы и риски:',
+           1,
+           'chapter',
+           'Заголовок',
+           3,
+           uuid_generate_v4()
+       );
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Вопросы безопасности и конфиденциальности данных.
+       Потеря рабочих мест из-за автоматизации.
+       Этические и правовые аспекты использования ИИ.',
+           1,
+           'paragraph',
+           'Aбзац',
+           1,
+           uuid_generate_v4()
+       );
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Социальное влияние:',
+           1,
+           'chapter',
+           'Заголовок',
+           3,
+           uuid_generate_v4()
+       );
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Изменения в социальной структуре и образе жизни людей.
+       Влияние на образование и требования к профессиональным навыкам.
+       Вопросы неравенства и доступности технологий.',
+           1,
+           'paragraph',
+           'Aбзац',
+           1,
+           uuid_generate_v4()
+       );
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Заключение:',
+           1,
+           'chapter',
+           'Заголовок',
+           3,
+           uuid_generate_v4()
+       );
+insert into articlepart (val, article, type, name, id, uuid)
+values (
+           'Перспективы развития ИИ в будущем.
+       Необходимость балансировки между преимуществами и рисками использования ИИ.
+       Роль общества и правительства в формировании безопасного и справедливого использования ИИ.',
+           1,
+           'paragraph',
+           'Aбзац',
+           1,
+           uuid_generate_v4()
+       );
