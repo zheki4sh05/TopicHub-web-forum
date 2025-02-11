@@ -4,6 +4,7 @@ import com.example.topichubbackend.services.interfaces.*;
 import io.minio.*;
 import io.minio.errors.*;
 import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.io.*;
@@ -15,11 +16,18 @@ import java.util.*;
 public class MinioService implements IFileStorage {
     private final MinioClient minioClient;
 
-    private final String BUCKET_NAME = System.getenv("MN_BUCKET")!=null ? System.getenv("MN_BUCKET") : "image";
+    @Value("${minio.bucket.name}")
+    private  String BUCKET_NAME;
 
-    private final String login = System.getenv("MN_LOGIN")!=null ? System.getenv("MN_LOGIN") : "minioadmin";
-    private final String password = System.getenv("MN_PASS")!=null ? System.getenv("MN_PASS") : "minioadmin";
-    private final String url = System.getenv("MN_URL")!=null ? System.getenv("MN_URL") : "http://192.168.0.5:9000";
+    @Value("${minio.access.name}")
+    private  String login;
+
+    @Value("${minio.access.secret}")
+    private  String password;
+
+    @Value("${minio.url}")
+    private String url;
+
     public MinioService(){
 
         this.minioClient = MinioClient.builder()
