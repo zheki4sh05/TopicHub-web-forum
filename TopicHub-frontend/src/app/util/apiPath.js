@@ -2,7 +2,7 @@ const BACKEND_HOST = import.meta.env.VITE_APP_BACKEND_ADDRESS
 const  base="http://"+BACKEND_HOST+"/api/v1/";
 const api={
     token:{
-        url:base.concat("refresh"),
+        url:base.concat("auth/refresh"),
         logout:base.concat("auth/logout")
     },
     article:{

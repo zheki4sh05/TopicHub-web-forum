@@ -58,4 +58,10 @@ public class ArticleRepository {
         return page;
 
     }
+    //necessary method only for tests
+    public Article findById(Long savedId) {
+        return em.createQuery("SELECT a FROM Article a WHERE a.id = :id", Article.class)
+                .setParameter("id", savedId)
+                .getSingleResult();
+    }
 }

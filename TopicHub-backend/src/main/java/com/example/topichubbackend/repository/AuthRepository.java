@@ -18,9 +18,6 @@ public interface AuthRepository {
     void delete(User user);
 
     List<User> findAll(String id);
-
-    Role findRoleByType(String type);
-
     void register(User newUser, List<UserRole> userRoles);
 
 }

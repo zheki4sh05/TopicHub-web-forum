@@ -34,7 +34,7 @@ public class ArticleService implements IArticleService {
 
     @Override
     @Transactional
-    public void create(ArticleDto articleDto, String id) {
+    public Long create(ArticleDto articleDto, String id) {
         final String DILIMITER = "|";
         List<Hub> hubList = hubDao.findAll();
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(EntityNotFoundException::new);
@@ -47,7 +47,7 @@ public class ArticleService implements IArticleService {
                 .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
                 .build();
 
-        articleRepo.save(article);
+      var savedId = articleRepo.save(article).getId();
 
         articleDto.getList().forEach(item->{
             articlePartRepository.save(ArticlePart.builder()
@@ -60,6 +60,8 @@ public class ArticleService implements IArticleService {
                     .articleEntity(article)
                     .build());
         });
+
+        return savedId;
 
 
     }

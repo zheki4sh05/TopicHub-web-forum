@@ -54,18 +54,18 @@ public class JwtService {
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
     }
 
-//    public boolean isValidRefreshToken(String token, User user) {
-//        String username = extractUsername(token);
-//
-//        var tokenOptional = tokenRepository.findByAccessToken(token);
-//        boolean validToken= false;
-//
-//        if(tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut()){
-//            validToken = true;
-//        }
-//
-//        return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
-//    }
+    public boolean isValidRefreshToken(String token, User user) {
+        String username = extractUsername(token);
+
+        var tokenOptional = tokenRepository.findByRefreshToken(token);
+        boolean validToken= false;
+
+        if(tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut()){
+            validToken = true;
+        }
+
+        return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
+    }
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

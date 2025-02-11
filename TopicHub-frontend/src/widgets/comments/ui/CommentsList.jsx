@@ -141,8 +141,8 @@ function CommentsList({ article }) {
             ))}
           </Box>
           <Box sx={{width:"100%"}} >
-      <IconButton sx={{margin:"5px auto 0 auto"}} >
-        <CachedIcon onClick={handleReload} />
+      <IconButton sx={{margin:"5px auto 0 auto"}} onClick={handleReload}>
+        <CachedIcon  />
       </IconButton>
     </Box>
         </Box>

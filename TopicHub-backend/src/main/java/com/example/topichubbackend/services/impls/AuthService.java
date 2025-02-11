@@ -62,7 +62,6 @@ public class AuthService implements IAuthorService {
         Optional<User> user = userRepository.findById(UUID.fromString(authorId));
         if(user.isPresent()){
             var item = user.get();
-            item.setState(!item.getState());
             item.setStatus(status);
             userRepository.save(item);
             return userMapper.toDto(item);

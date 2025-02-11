@@ -4,6 +4,7 @@ import { signin, signup } from "../../Login/api/requests";
 import { delUserArticle, fetchUserFollowers, fetchUserSubscriptions, logoutUser, updateUserData } from "../api/requests";
 import { checkCookie, userData } from "../../../processes/userData/api/request";
 import { logout } from './../../../features/Logout/api/request';
+import { getRefreshStorage, saveTokens } from "../../../app/util/localstorageApi";
 const base = {
   roles:[],
   id:0,
@@ -11,6 +12,8 @@ const base = {
   email:"",
   password:""
 }
+
+
 
 //----state---
 const initialState = {
@@ -33,7 +36,7 @@ const initialState = {
     pageCount:0
   },
   token:"no",
-  refresh:"",
+  refresh:"no",
   subscribes:[],
   followers:[],
   others:{},
@@ -79,6 +82,9 @@ const userSlice = createSlice({
     setRefresh(state,action){
       state.refresh = action.payload;
     },
+    setAuth(state,action){
+      state.auth = true
+    },
     clearUserError(state,action){
       state.error=null
     }
@@ -102,16 +108,19 @@ const userSlice = createSlice({
     
       
       })
-    //----------------------------------------
     //---авторизация-------------
     .addCase(signin.pending, (state, action) => {
       state.status = "loading";
     })
     .addCase(signin.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      // state.user = action.payload
+      state.status = "succeeded"
       state.token = action.payload.access_token;
       state.refresh = action.payload.refresh_token;
+      state.user.login = action.payload.userDto.login
+      state.user.id = action.payload.userDto.id
+      state.user.email = action.payload.userDto.email
+      state.user.roles = action.payload.userDto.roles
+      saveTokens(state.token, state.refresh)
       state.auth = true;
       state.error=null
 
@@ -300,7 +309,14 @@ export function getToken(state){
   return state[DomainNames.user].token;
 }
 export function getRefresh(state){
-  return state[DomainNames.user].refresh;
+
+  const token = state[DomainNames.user].refresh;
+
+  if(token!="no"){
+    return token
+  }else{
+    return getRefreshStorage()
+  }
 }
 
 
@@ -312,7 +328,8 @@ export const { controlUserStatus,
   deleteBookmark,
   setToken,
   setRefresh,
-  clearUserError
+  clearUserError,
+  setAuth
 } = userSlice.actions;
 
 export default userSlice.reducer;

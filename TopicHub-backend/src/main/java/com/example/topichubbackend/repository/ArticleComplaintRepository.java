@@ -24,6 +24,6 @@ From ArticleComplaint ac where ac.article.id = :article and ac.author.uuid = :au
 From ArticleComplaint ac where ac.id= :id
 
 """)
-     Optional<ArticleComplaint> findByIdArticle(@Param("id") String complaintId);
+     Optional<ArticleComplaint> findByIdArticle(@Param("id") UUID complaintId);
 
 }

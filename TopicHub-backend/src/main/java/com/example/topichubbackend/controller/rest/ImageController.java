@@ -35,7 +35,7 @@ public class ImageController {
      * @see IImageService#fetch(String)
      */
     @GetMapping("")
-    public ResponseEntity<?> getImage(@RequestParam("user") @NotNull String userId) {
+    public ResponseEntity<?> getImage(@RequestParam("id") @NotNull String userId) {
         byte[] imageData = imageService.fetch(userId);
         Resource resource = new ByteArrayResource(imageData);
         return new ResponseEntity<>(resource, HttpStatus.OK);

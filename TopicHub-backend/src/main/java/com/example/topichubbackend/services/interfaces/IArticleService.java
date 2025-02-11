@@ -3,7 +3,7 @@ package com.example.topichubbackend.services.interfaces;
 import com.example.topichubbackend.dto.*;
 
 public interface IArticleService {
-    void create(ArticleDto articleDto, String id);
+    Long create(ArticleDto articleDto, String id);
 //    ArticleBatchDto fetch(ArticleFilterDto param,String userId);
 //    ArticleBatchDto fetch(Integer page,String userId);
 //    ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId);

@@ -10,6 +10,9 @@ import com.example.topichubbackend.services.interfaces.*;
 import lombok.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
+
+import java.sql.*;
+import java.time.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -78,7 +81,6 @@ public class ComplaintService implements IComplaintControl {
         if(type.equals(ARTICLE)){
             var result = articleComplaintRepository.findAll(pageable);
             return PageResponse.map(complaintMapper::mapFrom, result);
-
         }else if(type.equals(COMMENT)){
             var result = commentComplaintRepository.findAllComment(pageable);
             return PageResponse.map(complaintMapper::mapFrom, result);
@@ -91,7 +93,7 @@ public class ComplaintService implements IComplaintControl {
     @Override
     public void deleteById(String complaintId, String type) {
         if(type.equals(ARTICLE)){
-            ArticleComplaint entity= articleComplaintRepository.findByIdArticle(complaintId).orElseThrow(EntityNotFoundException::new);
+            ArticleComplaint entity= articleComplaintRepository.findByIdArticle(UUID.fromString(complaintId)).orElseThrow(EntityNotFoundException::new);
             articleComplaintRepository.delete(entity);
         }else if(type.equals(COMMENT)){
             CommentComplaint entity= commentComplaintRepository.findByIdComment(complaintId).orElseThrow(EntityNotFoundException::new);
@@ -126,6 +128,7 @@ public class ComplaintService implements IComplaintControl {
                 .title(complaintDto.getTitle())
                 .body(complaintDto.getBody())
                 .article(article)
+                .date(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
 
         articleComplaintRepository.save(articleComplaint);

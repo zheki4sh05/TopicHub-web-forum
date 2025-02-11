@@ -149,17 +149,18 @@ public class ProfileController {
      * <p>This endpoint allows the user to upload a new profile image. The image file is passed
      * as a multipart file in the request. The image is saved using the image service.
      *
-     * @param filePart the profile image file to be uploaded.
+
      * @return a ResponseEntity indicating the result of the upload operation.
      * @throws IOException if there is an error during the file upload process.
      */
     @PostMapping("")
     public ResponseEntity<?> doPost(
-            @RequestParam("file") @Size(min = 1, max = 1) @NotNull MultipartFile filePart
+//            @RequestParam("file") @Size(min = 1, max = 1) @NotNull MultipartFile filePart
+             @ModelAttribute UploadImageDto uploadImageDto
     ) {
         String userId = customSecurityExpression.getUserId();
 
-        try (InputStream fileContent = filePart.getInputStream()) {
+        try (InputStream fileContent = uploadImageDto.getFile().getInputStream()) {
             imageService.save(userId, fileContent);
             return new ResponseEntity<>("", HttpStatus.CREATED);
         } catch (IOException e) {

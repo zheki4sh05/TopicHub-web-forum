@@ -17,10 +17,12 @@ public class FilterQueryFactory {
     private CriteriaBuilder criteriaBuilder;
 
     private Predicate createLikesPredicate(Root<Article> articleRoot, Double rating){
+        Double fraction = rating/100;
         Expression<Long> likes = articleRoot.get("likes");
         Expression<Long> dislikes = articleRoot.get("dislikes");
-        Expression<Number> ratio = criteriaBuilder.quot(likes, dislikes);
-        return criteriaBuilder.gt(ratio, rating);
+        Expression<Long> total = criteriaBuilder.sum(likes, dislikes);
+        Expression<Number> percent = criteriaBuilder.prod(total, fraction);
+        return criteriaBuilder.gt(likes, percent);
     }
 
     public List<Predicate> createPredicates(IFactoryFilterDataSupplier factoryFilterDataSupplier, Root<Article> articleRoot){

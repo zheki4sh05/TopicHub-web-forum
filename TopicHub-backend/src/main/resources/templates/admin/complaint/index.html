@@ -29,7 +29,7 @@
 
 <div th:insert="~{fragments/navbar.html :: navbar(${returnLink})}" ></div>
 <div th:insert="~{fragments/menu.html :: menu}" ></div>
-
+<input id="type" type="hidden" name="type" th:value="${type}"/>
 <div class="container mt-4">
     <div>
         <h4>Выберите тип</h4>
@@ -42,35 +42,40 @@
         <div th:each="complaint : ${list}" class="card mb-3 mt-2">
             <div class="card-body">
                 <div class="card-title-top d-flex justify-content-between">
-                    <h6 class="text-muted" th:text="${#dates.format(complaint.date, 'dd-MM-yyyy')}">01-01-2025</h6>
+                    <h6 class="text-muted" th:text="${#dates.format(complaint.getDate(), 'dd-MM-yyyy')}">01-01-2025</h6>
                     <h6 class="text-muted">Статья</h6>
                 </div>
 
 
-                <h5 class="card-title" th:text="${complaint.title}">Название статьи</h5>
+                <h5 class="card-title" th:text="${complaint.getTitle()}">Название статьи</h5>
                 <h6 class="card-title" th:text="${complaint.userDto.login}">Название статьи</h6>
                 <div class="d-flex justify-content-between" style="flex-direction: row">
 
                     <a th:href="@{/admin/complaint/view/{type}(type=${type}, number=${page}, id=${complaint.id})}" class="btn btn-primary">Открыть</a>
 
-                    <form th:action="@{/admin/complaint/del/{type}(type='article', id=${complaint.id}, number=${page})}" method="post">
-                        <input type="hidden" name="id" th:value="${complaint.getId()}"/>
+                    <form class="delete-form" th:action="@{/admin/complaint/del/{type}(type='article', id=${complaint.id}, number=${page})}" method="post">
+
                         <button class="btn btn-danger" type="submit">Удалить</button>
                     </form>
+<!--                    <form th:action="@{/admin/complaint/del/{type}(type='article', id=${complaint.id}, number=${page})}" method="post">-->
+<!--                        <input type="hidden" name="id" th:value="${complaint.getId()}"/>-->
+<!--                        <button class="btn btn-danger" type="submit">Удалить</button>-->
+<!--                    </form>-->
                 </div>
             </div>
         </div>
     </div>
+    <span id="message" style="display: none; margin-top: 10px;"></span>
     <nav aria-label="Пагинация">
         <ul class="pagination">
             <li class="page-item" th:classappend="${page == 0  ? 'disabled' : ''}">
-                <a class="page-link" href="#" th:href="@{/admin/complaint/fetch/{type}(type=${type}, page=${page})}" th:text="#{pagination.previous}">Назад</a>
+                <a class="page-link" href="#" th:href="@{/admin/complaint/fetch/{type}(type=${type}, page=${page})}" >Назад</a>
             </li>
             <li class="page-item" th:each="i : ${#numbers.sequence(1, total)}" th:classappend="${i == page+1} ? 'active'">
                 <a class="page-link" th:href="@{/admin/complaint/fetch/{type}(type=${type}, page=${i})}" th:text="${i}"></a>
             </li>
             <li class="page-item" th:classappend="${page == total+(-1) ? 'disabled' : ''}">
-                <a class="page-link" href="#" th:href="@{/admin/complaint/fetch/{type}(type=${type}, page=${page+2})}" th:text="#{pagination.next}">Вперед</a>
+                <a class="page-link" href="#" th:href="@{/admin/complaint/fetch/{type}(type=${type}, page=${page+2})}" >Вперед</a>
             </li>
         </ul>
     </nav>
@@ -78,7 +83,64 @@
 
 
 </div>
-
+<script>
+    // const forms = document.querySelectorAll(".delete-form");
+    //
+    // forms.forEach(form => {
+    //     form.addEventListener('submit', function(event) {
+    //         event.preventDefault();
+    //
+    //         const id = form.querySelector('input[name="id"]').value;
+    //         const typeField = document.getElementById('type').value;
+    //         const url = `/api/v1/admin/complaints/del/${typeField}?id=${encodeURIComponent(id)}`;
+    //
+    //         // Отправляем DELETE запрос
+    //         fetch(url, {
+    //             method: 'DELETE',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             credentials: 'same-origin'
+    //         })
+    //             .then(response => {
+    //                 if (!response.ok) {
+    //                     return response.json().then(error => {
+    //                         const messageElem = document.getElementById('message');
+    //                         messageElem.textContent = `Ошибка: ${error.message}, Код: ${error.code}`;
+    //                         messageElem.style.color = 'red';
+    //                         messageElem.style.display = 'block';
+    //                         setTimeout(() => {
+    //                             messageElem.style.display = 'none';
+    //                         }, 9000);
+    //                         throw new Error();
+    //                     });
+    //                 }
+    //                 return response.json();
+    //             })
+    //             .then(data => {
+    //                 const messageElem = document.createElement('div');
+    //                 messageElem.textContent = 'Удаление успешно!';
+    //                 messageElem.style.color = 'green';
+    //                 document.body.appendChild(messageElem);
+    //                 const cards = document.querySelectorAll('.card');
+    //                 cards.forEach(card => {
+    //                     const cardId = card.querySelector('input[name="id"]').value;
+    //                     if (cardId === id) {
+    //                         card.remove();
+    //                         console.log('Карточка успешно удалена');
+    //                     }
+    //                 });
+    //                 setTimeout(() => {
+    //                     document.body.removeChild(messageElem);
+    //                 }, 2000);
+    //
+    //             })
+    //             .catch(error => {
+    //
+    //             });
+    //     });
+    // });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

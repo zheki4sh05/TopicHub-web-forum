@@ -88,10 +88,10 @@ public class AuthenticationServiceImpl {
         if(validTokens.isEmpty()) {
             return;
         }
-        validTokens.forEach(t-> {
-            t.setLoggedOut(true);
-        });
-        tokenRepository.saveAll(validTokens);
+//        validTokens.forEach(t-> {
+//            t.setLoggedOut(true);
+//        });
+        tokenRepository.deleteAll(validTokens);
     }
     private void saveUserToken(String accessToken, String refreshToken, User user) {
         Token token = new Token();
@@ -120,7 +120,7 @@ public class AuthenticationServiceImpl {
         User user = repository.findByEmailOrLogin(username)
                 .orElseThrow(()->new EntityNotFoundException());
 
-        if(jwtService.isValid(token, user)) {
+        if(jwtService.isValidRefreshToken(token, user)) {
 
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);

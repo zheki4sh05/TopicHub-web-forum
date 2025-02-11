@@ -7,15 +7,15 @@ import getRequestImageConfig from "./../../../app/util/requestImageConfig";
 import addParams from "../../../app/util/paramsConfig";
 import { Link, useNavigate } from "react-router";
 import { PathConstants } from "../../../app/pathConstants";
-import { useDispatch } from "react-redux";
-import { setActiveUser } from "../../../pages/Profile/model/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getToken, setActiveUser } from "../../../pages/Profile/model/userSlice";
 
 function Author({ user, edit = false, size = 100 }) {
   const navigate = useNavigate()
   const [imageData, setImageData] = useState(null);
   const [input, setInput] = useState(false);
   const dispatch = useDispatch()
-
+  const token = useSelector(getToken)
   const handleGetImage = async () => {
     try {
       const response = await axios.get(
@@ -36,13 +36,13 @@ function Author({ user, edit = false, size = 100 }) {
   const handleLoadImage = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("image", imageData);
+    formData.append("file", imageData);
 
     try {
       const response = await axios.post(
         api.profile.url,
         formData,
-        getRequestImageConfig()
+        getRequestImageConfig(token)
       );
       const imageBlob = new Blob([response.data], { type: "image/*" });
       const imageObjectURL = URL.createObjectURL(imageBlob);

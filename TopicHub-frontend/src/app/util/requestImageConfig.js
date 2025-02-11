@@ -1,12 +1,13 @@
-function getRequestImageConfig(){
+function getRequestImageConfig(token){
     return {
-       withCredentials: true,
-        credentials: 'include',
+
         headers: 
         {
           'Content-Type': 'image', 
+           'Authorization': `Bearer ${token}`
         },
-        responseType: 'arraybuffer'
+        responseType: 'arraybuffer',
+       
     }
   
   } 

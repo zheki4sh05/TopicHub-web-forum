@@ -5,7 +5,6 @@ import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.security.filters.*;
 import com.example.topichubbackend.util.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
@@ -39,11 +38,6 @@ public class SecurityConfig{
     private final UserDetailsService userDetailsService;
     private final HttpRequestUtils httpRequestUtils;
 
-    @Value("${client.hostName}")
-    private String clientHostName;
-
-    @Value("${client.port}")
-    private String clientPort;
 
 
     @Bean

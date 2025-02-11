@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { checkCookie, userData } from "../api/request";
+import { checkCookie, refreshToken, userData } from "../api/request";
 import { useDispatch, useSelector } from "react-redux";
-import { isAuth } from "../../../pages/Profile/model/userSlice";
+import { isAuth, setAuth, setRefresh, setToken } from "../../../pages/Profile/model/userSlice";
 import { getHubsList } from "../../../entities/hubs/model/hubsSlice";
 import { fetchHubs } from "../../../pages/Article/api/requests";
+import { getRefreshStorage } from "../../../app/util/localstorageApi";
 
 function LoadingUserData() {
     const dispatch = useDispatch()
@@ -12,6 +13,27 @@ function LoadingUserData() {
     // useEffect(()=>{
     //     dispatch(checkCookie())
     // },[])
+     useEffect(()=>{
+
+        const token = getRefreshStorage()
+
+        if(token!=null && !auth){
+           refreshToken(token).then(data=>{
+                const access = data.access_token;
+                const refresh = data.refresh_token;
+                dispatch(setToken(access))
+                dispatch(setRefresh(refresh))
+                dispatch(setAuth())
+                
+           })
+           .catch(error=>{
+
+           })
+           
+        }
+
+      
+    },[])
     useEffect(()=>{
         if(auth){
             dispatch(userData({
