@@ -5,9 +5,11 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.*;
+import org.springframework.stereotype.*;
 
 import java.util.*;
 
+@Repository
 public interface ArticleComplaintRepository extends JpaRepository<ArticleComplaint, UUID> {
 
 

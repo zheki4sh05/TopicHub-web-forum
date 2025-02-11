@@ -19,7 +19,7 @@ public class ArticleRepository {
     private EntityManager em;
     private final Integer BATCH_SIZE = 15;
     public Long calcTotalEntitiesCount(){
-        String countQ = "SELECT COUNT(a.id) FROM Article a";
+        String countQ = "SELECT COUNT(a.id) FROM ArticleEntity a";
         Query countQuery = this.em.createQuery(countQ, Long.class);
         return (Long) countQuery.getSingleResult();
     }
@@ -29,7 +29,6 @@ public class ArticleRepository {
     }
 
     public Integer getLastPageNumber(Long count){
-
         return getPageNumber(count, BATCH_SIZE);
     }
 
@@ -58,7 +57,4 @@ public class ArticleRepository {
                 .getSingleResult();
     }
 
-    public void deleteAll() {
-        em.createQuery("DELETE FROM Article").executeUpdate();
-    }
 }

@@ -11,7 +11,6 @@ public interface IAuthorService {
 
     void delete(String userId);
 
-    List<UserDto> findAll(String id);
 
     UserDto manageBlock(String authorId, String status);
 

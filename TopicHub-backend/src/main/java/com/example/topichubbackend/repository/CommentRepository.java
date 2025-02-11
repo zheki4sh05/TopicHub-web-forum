@@ -10,11 +10,6 @@ import java.util.*;
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     @Query("""
-SELECT COUNT(c.id) FROM Comment c WHERE c.article.id= :id
-""")
-    Long calcArticleCommentsCount(@Param("id") Long id);
-
-    @Query("""
 From Comment c where c.article.id = :articleId
 """)
     List<Comment> findAllByArticleId(@Param("articleId") Long aLong);

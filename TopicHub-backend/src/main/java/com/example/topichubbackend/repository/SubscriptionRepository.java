@@ -21,13 +21,6 @@ From Subscription s where s.author.uuid= :authorId and s.follower.uuid = :follow
 
 """)
     Optional<Subscription> findByUsers(@Param("authorId")UUID author, @Param("follower") UUID user);
-
-
-    @Query("""
-FROM Subscription s where s.follower.uuid = :id
-""")
-    Optional<Subscription> findSubscribesById(UUID is);
-
     @Query("""
 FROM Subscription s where s.author.uuid = :id
 """)

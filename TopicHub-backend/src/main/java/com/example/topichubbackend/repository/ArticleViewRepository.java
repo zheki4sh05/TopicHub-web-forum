@@ -40,6 +40,3 @@ where b.author.uuid = :userId
 """)
     Page<Article> findBookmarks(@Param("userId") UUID userId, Pageable pageable);
 }
-//select b.article
-//from Bookmark b
-//where b.author.uuid=:userId

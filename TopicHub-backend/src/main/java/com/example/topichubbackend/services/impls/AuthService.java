@@ -23,7 +23,6 @@ public class AuthService implements IAuthorService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserMapper userMapper;
-    private final AuthorMapper authorMapper;
     @Override
     public void updateUser(UserDto userDto, String userId) {
         try{
@@ -48,15 +47,6 @@ public class AuthService implements IAuthorService {
         }
 
     }
-
-    @Override
-    public List<UserDto> findAll(String id) {
-        List<User> userList = userRepository.findAll(id);
-        return userList.stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
     @Override
     public UserDto manageBlock(String authorId, String status) {
         Optional<User> user = userRepository.findById(UUID.fromString(authorId));

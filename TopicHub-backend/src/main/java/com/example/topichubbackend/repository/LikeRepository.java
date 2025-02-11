@@ -17,18 +17,6 @@ public interface LikeRepository extends JpaRepository<Likes, UUID> {
       Optional<Likes> findById(@Param("articleId") Long targetId,@Param("userId") UUID uuid);
 
 
-    @Query("""
-
-SELECT COUNT(l.uuid) FROM Likes l WHERE l.article.id = :articleId AND l.state = 1
-
-""")
-    Long getLikesCount(Long articleId);
-    @Query("""
-
-SELECT COUNT(l.uuid) FROM Likes l WHERE l.article.id = :articleId AND l.state = -1
-
-""")
-    Long getDisLikesCount(Long articleId);
 
     @Query("""
 

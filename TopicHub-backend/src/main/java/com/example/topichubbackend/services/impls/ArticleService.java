@@ -47,7 +47,7 @@ public class ArticleService implements IArticleService {
                 .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
                 .build();
 
-      var savedId = articleRepo.save(article).getId();
+      Long savedId = articleRepo.save(article).getId();
 
         articleDto.getList().forEach(item->{
             articlePartRepository.save(ArticlePart.builder()
