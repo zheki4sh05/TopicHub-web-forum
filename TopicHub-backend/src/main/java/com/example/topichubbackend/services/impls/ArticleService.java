@@ -38,6 +38,8 @@ public class ArticleService implements IArticleService {
         final String DILIMITER = "|";
         List<Hub> hubList = hubDao.findAll();
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(EntityNotFoundException::new);
+
+        // Создание ArticleEntity можно вынести
         final var article = ArticleEntity.builder()
                 .theme(articleDto.getTheme())
                 .keyWords(String.join(DILIMITER, articleDto.getKeyWords()))
@@ -50,6 +52,8 @@ public class ArticleService implements IArticleService {
       Long savedId = articleRepo.save(article).getId();
 
         articleDto.getList().forEach(item->{
+
+            // Создание ArticlePart можно вынести
             articlePartRepository.save(ArticlePart.builder()
                     .uuid(UUID.randomUUID())
                     .id(item.getId())
@@ -72,6 +76,7 @@ public class ArticleService implements IArticleService {
         if(article.getAuthor().getUuid().toString().equals(userId)){
             articleRepo.delete(article);
         }else{
+            // логи для ошибок на уровне сервисов тоже не лишними будут, наверное
             throw new EntityNotFoundException("Not found article for user");
         }
     }
@@ -90,9 +95,12 @@ public class ArticleService implements IArticleService {
 
     }
     @Override
+    // Точно надо здесь @Transactional, вроде не модифицируем данные (но не уверен, сори)?
+    // К остальным методам, где просто считывание тоже относится. Понимаю, что и в таких случаях
+    // @Transactional может быть обоснован и полезен, но тогда может делать readOnly = true?
     @Transactional
     public PageResponse<ArticleDto> fetchBookMarks(String userId, Integer page) {
-        Pageable pageable= PageRequest.of(page-1,15);
+        Pageable pageable= PageRequest.of(page-1,15); // константы
         Page<Article> articles = articleViewRepository.findBookmarks(UUID.fromString(userId),pageable);
         PageResponse<Article> pageResponse = PageResponse.map(articles);
         checkLike(userId, pageResponse);

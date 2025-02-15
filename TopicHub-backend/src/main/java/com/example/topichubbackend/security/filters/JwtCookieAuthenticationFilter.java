@@ -17,6 +17,8 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final HttpResponseUtils httpResponseUtils;
     private final SecurityService securityService;
+
+    // Немного громоздкий метод, можно порефакторить
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

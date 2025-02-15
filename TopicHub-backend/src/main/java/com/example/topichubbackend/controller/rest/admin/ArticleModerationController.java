@@ -11,6 +11,11 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
+// Вроде ? в ResponseEntity<> не совсем хорошо
+// Сам когда смотрел много где видел, что так и оставляют
+// но, если не ошибаюсь, лучше что-то конкретное в тело ответа запихивать стараться
+// (этот доеб ко всем контроллерам, не дублирую дальше)
+
 @Slf4j
 @AllArgsConstructor
 @RestController
@@ -20,6 +25,11 @@ public class ArticleModerationController {
     private final IArticleService articleService;
     private final CustomSecurityExpression customSecurityExpression;
 
+    // В дополнение к комментарию выше, как можно было бы сделать
+    // Ты точно, значешь, что возвращаешь articles типа PageResponse<ArticleDto>,
+    // поэтому можно в декларации метода детализировать тип и поставить ResponseEntity<ArticleStatusDto>.
+    // Это снова один из моментов, касательно которых не совсем уверен, так ты обязательно пиши,
+    // если не согласен и не впадлу доказать, что я зря докапался
     @GetMapping("/fetch")
     public ResponseEntity<?> getModeration(
             @RequestParam Map<String, String> reqParam

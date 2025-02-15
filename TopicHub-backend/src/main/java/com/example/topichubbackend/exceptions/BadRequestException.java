@@ -29,6 +29,7 @@ public class BadRequestException extends ImplRuntimeException{
 //    }
     @Override
     public Integer getCode() {
+        // Константу лучше, пожалуй
         return 400;
     }
 

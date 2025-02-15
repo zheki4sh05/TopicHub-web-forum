@@ -1,5 +1,6 @@
 package com.example.topichubbackend.dto;
 
+// Пожалуй, импорты * избыточны (это не только к этому классу относится)
 import lombok.*;
 
 @Builder

@@ -21,6 +21,7 @@ import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
 import java.util.*;
 
+// Напоминаю про логи, константы
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -103,6 +104,7 @@ public class AuthenticationServiceImpl {
         tokenRepository.save(token);
     }
 
+    // Великоват метод
     @Transactional
     public ResponseEntity<?> refreshToken(
             HttpServletRequest request,

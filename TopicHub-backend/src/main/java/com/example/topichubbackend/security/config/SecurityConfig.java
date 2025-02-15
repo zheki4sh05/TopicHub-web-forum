@@ -40,6 +40,9 @@ public class SecurityConfig{
 
 
 
+    // Так, здесь точно сокращать надо, на экран даже не влазит, капэц.
+    // Все URL можно в константы также, как и статусы ошибок. Можно вообще, все, что permitAll(),
+    // в массив строковых констант и один permitAll() для этого массива, уже нехило сократим метод
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 

@@ -8,7 +8,7 @@ import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+@Slf4j // Аннотацию добавил, но логов нигде нет, надо бы добавить)
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admin/hub")

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.security.core.*;
 import org.springframework.security.web.authentication.logout.*;
 
+// Можно header-ы в константы, как и 7 в substring
 @Configuration
 @AllArgsConstructor
 public class CustomLogoutHandler implements LogoutHandler {

@@ -13,6 +13,10 @@ import org.springframework.web.context.request.*;
 import java.time.*;
 import java.util.*;
 
+// Как-будто многовато кода дублируется
+// Как минимум отдельный приватный метод-хелпер для построения ErrorDto.
+// Туда же можно было бы и остальное (code, locale) запихнуть, но подумать
+// над параметрами метода (в общем, сократить так нормально думаю можно было бы)
 @RestControllerAdvice
 @AllArgsConstructor
 public class ExceptionControllerAdvice {

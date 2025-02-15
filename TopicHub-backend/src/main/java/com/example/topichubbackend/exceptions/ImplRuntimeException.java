@@ -17,6 +17,7 @@ public class ImplRuntimeException extends BaseRuntimeException{
     }
     @Override
     public Integer getCode() {
+        // Константа
         return 500;
     }
 }

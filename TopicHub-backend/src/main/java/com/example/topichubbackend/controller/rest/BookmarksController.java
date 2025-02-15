@@ -64,6 +64,9 @@ public class BookmarksController {
             @RequestBody BookmarksRequestDto bookmarksRequestDto
     ){
         String userId = customSecurityExpression.getUserId();
+
+        // Вроде даже в таких мелких случаях Паша просил любые статические вещи в константы выносить,
+        // просто цифры не должны быть захардкожены в параметрах метода
         reactionService.manageBookmarks(1, bookmarksRequestDto.getArticle(), userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

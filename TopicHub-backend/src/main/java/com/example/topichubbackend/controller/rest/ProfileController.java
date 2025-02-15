@@ -70,6 +70,9 @@ public class ProfileController {
         String userId = customSecurityExpression.getUserId();
         switch (type) {
             case "articles" -> {
+                // Можно создание ArticleFilterDto и любые схожие моменты выносить
+                // в отдельные приватные методы, читаемость основного метода улучшишь и разгрузишь его,
+                // переиспользовать потом без б в случае необходимости
                 ArticleFilterDto articleFilterDto = ArticleFilterDto.builder()
                         .page(page)
                         .userId(userId)
@@ -86,6 +89,8 @@ public class ProfileController {
                         .body(authService.findById(userId));
             }
             default -> {
+                // Каких бы логов наверн навалить, если кидаешь BAD_REQUEST
+
                 return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
             }
         }
@@ -164,6 +169,9 @@ public class ProfileController {
             imageService.save(userId, fileContent);
             return new ResponseEntity<>("", HttpStatus.CREATED);
         } catch (IOException e) {
+
+            // Исключения логируем
+
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -52,6 +52,7 @@ public class SubscribeController {
                 return new ResponseEntity<>(authorDtos, HttpStatus.OK);
             }
             default -> {
+                // логи опять таки
                 return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
             }
         }

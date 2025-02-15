@@ -12,6 +12,7 @@ public class SearchDto{
     private String userId;
     private ArticleFilterDto articleFilterDto;
 
+    // Почему не lombok?
     public SearchDto(String theme, String keywords, String author, String userId, ArticleFilterDto articleFilterDto) {
         this.theme = theme;
         this.keywords = keywords;
