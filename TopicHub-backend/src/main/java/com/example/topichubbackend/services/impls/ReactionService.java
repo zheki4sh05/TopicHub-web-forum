@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.*;
 
 @Service
-@Slf4j
+@Slf4j // Логирования нет, аннотация есть
 @AllArgsConstructor
 public class ReactionService implements IReactionService {
 
@@ -126,6 +126,7 @@ public class ReactionService implements IReactionService {
 
         List<Subscription> subscriptions = subscriptionRepository.fetch(UUID.fromString(id));
 
+        // Можно вынести создание AuthorDto, повторяется в fetchAllFollowers
         return subscriptions.stream().map(item->AuthorDto.builder()
                 .login(item.getAuthor().getLogin())
                 .email(item.getAuthor().getEmail())

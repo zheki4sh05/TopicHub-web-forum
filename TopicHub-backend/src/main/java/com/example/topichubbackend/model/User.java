@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.*;
 import java.util.*;
 import java.util.UUID;
 
+// Как будто немножко не SRP, так как класс User
+// отвечает и за представление пользователя, и за реализацию интерфейса UserDetails для Spring Security
+// (можно попробовать рассмотреть возможность создания отдельного класса для реализации интерфейса UserDetails)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

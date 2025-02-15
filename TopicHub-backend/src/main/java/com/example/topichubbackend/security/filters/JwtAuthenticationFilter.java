@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.*;
 
+// Про возможность вынесения в константы опять напоминаю
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

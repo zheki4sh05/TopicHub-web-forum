@@ -16,6 +16,7 @@ import java.time.*;
 import java.util.*;
 import java.util.stream.*;
 
+// Логирование
 @Service
 @AllArgsConstructor
 public class ComplaintService implements IComplaintControl {
@@ -35,6 +36,7 @@ public class ComplaintService implements IComplaintControl {
         User user = userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(EntityNotFoundException::new);
 
+        // Не лучше switch(complaintDto.getType())?
         if(complaintDto.getType().equals(ARTICLE)){
 
             Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(Long.valueOf(complaintDto.getTargetId()), UUID.fromString(userId));
@@ -61,6 +63,7 @@ public class ComplaintService implements IComplaintControl {
 
     @Override
     public ComplaintDto findById(String id, String type) {
+        // Не лучше switch(type)?
         if(type.equals(ARTICLE)){
           ArticleComplaint articleComplaint =   articleComplaintRepository.findById(UUID.fromString(id))
                   .orElseThrow(EntityNotFoundException::new);
@@ -77,7 +80,7 @@ public class ComplaintService implements IComplaintControl {
 
     @Override
     public PageResponse<ComplaintDto> findAllByType(String type, Pageable pageable) {
-
+        // Не лучше switch(type)?
         if(type.equals(ARTICLE)){
             var result = articleComplaintRepository.findAll(pageable);
             return PageResponse.map(complaintMapper::mapFrom, result);
@@ -92,6 +95,7 @@ public class ComplaintService implements IComplaintControl {
 
     @Override
     public void deleteById(String complaintId, String type) {
+        // Не лучше switch(type)?
         if(type.equals(ARTICLE)){
             ArticleComplaint entity= articleComplaintRepository.findByIdArticle(UUID.fromString(complaintId)).orElseThrow(EntityNotFoundException::new);
             articleComplaintRepository.delete(entity);

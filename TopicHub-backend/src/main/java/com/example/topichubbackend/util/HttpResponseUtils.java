@@ -17,8 +17,10 @@ public class HttpResponseUtils {
     @Value("${spring.application.name}")
     private String applicationName;
 
+    // Вот тоже, не вижу причин, почему без lombok в util, мб я дЭбил
     public HttpResponseUtils(){}
 
+    // То же самое
     public HttpResponseUtils(Long accessTokenExpire, Long refreshTokenExpire, String applicationName) {
         this.accessTokenExpire = accessTokenExpire;
         this.refreshTokenExpire = refreshTokenExpire;

@@ -17,15 +17,24 @@ public class HttpRequestUtils {
     @Value("${client.port}")
     private String port;
 
+    // Почему про lombok забыл, или так надо?
     public HttpRequestUtils() {
     }
 
+    // То же самое
     public HttpRequestUtils(String host, String port) {
         this.host = host;
         this.port = port;
     }
 
     public static ArticleFilterDto parseFilterParams(Map<String, String> reqParam) {
+        // Можно вынести "reqParam.get("hub") == null ? null : Integer.valueOf(reqParam.get("hub"))" в переменную:
+
+        // Integer hubValue = reqParam.get("hub") == null ? null : Integer.valueOf(reqParam.get("hub"));
+
+        // и потом присваивать hubValue для param и hub, чтобы два раза не обращатся к параметру
+        // и повторно не проверять, равен ли он нулю или нет
+
         return ArticleFilterDto.builder()
                 .month(reqParam.get("month"))
                 .year(reqParam.get("year"))
@@ -58,6 +67,7 @@ public class HttpRequestUtils {
         return "http://"+host+":"+port;
     }
 
+    // Можно через Stream API (anyMatch, по-моему)
     public Boolean isPublic(HttpServletRequest httpRequest){
         var path = httpRequest.getServletPath();
         for (PublicPath p : PublicPath.values()) {

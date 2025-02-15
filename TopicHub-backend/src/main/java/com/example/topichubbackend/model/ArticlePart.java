@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.util.*;
 
+// Объясни, пж, как связаны ArticlePart и ArticlePartEntity, и зачем такая архитектура.
+// Вроде маппинг на одну и ту же таблицу, почти одинаковые поля, зачем пока не понял
 @Entity
 @Table(name = "articlepart")
 @Builder

@@ -19,6 +19,7 @@ public class CommentFullMapper {
         }
         processedIds.add(comment.getId());
 
+        // Можно вынести
         CommentDto dto = CommentDto.builder()
                 .created(comment.getCreated())
                 .id(comment.getId().toString())
@@ -27,6 +28,7 @@ public class CommentFullMapper {
                 .authorDto(authorMapper.mapFrom(comment.getAuthor()))
                 .parentId(comment.getParentComment()!=null ? comment.getParentComment().getId().toString() : null)
                 .build();
+
         if (comment.getReplies() != null && !comment.getReplies().isEmpty()) {
             List<CommentDto> replyDtos = new ArrayList<>();
             for (Comment reply : comment.getReplies()) {

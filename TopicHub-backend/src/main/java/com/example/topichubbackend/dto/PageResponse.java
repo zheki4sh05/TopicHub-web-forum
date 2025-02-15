@@ -19,6 +19,8 @@ public class PageResponse<R> {
     private Integer maxPage;
     public static <T,R> PageResponse<R> map(Function<T, R> mapper, Page<T> page){
         var items = page.getContent();
+
+        // Можно вынести создание PageResponse у 3-х методов и сократить код
         return PageResponse.<R>builder()
                 .items(items.stream().map(mapper).collect(Collectors.toList()))
                 .total(page.getTotalElements())

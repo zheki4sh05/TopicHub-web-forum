@@ -1,5 +1,6 @@
 package com.example.topichubbackend.dto;
 
+// Здесь у меня те же вопросы, что и для RoleDto
 public enum StatusDto {
 
         MODERATION ("MODERATION"),

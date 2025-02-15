@@ -14,6 +14,8 @@ import java.util.*;
 @Data
 @Builder
 @Entity
+// До нейминга опять декапаюсь, раз уж табличка complaint_article, то и сущность наверное уже стоило
+// назвать ComplaintArticle, но это мелочи, думаю
 @Table(name="complaint_article")
 public class ArticleComplaint {
     @Column(name = "id")

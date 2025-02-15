@@ -12,8 +12,11 @@ public class ArticleFilterDto implements IBusinessLogicFilterSupplier, IFactoryF
     private String rating;
     private Integer page;
 
+    // Не лучше константой сдлелать?
     private Integer size = 15;
 
+    // Как-то странно метод среди полей затесался, хоть и рядом с полем, к которому относится, но все же.
+    // + зачем вручную сеттеры и геттеры, которые без @Override, можно @Setter, @Getter и над полями
     public String getStatus() {
         return status;
     }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.*;
 import java.util.*;
 import java.util.stream.*;
 
-@Slf4j
+@Slf4j // Опять аннотация есть, логов нет (для исключений, как минимум)
 @Service
 @RequiredArgsConstructor
 public class AuthService implements IAuthorService {

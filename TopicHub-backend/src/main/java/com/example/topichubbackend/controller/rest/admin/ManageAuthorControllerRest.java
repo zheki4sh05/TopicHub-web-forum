@@ -9,7 +9,7 @@ import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+@Slf4j // Опять таки, аннотация есть, а логов нет
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admin/author")

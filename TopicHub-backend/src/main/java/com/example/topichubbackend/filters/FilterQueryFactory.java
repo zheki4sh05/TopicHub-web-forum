@@ -10,9 +10,12 @@ import org.springframework.stereotype.*;
 
 import java.util.*;
 
+// Числа и строки можно, опять таки, в константы
+
 @Service
 public class FilterQueryFactory {
 
+    // Чего не через конструктор внедряем?
     @Autowired
     private CriteriaBuilder criteriaBuilder;
 
@@ -41,6 +44,8 @@ public class FilterQueryFactory {
         return list;
     }
 
+    // Слегка громоздкий метод. Паша говорил, что если на экран помещается, то как бы норм,
+    // но я бы подсократил и что-то бы вынес. Остальные меньше меня по объему напрягли
     public CriteriaQuery<Article> createQuery(ArticleFilterDto articleFilterDto){
         CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
         Root<Article> articleRoot = criteriaQuery.from(Article.class);
