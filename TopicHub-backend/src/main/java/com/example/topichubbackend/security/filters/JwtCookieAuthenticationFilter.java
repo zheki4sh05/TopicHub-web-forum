@@ -33,12 +33,12 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
             String accessToken=null;
             String refreshToken=null;
             var cookies = request.getCookies();
-            for(int i=0;i<cookies.length; i++){
-                if(httpResponseUtils.accessCookie().equals(cookies[i].getName())){
-                    accessToken = cookies[i].getValue();
+            for (Cookie cookie : cookies) {
+                if (httpResponseUtils.accessCookie().equals(cookie.getName())) {
+                    accessToken = cookie.getValue();
                 }
-                if(httpResponseUtils.refreshCookie().equals(cookies[i].getName())){
-                    refreshToken = cookies[i].getValue();
+                if (httpResponseUtils.refreshCookie().equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
                 }
             }
             if(accessToken!=null && refreshToken!=null){
@@ -48,12 +48,7 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
             }
         }else{
             filterChain.doFilter(request, response);
-            return;
         }
-
-
-
-
     }
 
 }

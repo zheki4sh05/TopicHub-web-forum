@@ -1,21 +1,18 @@
 package com.example.topichubbackend.security.util;
 
-public enum PublicPath {
-    AUTH("/auth"),
-    API_AUTH("/api/v1/auth/**"),
-    API_ARTICLE("/api/v1/article"),
-    API_SEARCH("/api/v1/search"),
-    API_PROF_SEARCH("/api/v1/profile/search"),
-    API_ANSWERS("/api/v1/answers"),
-    API_IMAGE("/api/v1/image"),
-    API_HUBS("/api/v1/hubs");
-    private final String type;
+public class PublicPath {
+    public static final String[] LIST = new String[]{
+            "/auth",
+            "/api/v1/auth/**",
+            "/api/v1/article",
+            "/api/v1/article/**",
+            "/api/v1/search/**",
+            "/api/v1/answers",
+            "/api/v1/image",
+            "/api/v1/hubs",
+            "/swagger-ui/**",
+            "/swagger-resources/*",
+            "/v3/api-docs/**"
+    };
 
-    PublicPath(String type) {
-        this.type = type;
-    }
-
-    public String type() {
-        return type;
-    }
 }

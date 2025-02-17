@@ -1,21 +1,19 @@
 package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.exceptions.EntityNotFoundException;
+import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
-import jakarta.persistence.RollbackException;
+import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
-import java.util.*;
-import java.util.stream.*;
 
-@Slf4j
+import java.util.*;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService implements IAuthorService {
@@ -31,7 +29,7 @@ public class AuthService implements IAuthorService {
             user.setLogin(userDto.getLogin());
             userRepository.save(user);
         }catch (RollbackException e){
-            throw new BadRequestException();
+            throw new EntityAlreadyExists();
         }
     }
 
@@ -43,7 +41,7 @@ public class AuthService implements IAuthorService {
             userRoleRepository.deleteAll(userRoles);
             userRepository.delete(user.get());
         }else{
-            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.type());
+            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.name());
         }
 
     }
@@ -56,7 +54,7 @@ public class AuthService implements IAuthorService {
             userRepository.save(item);
             return userMapper.toDto(item);
         }else{
-            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.type());
+            throw  new EntityNotFoundException(ErrorKey.NOT_FOUND.name());
         }
     }
 

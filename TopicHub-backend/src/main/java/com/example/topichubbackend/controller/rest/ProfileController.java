@@ -9,7 +9,6 @@ import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.*;
 
 import java.io.*;
 
@@ -50,13 +49,13 @@ public class ProfileController {
     }
 
     /**
-     * Retrieves profile or articles based on the provided type and page.
+     * Retrieves profile or articles based on the provided name and page.
      *
-     * <p>This endpoint fetches either user articles or user profile information depending on the type parameter.
-     * If the type is "articles", it returns a list of articles for the authenticated user.
-     * If the type is "profile", it returns the user's profile information.
+     * <p>This endpoint fetches either user articles or user profile information depending on the name parameter.
+     * If the name is "articles", it returns a list of articles for the authenticated user.
+     * If the name is "profile", it returns the user's profile information.
      *
-     * @param type the type of data to retrieve: either "articles" or "profile".
+     * @param type the name of data to retrieve: either "articles" or "profile".
      * @param page the page number for article pagination.
      * @return a ResponseEntity containing the requested data and a 200 OK status.
      * @see ArticleFilterDto
@@ -70,15 +69,9 @@ public class ProfileController {
         String userId = customSecurityExpression.getUserId();
         switch (type) {
             case "articles" -> {
-                ArticleFilterDto articleFilterDto = ArticleFilterDto.builder()
-                        .page(page)
-                        .userId(userId)
-                        .authorId(userId)
-                        .status(StatusDto.PUBLISH.type())
-                        .build();
                 return ResponseEntity.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(articleService.fetch(articleFilterDto));
+                        .body(articleService.fetch(createFilter(page, userId, userId)));
             }
             case "profile" -> {
                 return ResponseEntity.ok()
@@ -95,10 +88,10 @@ public class ProfileController {
      * Deletes either an article or the user's profile.
      *
      * <p>This endpoint allows the user to delete either an article or their profile.
-     * If the type is "article", the specified article is deleted.
-     * If the type is "author", the user's profile is deleted.
+     * If the name is "article", the specified article is deleted.
+     * If the name is "author", the user's profile is deleted.
      *
-     * @param type the type of data to delete: either "article" or "author".
+     * @param type the name of data to delete: either "article" or "author".
      * @param id the ID of the article or user to be deleted.
      * @return a ResponseEntity indicating the result of the delete operation.
      */
@@ -151,11 +144,9 @@ public class ProfileController {
      *
 
      * @return a ResponseEntity indicating the result of the upload operation.
-     * @throws IOException if there is an error during the file upload process.
      */
     @PostMapping("")
     public ResponseEntity<?> doPost(
-//            @RequestParam("file") @Size(min = 1, max = 1) @NotNull MultipartFile filePart
              @ModelAttribute UploadImageDto uploadImageDto
     ) {
         String userId = customSecurityExpression.getUserId();
@@ -167,6 +158,18 @@ public class ProfileController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    private ArticleFilterDto createFilter(Integer page,
+                                          String user,
+                                          String author){
+        return  ArticleFilterDto.builder()
+                .page(page)
+                .userId(user)
+                .authorId(author)
+                .status(StatusDto.PUBLISH.name())
+                .build();
+    }
+
 }
 
 

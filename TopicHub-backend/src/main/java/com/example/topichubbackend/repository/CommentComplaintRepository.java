@@ -1,8 +1,8 @@
 package com.example.topichubbackend.repository;
+
 import com.example.topichubbackend.model.complaints.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.*;
 
 import java.util.*;
@@ -14,7 +14,7 @@ public interface CommentComplaintRepository extends JpaRepository<CommentComplai
 From CommentComplaint ac where ac.comment.id = :article and ac.author.uuid = :author
 
 """)
-     Optional<CommentComplaint> findByCommentUserId(@Param("article") String targetId,@Param("author") String userId);
+     Optional<CommentComplaint> findByCommentUserId(@Param("article") String targetId,@Param("author") UUID userId);
 
     @Query("""
 

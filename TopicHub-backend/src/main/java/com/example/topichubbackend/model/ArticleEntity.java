@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.*;
-import java.util.*;
 
 @Entity
 @Getter

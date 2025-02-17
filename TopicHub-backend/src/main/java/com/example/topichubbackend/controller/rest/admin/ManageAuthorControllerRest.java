@@ -1,15 +1,15 @@
 package com.example.topichubbackend.controller.rest.admin;
+
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admin/author")
@@ -18,13 +18,13 @@ public class ManageAuthorControllerRest {
     private final IAuthorService authService;
 
     @GetMapping("/fetch")
-    public ResponseEntity<?> getAuthor(
+    public ResponseEntity< PageResponse<UserDto>> getAuthor(
             @RequestParam(value = "status", defaultValue = "ACTIVE") String status,
             @RequestParam(value = "page", defaultValue = "1") Integer number,
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ){
         if(HttpRequestUtils.contains(status)){
-            Pageable pageable = PageRequest.of(number==0 ? number : number -1, size);
+            var pageable = PageRequest.of(number==0 ? number : number -1, size);
             var userListPage = authService.fetch(status, pageable);
             return new ResponseEntity<>(userListPage, HttpStatus.OK);
         }else{
@@ -33,7 +33,7 @@ public class ManageAuthorControllerRest {
         }
     }
     @PostMapping("/delete")
-    public  ResponseEntity<?> deleteAuthor(
+    public  ResponseEntity<String> deleteAuthor(
             @RequestParam("id") String id
     ){
         authService.delete(id);
@@ -49,7 +49,7 @@ public class ManageAuthorControllerRest {
             authService.manageBlock(id, status);
             return new ResponseEntity<>(id, HttpStatus.OK);
         }else{
-           throw new BadRequestException();
+           return new ResponseEntity<>(StatusDto.values(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -60,7 +60,7 @@ public class ManageAuthorControllerRest {
             @RequestParam(value = "page",defaultValue = "1") Integer page
     ){
         if(login.isEmpty() && email.isEmpty()){
-            throw new BadRequestException();
+            return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
         }else{
             PageResponse<UserDto> authorDtoPageResponse = authService.search(login, email,page,true);
             return new ResponseEntity<>(authorDtoPageResponse, HttpStatus.OK);

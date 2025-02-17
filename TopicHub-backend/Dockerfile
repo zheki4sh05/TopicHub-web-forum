@@ -1,18 +1,10 @@
 
-FROM maven:3.8-openjdk-17 AS build
+FROM openjdk:latest
+
 
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY . .
-RUN mvn clean package
+
+COPY target/TopicHub-backend-0.0.1-SNAPSHOT.jar app.jar
 
 
-FROM tomcat:latest
-
-
-COPY --from=build /app/target/TopicHub-backend-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
-
-CMD ["catalina.sh", "run"]
-
-EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

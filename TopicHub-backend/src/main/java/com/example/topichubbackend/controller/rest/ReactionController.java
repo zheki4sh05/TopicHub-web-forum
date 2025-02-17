@@ -27,9 +27,9 @@ public class ReactionController {
      * Creates a reaction (like/dislike) for an article.
      *
      * <p>This endpoint allows users to create a reaction (such as like or dislike) for an article.
-     * The reaction is created based on the data provided in the request body, including the reaction type, value, and target article.
+     * The reaction is created based on the data provided in the request body, including the reaction name, value, and target article.
      *
-     * @param reactionDto the DTO containing the reaction type, value, and target article ID.
+     * @param reactionDto the DTO containing the reaction name, value, and target article ID.
      * @return a ResponseEntity containing the reaction data and a 201 CREATED status.
      * @see LikeRequestDto
      */
@@ -46,9 +46,9 @@ public class ReactionController {
      * Removes a reaction (like/dislike) for an article.
      *
      * <p>This endpoint allows users to remove a previously created reaction on an article.
-     * The type of reaction and the target article ID are specified in the request parameters.
+     * The name of reaction and the target article ID are specified in the request parameters.
      *
-     * @param type the type of reaction to remove (e.g., "like", "dislike").
+     * @param type the name of reaction to remove (e.g., "like", "dislike").
      * @param targetId the ID of the article to remove the reaction from.
      * @return a ResponseEntity indicating the success of the removal with a 200 OK status.
      */
@@ -69,7 +69,6 @@ public class ReactionController {
      * It returns the current reaction data for the user on the specified article.
      *
      * @param articleId the ID of the article to check the reaction for.
-     * @param authorId the ID of the article's author.
      * @param authorId the ID of the article's author.
      * @return a ResponseEntity containing the reaction data and a 200 OK status.
      * @see ReactionDto

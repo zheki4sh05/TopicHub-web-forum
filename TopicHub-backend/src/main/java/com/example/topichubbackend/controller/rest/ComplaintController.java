@@ -6,21 +6,17 @@ import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
-import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
 /**
  * REST Controller for managing user complaints.
  * Provides endpoints for creating, retrieving, and deleting complaints.
  *
  * <p>This controller is responsible for managing user complaints, including creating new complaints,
- * retrieving complaints by type, and deleting complaints. It uses the complaint control service to handle
+ * retrieving complaints by name, and deleting complaints. It uses the complaint control service to handle
  * the business logic and the authentication service for user validation.
  *
  */
-@Slf4j
 @RequestMapping("/api/v1/complaint")
 @AllArgsConstructor
 @RestController
@@ -42,17 +38,18 @@ public class ComplaintController {
     @PostMapping("")
     public ResponseEntity<?> doPost(@RequestBody ComplaintDto complaintDto)  {
         String userId = customSecurityExpression.getUserId();
-        complaintControl.create(userId, complaintDto);
+        complaintDto.getUserDto().setId(userId);
+        complaintControl.create(complaintDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
-     * Deletes a complaint based on the complaint ID and type.
+     * Deletes a complaint based on the complaint ID and name.
      *
-     * <p>This endpoint allows the user to delete a specific complaint by providing the complaint ID and the type.
+     * <p>This endpoint allows the user to delete a specific complaint by providing the complaint ID and the name.
      *
      * @param complaintId the ID of the complaint to be deleted.
-     * @param type the type of the complaint.
+     * @param type the name of the complaint.
      * @return a ResponseEntity with the complaint ID and a 200 OK status indicating the complaint was successfully deleted.
      */
     @DeleteMapping("")

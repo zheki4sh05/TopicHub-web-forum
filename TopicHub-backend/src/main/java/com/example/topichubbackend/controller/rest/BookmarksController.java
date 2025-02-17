@@ -9,8 +9,6 @@ import lombok.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
-
 
 /**
  * REST Controller for managing user bookmarks.
@@ -29,6 +27,8 @@ public class BookmarksController {
     private final IReactionService reactionService;
     private final IArticleService articleService;
     private final CustomSecurityExpression customSecurityExpression;
+    private final static Integer ADD = 1;
+    private final static Integer REMOVE = -1;
 
     /**
      * Fetches a page of bookmarked articles for the authenticated user.
@@ -39,7 +39,6 @@ public class BookmarksController {
      * @param page the page number to retrieve, for pagination.
      * @return a ResponseEntity containing a batch of bookmarked articles for the user.
      *         A 200 OK status is returned along with the list of articles.
-     * @see ArticleBatchDto
      */
     @GetMapping("")
     public ResponseEntity<?> fetchPage(
@@ -64,7 +63,7 @@ public class BookmarksController {
             @RequestBody BookmarksRequestDto bookmarksRequestDto
     ){
         String userId = customSecurityExpression.getUserId();
-        reactionService.manageBookmarks(1, bookmarksRequestDto.getArticle(), userId);
+        reactionService.manageBookmarks(ADD, bookmarksRequestDto.getArticle(), userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -80,7 +79,7 @@ public class BookmarksController {
     @DeleteMapping("")
     public ResponseEntity<?> doDelete(@RequestParam("article") @NotNull String article){
         String userId = customSecurityExpression.getUserId();
-        reactionService.manageBookmarks(-1, article, userId);
+        reactionService.manageBookmarks(REMOVE, article, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

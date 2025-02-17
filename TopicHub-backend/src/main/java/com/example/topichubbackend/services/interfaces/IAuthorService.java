@@ -3,8 +3,6 @@ package com.example.topichubbackend.services.interfaces;
 import com.example.topichubbackend.dto.*;
 import org.springframework.data.domain.*;
 
-import java.util.*;
-
 public interface IAuthorService {
 
     void updateUser(UserDto userDto, String userId);

@@ -1,6 +1,5 @@
 package com.example.topichubbackend.dto;
 
-import com.example.topichubbackend.model.*;
 import lombok.*;
 import org.springframework.data.domain.*;
 
@@ -19,32 +18,42 @@ public class PageResponse<R> {
     private Integer maxPage;
     public static <T,R> PageResponse<R> map(Function<T, R> mapper, Page<T> page){
         var items = page.getContent();
-        return PageResponse.<R>builder()
-                .items(items.stream().map(mapper).collect(Collectors.toList()))
-                .total(page.getTotalElements())
-                .page(page.getNumber())
-                .maxPage(page.getTotalPages())
-                .build();
+        return createPageResponse(
+                items.stream().map(mapper).collect(Collectors.toList()),
+                page.getTotalElements(),
+                page.getNumber(),
+                page.getTotalPages()
+        );
     }
 
     public static <T,R> PageResponse<R> map(Function<T, R> mapper, PageResponse<T> page){
         var items = page.getItems();
-        return PageResponse.<R>builder()
-                .items(items.stream().map(mapper).collect(Collectors.toList()))
-                .total(page.getTotal())
-                .page(page.getPage())
-                .maxPage(page.getMaxPage())
-                .build();
+        return createPageResponse(
+                items.stream().map(mapper).collect(Collectors.toList()),
+                page.getTotal(),
+                page.getPage(),
+                page.getMaxPage()
+        );
     }
 
     public static <T> PageResponse<T> map(Page<T> page){
-        return  PageResponse.<T>builder()
-                .total(page.getTotalElements())
-                .page(page.getNumber())
-                .maxPage(page.getTotalPages())
-                .items(page.getContent())
+        return createPageResponse(
+                page.getContent(),
+                page.getTotalElements(),
+                page.getNumber(),
+                page.getTotalPages()
+        );
+    }
+
+    private static <R> PageResponse<R> createPageResponse(List<R> items, Long total, Integer page, Integer maxPage) {
+        return PageResponse.<R>builder()
+                .items(items)
+                .total(total)
+                .page(page)
+                .maxPage(maxPage)
                 .build();
     }
+
 
     @Override
     public String toString() {

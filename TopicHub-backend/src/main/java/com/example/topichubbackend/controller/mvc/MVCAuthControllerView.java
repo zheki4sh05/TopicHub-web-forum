@@ -36,7 +36,7 @@ public class MVCAuthControllerView {
             ){
        AuthenticationResponse authenticationResponse =  authenticationService.authenticate(authDto);
        UserDto user = authenticationResponse.getUserDto();
-       if(user.getRoles().contains(RoleDto.ADMIN.type())){
+       if(user.getRoles().contains(RoleDto.ADMIN.name())){
            Cookie[] cookies = httpResponseUtils.createCookie(authenticationResponse);
            httpServletResponse.addCookie(cookies[0]);
            httpServletResponse.addCookie(cookies[1]);

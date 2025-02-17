@@ -6,7 +6,6 @@ import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.security.dto.*;
-import com.example.topichubbackend.security.dto.AuthDto;
 import com.example.topichubbackend.security.model.*;
 import com.example.topichubbackend.security.repository.*;
 import com.example.topichubbackend.security.service.*;
@@ -14,21 +13,17 @@ import com.example.topichubbackend.util.*;
 import jakarta.servlet.http.*;
 import jakarta.transaction.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
+
 import java.util.*;
 
 @Service
 @AllArgsConstructor
-@Slf4j
 public class AuthenticationServiceImpl {
     private final UserRepository repository;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
-    private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final UserRoleMapper userRoleMapper;
     private final UserRoleRepository userRoleRepository;
@@ -38,7 +33,7 @@ public class AuthenticationServiceImpl {
 
         Optional<User> isExist = repository.findByEmailOrLogin(authDto.getLogin());
         if(isExist.isPresent()) {
-            throw new EntityAlreadyExists(ErrorKey.CONFLICT.type());
+            throw new EntityAlreadyExists(ErrorKey.CONFLICT.name());
         }
         var user  = userMapper.mapFrom(authDto);
         user = repository.save(user);
@@ -53,12 +48,6 @@ public class AuthenticationServiceImpl {
 
     @Transactional
     public AuthenticationResponse authenticate(AuthDto request) {
-//            authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            request.getLogin(),
-//                            request.getPassword()
-//                    )
-//            );
 
         User user = repository.getByEmailOrLogin(request.getLogin());
         UserDto userDto = checkUser(user, request);
@@ -72,14 +61,14 @@ public class AuthenticationServiceImpl {
     }
     private UserDto checkUser(User isExist, AuthDto userDto) {
         if (isExist == null) {
-            throw new InvalidCredentialsException(ErrorKey.NOT_FOUND.type());
-        } else if (isExist.getStatus().equals(StatusDto.BLOCK.type())) {
+            throw new InvalidCredentialsException(ErrorKey.NOT_FOUND.name());
+        } else if (isExist.getStatus().equals(StatusDto.BLOCK.name())) {
             throw new UserBlockException();
         } else {
             if (new PasswordEncoderWrapper().matches(userDto.getPassword(), isExist.getPassword())) {
                 return userMapper.toDto(isExist);
             } else {
-                throw new InvalidCredentialsException(ErrorKey.PASS_INCORRECT.type());
+                throw new InvalidCredentialsException(ErrorKey.CREDENTIALS.name());
             }
         }
     }
@@ -88,9 +77,6 @@ public class AuthenticationServiceImpl {
         if(validTokens.isEmpty()) {
             return;
         }
-//        validTokens.forEach(t-> {
-//            t.setLoggedOut(true);
-//        });
         tokenRepository.deleteAll(validTokens);
     }
     private void saveUserToken(String accessToken, String refreshToken, User user) {
@@ -118,7 +104,7 @@ public class AuthenticationServiceImpl {
         String username = jwtService.extractUsername(token);
 
         User user = repository.findByEmailOrLogin(username)
-                .orElseThrow(()->new EntityNotFoundException());
+                .orElseThrow(EntityNotFoundException::new);
 
         if(jwtService.isValidRefreshToken(token, user)) {
 

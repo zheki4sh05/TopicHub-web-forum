@@ -1,6 +1,5 @@
 package com.example.topichubbackend.model;
 
-import com.example.topichubbackend.model.*;
 import jakarta.persistence.*;
 import lombok.*;
 

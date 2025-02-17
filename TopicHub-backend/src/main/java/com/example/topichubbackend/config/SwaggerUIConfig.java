@@ -14,8 +14,8 @@ public class SwaggerUIConfig{
     @Value("${server.port}")
     private String serverPort;
 
-    //    @Value("${}")
-    private String hostName = "localhost";
+    @Value("${spring.application.host}")
+    private String hostName;
 
     private String createServerUrl(String hostName, String serverPort) {
         return "http://" + hostName + ":" + serverPort;

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.*;
 
 import java.time.*;
-import java.util.*;
 
 @RestControllerAdvice
 @AllArgsConstructor
@@ -20,75 +19,54 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> exceptionEntityNotFound(EntityNotFoundException e, WebRequest request) {
-        var code = HttpStatus.NO_CONTENT;
-        Locale locale = request.getLocale();
-        String errorMessage = i18nUtil.getMessage(ErrorKey.WRONG_REQUEST_PARAM.type(), locale, null);
-        ErrorDto errorDto = ErrorDto.builder()
-                .code(code.value())
-                .message(errorMessage)
-                .localDate(LocalDate.now().toString())
-                .build();
-        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+        return  createResponse(
+                e.getMessage(),
+                HttpStatus.NOT_FOUND,
+                request);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?>  handleIllegalArgumentException(BadRequestException e, WebRequest request) {
-        Locale locale = request.getLocale();
-        String errorMessage = i18nUtil.getMessage(ErrorKey.WRONG_REQUEST_PARAM.type(), locale, null);
-        var code = HttpStatus.BAD_REQUEST;
-        ErrorDto errorDto = ErrorDto.builder()
-                .code(code.value())
-                .message(errorMessage)
-                .localDate(LocalDate.now().toString())
-                .build();
-        return new ResponseEntity<>(errorDto, code);
+        return  createResponse(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                request);
     }
 
         @ExceptionHandler(EntityAlreadyExists.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<?>  handleIllegalArgumentException(EntityAlreadyExists e, WebRequest request) {
-        Locale locale = request.getLocale();
-        String errorMessage = i18nUtil.getMessage(ErrorKey.CONFLICT.type(),locale, null);
-        var code = HttpStatus.CONFLICT;
-        ErrorDto errorDto = ErrorDto.builder()
-                .code(code.value())
-                .message(errorMessage)
-                .localDate(LocalDate.now().toString())
-                .build();
-        return new ResponseEntity<>(errorDto, code);
+            return  createResponse(
+                    e.getMessage(),
+                    HttpStatus.CONFLICT,
+                    request);
     }
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<?>  handleIllegalArgumentException(DataIntegrityViolationException e, WebRequest request) {
-        Locale locale = request.getLocale();
-        String errorMessage = i18nUtil.getMessage(ErrorKey.UNIQUE.type(),locale, null);
-        var code = HttpStatus.BAD_REQUEST;
-        ErrorDto errorDto = ErrorDto.builder()
-                .code(code.value())
-                .message(errorMessage)
-                .localDate(LocalDate.now().toString())
-                .build();
-        return new ResponseEntity<>(errorDto, code);
+     public ResponseEntity<?>  handleIllegalArgumentException(DataIntegrityViolationException e, WebRequest request) {
+        return  createResponse(
+                ErrorKey.UNIQUE.name(),
+                HttpStatus.BAD_REQUEST,
+                request);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?>  handleIllegalArgumentException(MethodArgumentNotValidException e, WebRequest request) {
-        Locale locale = request.getLocale();
-        String errorMessage = i18nUtil.getMessage(ErrorKey.WRONG_REQUEST_PARAM.type(),locale, null);
-      var code = HttpStatus.BAD_REQUEST;
-        ErrorDto errorDto = ErrorDto.builder()
-                .code(code.value())
-                .message(errorMessage)
-                .localDate(LocalDate.now().toString())
-                .build();
-        return new ResponseEntity<>(errorDto, code);
+        return  createResponse(
+                ErrorKey.WRONG_REQUEST_PARAM.name(),
+                HttpStatus.BAD_REQUEST,
+                request);
     }
 
+    private ResponseEntity<ErrorDto> createResponse(String errorKey, HttpStatus httpStatus,WebRequest request ){
+        return new ResponseEntity<>(createErrorDto(
+                i18nUtil.getMessage(errorKey, request, null),
+                httpStatus
+        ), httpStatus);
+    }
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<?> exceptionBadRequest(RuntimeException e) {
-//        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//    }
-
+    private ErrorDto createErrorDto(String message, HttpStatus httpStatus){
+        return ErrorDto.builder()
+                .code(httpStatus.value())
+                .message(message)
+                .localDate(LocalDate.now().toString())
+                .build();
+    }
 }

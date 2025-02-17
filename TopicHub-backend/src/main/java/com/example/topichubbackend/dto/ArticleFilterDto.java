@@ -1,6 +1,7 @@
 package com.example.topichubbackend.dto;
 
 import com.example.topichubbackend.dto.filter.*;
+import com.example.topichubbackend.util.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -12,7 +13,7 @@ public class ArticleFilterDto implements IBusinessLogicFilterSupplier, IFactoryF
     private String rating;
     private Integer page;
 
-    private Integer size = 15;
+    private Integer size = PageSize.SIZE;
 
     public String getStatus() {
         return status;

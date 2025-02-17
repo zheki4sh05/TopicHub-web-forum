@@ -13,8 +13,6 @@ import java.util.*;
 public class CommentDto {
 
     private String id;
-
-    @NonNull
     private Long articleId;
 
     private UserDto userDto;

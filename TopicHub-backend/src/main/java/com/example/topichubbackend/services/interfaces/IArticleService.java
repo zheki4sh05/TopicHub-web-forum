@@ -4,9 +4,6 @@ import com.example.topichubbackend.dto.*;
 
 public interface IArticleService {
     Long create(ArticleDto articleDto, String id);
-//    ArticleBatchDto fetch(ArticleFilterDto param,String userId);
-//    ArticleBatchDto fetch(Integer page,String userId);
-//    ArticleBatchDto fetch(ArticleFilterDto articleFilterDto, String userId, String otherUserId);
     PageResponse<ArticleDto> fetch(ArticleFilterDto articleFilter);
     void delete(String id, String userId);
     PageResponse<ArticleDto> search(SearchDto searchDto);

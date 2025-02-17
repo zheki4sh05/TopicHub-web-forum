@@ -2,33 +2,26 @@ package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.exceptions.*;
-import com.example.topichubbackend.filters.*;
-import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
+
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
     @Mock ArticlePartRepository articlePartRepository;
     @Mock HubRepository hubDao;
     @Mock UserRepository userRepository;
-    @Mock LikeRepository likeRepository;
-    @Mock
-    ArticleMapper articleMapper;
+
     @Mock ArticleRepo articleRepo;
-    @Mock
-    FilterQueryFactory filterQueryFactory;
     @InjectMocks
     ArticleService articleService;
 

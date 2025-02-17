@@ -1,11 +1,9 @@
 package com.example.topichubbackend.repository;
 
 import com.example.topichubbackend.model.*;
-import com.example.topichubbackend.model.User;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;
-import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;

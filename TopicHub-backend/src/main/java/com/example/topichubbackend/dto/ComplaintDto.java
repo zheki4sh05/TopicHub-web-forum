@@ -32,7 +32,7 @@ public class ComplaintDto {
     public String toString() {
         return "ComplaintDto{" +
                 "id='" + id + '\'' +
-                ", type='" + type + '\'' +
+                ", name='" + type + '\'' +
                 ", date=" + date +
                 ", title='" + title + '\'' +
                 ", targetId='" + targetId + '\'' +

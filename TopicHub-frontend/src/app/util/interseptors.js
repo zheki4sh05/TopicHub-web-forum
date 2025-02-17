@@ -4,7 +4,7 @@ import api from "./api";
 import apiPath from "./apiPath";
 import { saveTokens } from "./localstorageApi";
 const MAX_RETRY_COUNT = 3; 
-// Функция для получения состояния из Redux
+
 export const getState = store => store.getState();
 const refreshUrl = apiPath.token.url
 
@@ -18,14 +18,13 @@ const hasKey=(obj)=>{
 }
 
 const applyInterceptors = (store) => {
-  // Перехватчик запроса для добавления токена
   api.interceptors.request.use(
     (config) => {
       const state = getState(store);
       const token = getToken(state);
       if (token!="no") {
         if (!config.retryCount) {
-          config.retryCount = 0;  // Инициализация счётчика повторных попыток
+          config.retryCount = 0;  
         }
       
         if(hasKey(config.headers) && config.headers['Authorization']!=`Bearer ${token}`){
@@ -43,7 +42,7 @@ const applyInterceptors = (store) => {
   );
 
   let count=0;
-  // Перехватчик ответа для обработки ошибок
+
   api.interceptors.response.use(
     (response) => {
       return response;
@@ -55,25 +54,25 @@ const applyInterceptors = (store) => {
         count += 1;
       
         try {
-          // Обновление токена
+      
         
           const state = getState(store);
           const tokenRefresh = getRefresh(state);   
           const { data } = await api.post(refreshUrl,{}, {
             headers: {
-              'Authorization': `Bearer ${tokenRefresh}`  // Вставляем токен в заголовок
+              'Authorization': `Bearer ${tokenRefresh}` 
             }
           });
           count=0;
           saveTokens(data.access_token, data.refresh_token)
           store.dispatch(setToken(data.access_token))
           store.dispatch(setRefresh(data.refresh_token))
-          // Повторение исходного запроса
+       
           return api(originalRequest);
         } catch (refreshError) {
-          // Обработка ошибки обновления токена
+          
           console.error('Ошибка обновления токена:', refreshError);
-          // Можно сделать редирект на страницу логина или другое действие
+        
         }
       }
       return Promise.reject(error);

@@ -20,7 +20,6 @@ public class CommentsService implements ICommentsService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final CommentFullMapper commentFullMapper;
-    private final CommentMapper commentMapper;
     private final ArticleRepo articleRepo;
 
     @Transactional
@@ -33,8 +32,8 @@ public class CommentsService implements ICommentsService {
     @Override
     @Transactional
     public CommentDto create(CommentDto commentDto, String userId) {
-        var article = articleRepo.findById(commentDto.getArticleId()).orElseThrow(EntityNotFoundException::new);
-        User author = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityExistsException::new);
+        var article = articleRepo.findById(commentDto.getArticleId()).orElseThrow(com.example.topichubbackend.exceptions.EntityNotFoundException::new);
+        var author = userRepository.findById(UUID.fromString(userId)).orElseThrow(EntityExistsException::new);
         Comment comment = Comment.builder()
                 .id(UUID.randomUUID())
                 .message(commentDto.getValue())

@@ -15,13 +15,13 @@ public class ComplaintsController {
     private final IComplaintControl complaintControl;
 
     @GetMapping("/fetch/{type}")
-    public ResponseEntity<?> getComplaints(
+    public ResponseEntity<PageResponse<ComplaintDto>> getComplaints(
             @PathVariable("type") String type,
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ){
-        Pageable pageable = PageRequest.of(page==0 ? page : page -1, size);
-        PageResponse<ComplaintDto> complaintDtos =  complaintControl.findAllByType(type, pageable);
+        var pageable = PageRequest.of(page==0 ? page : page -1, size);
+        var complaintDtos =  complaintControl.findAllByType(type, pageable);
         return new ResponseEntity<>(complaintDtos, HttpStatus.OK);
     }
 

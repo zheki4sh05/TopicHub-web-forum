@@ -1,21 +1,14 @@
 package com.example.topichubbackend.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.*;
-
-import java.io.*;
-import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 @Entity
-//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "hub")
 @Table(name="hub")
-//@Cacheable
 public class Hub{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

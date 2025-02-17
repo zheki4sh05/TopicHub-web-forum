@@ -9,6 +9,7 @@ import java.util.*;
 
 @Mapper(componentModel = "spring", uses = {ArticlePartMapper.class, UserMapper.class})
 public interface ArticleMapper{
+
     @Mappings({
             @Mapping(target = "id", source = "id"),
             @Mapping(source = "hub.id", target = "hub"),
@@ -22,8 +23,19 @@ public interface ArticleMapper{
     })
     ArticleDto toDto(Article item);
 
+    @Named("getWords")
     default List<String> getWords(String words){
         return Arrays.asList(words.split("\\|"));
     }
+
+    @Mappings({
+            @Mapping(target = "theme", source = "theme"),
+            @Mapping(target = "keyWords", expression = "java(String.join(\"\\\\|\", articleDto.getKeyWords()))"),
+            @Mapping(target = "created", expression = "java(java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()))"),
+            @Mapping(target = "author", ignore = true),
+            @Mapping(target = "status", expression = "java(com.example.topichubbackend.dto.StatusDto.MODERATION.name())"),
+            @Mapping(target = "hub", ignore = true)
+    })
+    ArticleEntity fromDto(ArticleDto articleDto);
 
 }

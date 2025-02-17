@@ -1,8 +1,8 @@
 package com.example.topichubbackend.model;
 
-import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.*;
 
@@ -40,11 +40,8 @@ public class Article {
     @Column(name = "status")
     private String status;
 
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
     @Transient
+    @Setter
     private Integer state;
 
     @ManyToOne

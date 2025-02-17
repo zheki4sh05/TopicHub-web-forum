@@ -8,10 +8,12 @@ import jakarta.transaction.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.context.*;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.sql.*;
 import java.time.*;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(classes = TestContainerConfig.class)
@@ -54,7 +56,7 @@ class ArticleRepositoryTest {
                 .theme("тема")
                 .keyWords("слова")
                 .created(Timestamp.valueOf(LocalDateTime.now()))
-                .status(StatusDto.MODERATION.type())
+                .status(StatusDto.MODERATION.name())
                 .build();
 
         var savedArticle = articleRepo.save(article1);

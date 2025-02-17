@@ -35,21 +35,32 @@ services:
       MN_PASS: minioadmin
       MN_URL: http://192.168.0.5:9001
       MN_BUCKET: image
-      FRONT: localhost
-      FRONT_HOST: 3000
-      SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-
+      CLIENT_HOST: localhost
+      CLIENT_PORT: 3000
   db:
     image: postgres:latest
     container_name: db
     environment:
       POSTGRES_DB: web_forum
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: lhs22LI=D=
+      POSTGRES_USER:   postgres
+      POSTGRES_PASSWORD:  lhs22LI=D=
     ports:
       - '5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
+    
+  migrations:
+    image: redgate/flyway
+    volumes:
+      - ./TopicHub-backend/flyway:/flyway/sql
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://db:5432/web_forum
+      - FLYWAY_USER=postgres
+      - FLYWAY_PASSWORD=lhs22LI=D=
+      - FLYWAY_VALIDATE_MIGRATION_NAMING=true
+    command: migrate
+    depends_on:
+      - db
 
   minio:
     image: minio/minio:latest
@@ -73,7 +84,7 @@ services:
     entrypoint: >
       sh -c "
         sleep 10;
-        mc alias set myminio http://minio:9000 minioadmin minioadmin;
+        mc alias set myminio http://minio:9001 minioadmin minioadmin;
         mc mb myminio/image; 
         mc ls minio 
       "

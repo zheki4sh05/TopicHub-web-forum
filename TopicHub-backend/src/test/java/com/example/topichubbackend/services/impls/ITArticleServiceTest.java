@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.context.*;
 import org.springframework.dao.*;
-import org.testcontainers.junit.jupiter.*;
 
 import java.sql.*;
 import java.util.*;
@@ -117,7 +116,7 @@ class ITArticleServiceTest {
     void create() {
         var article = articleRepo.findById(savedId).orElseThrow();
         assertEquals(searchDto.getTheme(), article.getTheme());
-        assertEquals(StatusDto.MODERATION.type(), article.getStatus());
+        assertEquals(StatusDto.MODERATION.name(), article.getStatus());
     }
 
     @Test
@@ -184,7 +183,7 @@ class ITArticleServiceTest {
 
         ArticleStatusDto articleStatusDto = ArticleStatusDto.builder()
                 .id(savedId.toString())
-                .status(StatusDto.PUBLISH.type())
+                .status(StatusDto.PUBLISH.name())
                 .page(1)
                 .build();
 
@@ -192,7 +191,7 @@ class ITArticleServiceTest {
 
         var result = articleRepository.findById(savedId);
 
-        assertEquals(StatusDto.PUBLISH.type(), result.getStatus());
+        assertEquals(StatusDto.PUBLISH.name(), result.getStatus());
 
     }
 

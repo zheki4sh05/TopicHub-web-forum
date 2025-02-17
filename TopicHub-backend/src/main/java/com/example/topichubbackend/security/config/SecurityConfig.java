@@ -3,6 +3,7 @@ package com.example.topichubbackend.security.config;
 
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.security.filters.*;
+import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.util.*;
 import lombok.*;
 import org.springframework.context.annotation.*;
@@ -32,13 +33,9 @@ public class SecurityConfig{
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtCookieAuthenticationFilter jwtCookieAuthenticationFilter;
-//
     private final CustomLogoutHandler logoutHandler;
-
     private final UserDetailsService userDetailsService;
     private final HttpRequestUtils httpRequestUtils;
-
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -49,21 +46,9 @@ public class SecurityConfig{
                  .authorizeHttpRequests(authorizeRequests->
                          authorizeRequests
                                  .requestMatchers("/").permitAll()
-                                 .requestMatchers("/auth").permitAll()
-                                 .requestMatchers("/api/v1/auth/**").permitAll()
-                                 .requestMatchers("/admin/**").hasAuthority(RoleDto.ADMIN.type())
-                                 .requestMatchers("/api/v1/admin/**").hasAuthority(RoleDto.ADMIN.type())
-                                 .requestMatchers("/api/v1/article").permitAll()
-                                 .requestMatchers("/api/v1/article/**").permitAll()
-                                 .requestMatchers("/api/v1/search/**").permitAll()
-                                 .requestMatchers("/api/v1/profile/search/**").permitAll()
-                                 .requestMatchers("/api/v1/answers").permitAll()
-                                 .requestMatchers("/api/v1/image").permitAll()
-                                 .requestMatchers("/api/v1/hubs").permitAll()
-                                 .requestMatchers("/swagger-ui/**",
-                                         "/swagger-resources/*",
-                                         "/v3/api-docs/**")
-                                 .permitAll()
+                                 .requestMatchers("/admin/**").hasAuthority(RoleDto.ADMIN.name())
+                                 .requestMatchers("/api/v1/admin/**").hasAuthority(RoleDto.ADMIN.name())
+                                 .requestMatchers(PublicPath.LIST).permitAll()
                                  .anyRequest().authenticated()
                  )
                 .sessionManagement(session->session

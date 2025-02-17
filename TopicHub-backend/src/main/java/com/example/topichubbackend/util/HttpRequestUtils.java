@@ -31,7 +31,7 @@ public class HttpRequestUtils {
                 .year(reqParam.get("year"))
                 .rating(reqParam.get("rating"))
                 .userId(reqParam.get("userId"))
-                .status(reqParam.get("status") == null ? StatusDto.PUBLISH.type() : reqParam.get("status"))
+                .status(reqParam.get("status") == null ? StatusDto.PUBLISH.name() : reqParam.get("status"))
                 .param(reqParam.get("hub") == null ? null : Integer.valueOf(reqParam.get("hub")))
                 .page( reqParam.get("page") == null ? 1 : Integer.parseInt(reqParam.get("page")))
                 .hub(reqParam.get("hub") ==null ? null : Integer.valueOf(reqParam.get("hub")))
@@ -60,15 +60,12 @@ public class HttpRequestUtils {
 
     public Boolean isPublic(HttpServletRequest httpRequest){
         var path = httpRequest.getServletPath();
-        for (PublicPath p : PublicPath.values()) {
-            if (path.contains(p.type())) {
+        for (String p : PublicPath.LIST) {
+            if (path.contains(p)) {
                 return true;
             }
         }
         return false;
     }
-
-
-
 
 }

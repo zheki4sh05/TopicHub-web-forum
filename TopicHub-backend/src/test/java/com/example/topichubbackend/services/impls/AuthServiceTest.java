@@ -5,7 +5,6 @@ import com.example.topichubbackend.exceptions.*;
 import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
-import org.jetbrains.annotations.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -13,7 +12,6 @@ import org.mockito.junit.jupiter.*;
 import org.springframework.data.domain.*;
 
 import java.util.*;
-import java.util.function.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -35,7 +33,7 @@ class AuthServiceTest {
     void change_user_status(){
         var user = User.builder()
                 .uuid(authorId)
-                .status(StatusDto.ACTIVE.type())
+                .status(StatusDto.ACTIVE.name())
                 .login("author")
                 .password("123456")
                 .email("email@mail.ru")
@@ -45,12 +43,12 @@ class AuthServiceTest {
         doReturn(user).when(userRepository).save(user);
         when(userMapper.toDto(user)).thenReturn(UserDto.builder()
                         .id(authorId.toString())
-                        .status(StatusDto.BLOCK.type())
+                        .status(StatusDto.BLOCK.name())
                         .email(user.getEmail())
                 .build());
         assertDoesNotThrow(()->{
-            var userDto = authService.manageBlock(authorId.toString(),StatusDto.BLOCK.type());
-            assertEquals(StatusDto.BLOCK.type(), userDto.getStatus());
+            var userDto = authService.manageBlock(authorId.toString(),StatusDto.BLOCK.name());
+            assertEquals(StatusDto.BLOCK.name(), userDto.getStatus());
             assertEquals(user.getEmail(), userDto.getEmail());
         });
     }
@@ -58,9 +56,7 @@ class AuthServiceTest {
     @Test
     void manage_not_exists_user(){
         when(userRepository.findById(authorId)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class,()->{
-            authService.manageBlock(authorId.toString(),StatusDto.BLOCK.type());
-        });
+        assertThrows(EntityNotFoundException.class,()-> authService.manageBlock(authorId.toString(),StatusDto.BLOCK.name()));
     }
 
     @Test

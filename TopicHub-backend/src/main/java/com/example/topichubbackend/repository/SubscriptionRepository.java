@@ -1,9 +1,7 @@
 package com.example.topichubbackend.repository;
 
 import com.example.topichubbackend.model.*;
-import jakarta.persistence.*;
 import org.springframework.data.jpa.repository.*;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.*;
 
 import java.util.*;

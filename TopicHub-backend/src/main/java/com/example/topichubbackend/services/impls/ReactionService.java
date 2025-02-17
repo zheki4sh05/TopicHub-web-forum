@@ -45,12 +45,8 @@ public class ReactionService implements IReactionService {
                         () -> createNewReaction(article, user, value)
                 );
             }
-            case "comment" -> {
-                throw new UnsupportedException();
-            }
-            default -> {
-                throw new BadRequestException();
-            }
+            case "comment" -> throw new UnsupportedException();
+            default -> throw new BadRequestException();
         }
     }
 
@@ -79,7 +75,7 @@ public class ReactionService implements IReactionService {
                            .follower(user)
                    .build());
        }else{
-           var subscription = subscriptionRepository.findByUsers(author.getUuid(), user.getUuid()).orElseThrow(()->new EntityNotFoundException(ErrorKey.NOT_FOUND.type()));
+           var subscription = subscriptionRepository.findByUsers(author.getUuid(), user.getUuid()).orElseThrow(()->new EntityNotFoundException(ErrorKey.NOT_FOUND.name()));
            subscriptionRepository.delete(subscription);
        }
 
@@ -98,26 +94,21 @@ public class ReactionService implements IReactionService {
             bookmarkRepository.save(entity);
         }else{
             var bookmark = bookmarkRepository.findByUserIdArticleId(UUID.fromString(userId),Long.valueOf(articleId))
-                    .orElseThrow(()-> new EntityNotFoundException(ErrorKey.NOT_FOUND.type()));
+                    .orElseThrow(()-> new EntityNotFoundException(ErrorKey.NOT_FOUND.name()));
             bookmarkRepository.delete(bookmark);
         }
     }
 
     @Override
     public void removeReaction(String type, String userId, Long articleId) {
-        switch(type){
-            case "article":{
-                var like = likeRepository.findById(articleId,UUID.fromString(userId))
-                        .orElseThrow(()->new EntityNotFoundException(ErrorKey.NOT_FOUND.type()));
+        switch (type) {
+            case "article" -> {
+                var like = likeRepository.findById(articleId, UUID.fromString(userId))
+                        .orElseThrow(() -> new EntityNotFoundException(ErrorKey.NOT_FOUND.name()));
                 likeRepository.delete(like);
-                break;
             }
-            case "comment":{
-                throw new UnsupportedException();
-            }
-            default:{
-                throw new BadRequestException();
-            }
+            case "comment" -> throw new UnsupportedException();
+            default -> throw new BadRequestException();
         }
     }
 

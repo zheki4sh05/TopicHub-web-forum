@@ -1,16 +1,14 @@
 package com.example.topichubbackend.model;
 
-import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.*;
 import org.springframework.security.core.*;
-import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
 
 import java.util.*;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor

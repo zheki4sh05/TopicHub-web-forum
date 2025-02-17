@@ -1,9 +1,9 @@
 package com.example.topichubbackend.controller.rest;
+
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 

@@ -57,9 +57,9 @@
 
                         <button class="btn btn-danger" type="submit">Удалить</button>
                     </form>
-<!--                    <form th:action="@{/admin/complaint/del/{type}(type='article', id=${complaint.id}, number=${page})}" method="post">-->
-<!--                        <input type="hidden" name="id" th:value="${complaint.getId()}"/>-->
-<!--                        <button class="btn btn-danger" type="submit">Удалить</button>-->
+<!--                    <form th:action="@{/admin/complaint/del/{name}(name='article', id=${complaint.id}, number=${page})}" method="post">-->
+<!--                        <input name="hidden" name="id" th:value="${complaint.getId()}"/>-->
+<!--                        <button class="btn btn-danger" name="submit">Удалить</button>-->
 <!--                    </form>-->
                 </div>
             </div>
@@ -91,7 +91,7 @@
     //         event.preventDefault();
     //
     //         const id = form.querySelector('input[name="id"]').value;
-    //         const typeField = document.getElementById('type').value;
+    //         const typeField = document.getElementById('name').value;
     //         const url = `/api/v1/admin/complaints/del/${typeField}?id=${encodeURIComponent(id)}`;
     //
     //         // Отправляем DELETE запрос

@@ -1,0 +1,76 @@
+package com.example.topichubbackend.services.impls;
+
+import com.example.topichubbackend.dto.*;
+import com.example.topichubbackend.exceptions.*;
+import com.example.topichubbackend.mapper.*;
+import com.example.topichubbackend.model.*;
+import com.example.topichubbackend.model.complaints.*;
+import com.example.topichubbackend.repository.*;
+import com.example.topichubbackend.services.interfaces.*;
+import lombok.*;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
+
+import java.sql.*;
+import java.time.*;
+import java.util.*;
+
+@Service
+@AllArgsConstructor
+public class ArticleComplaintService implements IArticleComplaintService {
+
+    private final UserRepository userRepository;
+    private final ArticleComplaintRepository articleComplaintRepository;
+    private final ArticleRepo articleRepo;
+    private final ComplaintMapper complaintMapper;
+
+    @Override
+    @Transactional
+    public ComplaintDto create(ComplaintDto complaintDto) {
+        User user = userRepository.findById(UUID.fromString(complaintDto.getUserDto().getId()))
+                .orElseThrow(EntityNotFoundException::new);
+        Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(Long.valueOf(complaintDto.getTargetId()), user.getUuid());
+        if(complaint.isEmpty()){
+
+           return createAndSaveArticleComplaint(complaintDto, user);
+
+        }else{
+            throw new EntityAlreadyExists();
+        }
+    }
+
+    @Override
+    public ComplaintDto findById(String id) {
+        ArticleComplaint articleComplaint =   articleComplaintRepository.findById(UUID.fromString(id))
+                .orElseThrow(EntityNotFoundException::new);
+        return complaintMapper.mapFrom(articleComplaint);
+    }
+
+    @Override
+    public PageResponse<ComplaintDto> findAll(Pageable pageable) {
+        var result = articleComplaintRepository.findAll(pageable);
+        return PageResponse.map(complaintMapper::mapFrom, result);
+    }
+
+    @Override
+    public String deleteById(String id) {
+        ArticleComplaint entity= articleComplaintRepository.findByIdArticle(UUID.fromString(id)).orElseThrow(EntityNotFoundException::new);
+        articleComplaintRepository.delete(entity);
+        return id;
+    }
+
+    private ComplaintDto createAndSaveArticleComplaint(ComplaintDto complaintDto, User author) {
+        var article = articleRepo.findById(Long.valueOf(complaintDto.getTargetId()))
+                .orElseThrow(EntityNotFoundException::new);
+        ArticleComplaint articleComplaint = ArticleComplaint.builder()
+                .id(UUID.randomUUID())
+                .author(author)
+                .title(complaintDto.getTitle())
+                .body(complaintDto.getBody())
+                .article(article)
+                .date(Timestamp.valueOf(LocalDateTime.now()))
+                .build();
+        return complaintMapper.mapFrom( articleComplaintRepository.save(articleComplaint));
+    }
+}

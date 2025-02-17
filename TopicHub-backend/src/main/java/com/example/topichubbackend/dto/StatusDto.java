@@ -13,8 +13,4 @@ public enum StatusDto {
             this.type = type;
         }
 
-        public String type() {
-            return type;
-        }
-
 }

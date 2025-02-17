@@ -1,6 +1,8 @@
 package com.example.topichubbackend.model;
+
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.*;
 @Data
 @NoArgsConstructor

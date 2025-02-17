@@ -70,7 +70,7 @@ class BookmarkRepositoryTest {
                 .theme("тема")
                 .keyWords("слова")
                 .created(Timestamp.valueOf(LocalDateTime.now()))
-                .status(StatusDto.MODERATION.type())
+                .status(StatusDto.MODERATION.name())
                 .build();
 
         var savedArticle = articleRepo.save(article1);

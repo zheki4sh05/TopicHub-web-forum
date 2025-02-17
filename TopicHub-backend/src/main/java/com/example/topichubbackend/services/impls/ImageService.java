@@ -7,6 +7,7 @@ import com.example.topichubbackend.services.interfaces.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class ImageService implements IImageService {
     public void save(String userId, InputStream fileContent) throws IOException {
             User user = authDao.findById(UUID.fromString(userId)).orElseThrow(EntityNotFoundException::new);
             if(!fileStorage.save(fileContent, user.getUuid().toString())) {
-                throw new InternalServerErrorException(ErrorKey.IMAGE_LOAD_ERROR.type());
+                throw new InternalServerErrorException(ErrorKey.IMAGE_LOAD_ERROR.name());
             }
         }
 }

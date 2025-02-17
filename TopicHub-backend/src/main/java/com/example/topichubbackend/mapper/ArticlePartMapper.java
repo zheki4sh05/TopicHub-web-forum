@@ -9,12 +9,29 @@ import org.mapstruct.*;
 public interface ArticlePartMapper {
 
 
-    @Mapping(target = "uuid", expression = "java(articlePart.getUuid().toString())")
-    @Mapping(source = "value", target = "value")
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "type", target = "type")
-    @Mapping(source = "created", target = "created")
+    @Mappings({
+            @Mapping(target = "uuid", expression = "java(articlePart.getUuid().toString())"),
+            @Mapping(source = "value", target = "value"),
+            @Mapping(source = "name", target = "name"),
+            @Mapping(source = "type", target = "type"),
+            @Mapping(source = "created", target = "created")
+    })
     ArticlePartDto toDto(ArticlePart articlePart);
+
+    @Mappings({
+            @Mapping(target = "uuid", expression = "java(java.util.UUID.fromString(articlePartDto.getId().toString()))"),
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "value", source = "value"),
+            @Mapping(target = "name", source = "value"),
+            @Mapping(target = "type", source = "type"),
+            @Mapping(target = "created", source = "created"),
+            @Mapping(target = "article", ignore = true),
+            @Mapping(target = "articleEntity", ignore = true)
+
+    })
+    ArticlePart fromDto(ArticlePartDto articlePartDto);
+
+
 
 
 

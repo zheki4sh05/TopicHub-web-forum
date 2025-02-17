@@ -4,7 +4,7 @@ import com.example.topichubbackend.dto.*;
 import org.springframework.data.domain.*;
 
 public interface IComplaintControl {
-    void create(String userId, ComplaintDto complaintDto);
+    void create(ComplaintDto complaintDto);
 
     ComplaintDto findById(String id, String type);
 

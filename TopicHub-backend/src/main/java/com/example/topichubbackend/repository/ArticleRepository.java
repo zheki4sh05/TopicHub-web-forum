@@ -3,8 +3,6 @@ package com.example.topichubbackend.repository;
 import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.model.*;
 import jakarta.persistence.*;
-import jakarta.persistence.EntityGraph;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
 import lombok.extern.slf4j.*;
 import org.springframework.data.domain.*;
@@ -41,13 +39,12 @@ public class ArticleRepository {
         query.setMaxResults(BATCH_SIZE);
         query.setHint("jakarta.persistence.fetchgraph", entityGraph);
         List<Article> result = query.getResultList();
-        PageResponse<Article> page  = PageResponse.<Article>builder()
+        return PageResponse.<Article>builder()
                 .page(pageable.getPageNumber())
                 .maxPage(getLastPageNumber(total))
                 .items(result)
                 .total(total)
                 .build();
-        return page;
 
     }
     //necessary method only for tests

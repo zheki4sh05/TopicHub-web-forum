@@ -1,8 +1,9 @@
 package com.example.topichubbackend.security.config;
 
+import com.example.topichubbackend.dto.*;
 import com.example.topichubbackend.security.model.*;
 import com.example.topichubbackend.security.repository.*;
-import com.example.topichubbackend.security.service.*;
+import com.example.topichubbackend.security.util.*;
 import jakarta.servlet.http.*;
 import jakarta.transaction.*;
 import lombok.*;
@@ -21,13 +22,13 @@ public class CustomLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request,
                        HttpServletResponse response,
                        Authentication authentication) {
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader(Header.NAME.name());
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if(authHeader == null || !authHeader.startsWith(Header.ALIAS.name())) {
             return;
         }
 
-        String token = authHeader.substring(7);
+        String token = authHeader.substring(Alias.LENGTH);
         Token storedToken = tokenRepository.findByAccessToken(token).orElse(null);
         var tokens = tokenRepository.findAllAccessTokensByUser(storedToken.getUser().getUuid());
         tokenRepository.deleteAll(tokens);

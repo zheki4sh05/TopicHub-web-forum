@@ -1,14 +1,11 @@
 package com.example.topichubbackend.security.service;
 
-import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.model.User;
 import com.example.topichubbackend.security.repository.*;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.*;
 import io.jsonwebtoken.security.*;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.annotation.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
 
@@ -46,11 +43,8 @@ public class JwtService {
         String username = extractUsername(token);
 
         var tokenOptional = tokenRepository.findByAccessToken(token);
-        boolean validToken= false;
+        boolean validToken= tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut();
 
-        if(tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut()){
-            validToken = true;
-        }
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
     }
 
@@ -58,11 +52,7 @@ public class JwtService {
         String username = extractUsername(token);
 
         var tokenOptional = tokenRepository.findByRefreshToken(token);
-        boolean validToken= false;
-
-        if(tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut()){
-            validToken = true;
-        }
+        boolean validToken= tokenOptional.isPresent() && !tokenOptional.get().getLoggedOut();
 
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
     }
@@ -99,15 +89,14 @@ public class JwtService {
     }
 
     private String generateToken(User user, long expireTime) {
-        String token = Jwts
+
+        return Jwts
                 .builder()
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expireTime ))
                 .signWith(getSigninKey())
                 .compact();
-
-        return token;
     }
 
     private SecretKey getSigninKey() {

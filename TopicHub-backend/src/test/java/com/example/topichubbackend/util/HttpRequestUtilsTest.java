@@ -34,13 +34,13 @@ class HttpRequestUtilsTest {
             when(request.getServletPath()).thenReturn(s);
             assertTrue(httpRequestUtils.isPublic(request));
         }
-        assertEquals(list.size(), PublicPath.values().length);
+        assertEquals(list.size(), PublicPath.LIST.length);
     }
 
     @Test
     void check_if_path_is_not_public(){
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        when(request.getServletPath()).thenReturn("/api/v1/profile?type=profile&page=1");
+        when(request.getServletPath()).thenReturn("/api/v1/profile?name=profile&page=1");
             assertFalse(httpRequestUtils.isPublic(request));
 
 
@@ -49,7 +49,7 @@ class HttpRequestUtilsTest {
     @Test
     void check_status_is_valid(){
         for(StatusDto statusDto: StatusDto.values()){
-            assertTrue(HttpRequestUtils.contains(statusDto.type()));
+            assertTrue(HttpRequestUtils.contains(statusDto.name()));
         }
     }
 

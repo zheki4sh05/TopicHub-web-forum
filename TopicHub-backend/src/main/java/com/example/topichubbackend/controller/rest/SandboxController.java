@@ -1,17 +1,11 @@
 package com.example.topichubbackend.controller.rest;
 
 import com.example.topichubbackend.dto.*;
-import com.example.topichubbackend.exceptions.*;
-import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
-import com.example.topichubbackend.util.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.*;
 
 /**
  * REST Controller for managing sandbox articles.
@@ -23,7 +17,6 @@ import java.io.*;
  */
 @RequestMapping("/api/v1/sandbox")
 @AllArgsConstructor
-@Slf4j
 @RestController
 public class SandboxController {
     private final IArticleService articleService;

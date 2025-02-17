@@ -1,8 +1,8 @@
 package com.example.topichubbackend.exceptions;
 
-public class UserBlockException extends ImplRuntimeException{
+public class UserBlockException extends RuntimeException{
     public UserBlockException() {
-        super(ErrorKey.USER_BLOCKED.type());
+        super(ErrorKey.USER_BLOCKED.key());
     }
 
 }

@@ -5,7 +5,6 @@ import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,6 @@ import java.util.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/article")
-@Slf4j
 public class ArticleController {
 
     private final IArticleService articleService;
@@ -39,7 +37,6 @@ public class ArticleController {
      * @param reqParam a map containing the filter parameters (e.g., status, category, page, etc.).
      *                 The status will be set to "PUBLISHED" by default.
      * @return a ResponseEntity containing a batch of articles matching the provided filter parameters.
-     * @see ArticleBatchDto
      * @see ArticleFilterDto
      */
 
@@ -47,7 +44,7 @@ public class ArticleController {
     public ResponseEntity<?> doGet(
             @RequestParam Map<String, String> reqParam
     )  {
-                reqParam.put("status", StatusDto.PUBLISH.type());
+                reqParam.put("status", StatusDto.PUBLISH.name());
                 ArticleFilterDto articleFilterDto = HttpRequestUtils.parseFilterParams(reqParam);
                 PageResponse<ArticleDto> articleBatchDto = articleService.fetch(articleFilterDto);
                 return new ResponseEntity<>(articleBatchDto, HttpStatus.OK);

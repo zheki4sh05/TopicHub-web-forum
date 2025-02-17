@@ -10,7 +10,7 @@ public interface UserRoleMapper {
 
     @Mappings({
             @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID())"),
-    @Mapping(target = "role", expression = "java(com.example.topichubbackend.dto.RoleDto.USER.type())"),
+    @Mapping(target = "role", expression = "java(com.example.topichubbackend.dto.RoleDto.USER.name())"),
     @Mapping(target = "user", expression = "java(user)")
     })
     UserRole mapFrom(User user);

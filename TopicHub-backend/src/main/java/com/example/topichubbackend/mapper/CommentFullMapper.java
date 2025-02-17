@@ -12,6 +12,7 @@ import java.util.*;
 public class CommentFullMapper {
 
     private final AuthorMapper authorMapper;
+
     public CommentDto mapFrom(Comment comment, Long aLong, Set<UUID> processedIds) {
 
         if (processedIds.contains(comment.getId())) {

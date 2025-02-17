@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
  * It interacts with the image service to fetch the image data and return it to the client.
  *
  */
-@CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/image")

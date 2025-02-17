@@ -2,9 +2,7 @@ package com.example.topichubbackend.model.complaints;
 
 import com.example.topichubbackend.model.*;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.*;
 
 import java.sql.*;
 import java.util.*;

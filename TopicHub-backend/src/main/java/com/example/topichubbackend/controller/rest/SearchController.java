@@ -1,18 +1,12 @@
 package com.example.topichubbackend.controller.rest;
 
 import com.example.topichubbackend.dto.*;
-
-import com.example.topichubbackend.mapper.*;
 import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
-import org.hibernate.query.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
 import java.util.*;
 
 
@@ -27,7 +21,6 @@ import java.util.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/search")
-@Slf4j
 public class SearchController {
 
     private final IArticleService articleService;
@@ -41,7 +34,6 @@ public class SearchController {
      * @param reqParam the request parameters used for the search, such as filters and keywords.
      * @return a ResponseEntity containing the search results in an ArticleBatchDto with a 200 OK status.
      * @see SearchDto
-     * @see ArticleBatchDto
      */
     @GetMapping("")
     public ResponseEntity<?> doGet(

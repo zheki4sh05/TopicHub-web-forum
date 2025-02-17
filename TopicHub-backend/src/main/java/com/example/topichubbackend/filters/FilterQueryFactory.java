@@ -5,17 +5,15 @@ import com.example.topichubbackend.dto.filter.*;
 import com.example.topichubbackend.model.*;
 import jakarta.persistence.criteria.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class FilterQueryFactory {
 
-    @Autowired
-    private CriteriaBuilder criteriaBuilder;
-
+    private final CriteriaBuilder criteriaBuilder;
     private Predicate createLikesPredicate(Root<Article> articleRoot, Double rating){
         Double fraction = rating/100;
         Expression<Long> likes = articleRoot.get("likes");
@@ -44,27 +42,33 @@ public class FilterQueryFactory {
     public CriteriaQuery<Article> createQuery(ArticleFilterDto articleFilterDto){
         CriteriaQuery<Article> criteriaQuery = criteriaBuilder.createQuery(Article.class);
         Root<Article> articleRoot = criteriaQuery.from(Article.class);
+        List<Predicate> predicates = createPredicatesByFilter(articleFilterDto, criteriaBuilder, articleRoot,criteriaQuery);
+        criteriaQuery.select(articleRoot)
+                .where(predicates.toArray(Predicate[]::new))
+                .orderBy(criteriaBuilder.asc(articleRoot.get("created")));
+        return criteriaQuery;
+    }
+
+    private List<Predicate> createPredicatesByFilter(ArticleFilterDto articleFilterDto, CriteriaBuilder criteriaBuilder, Root<Article> articleRoot,CriteriaQuery<Article> criteriaQuery) {
         List<Predicate> predicates = new ArrayList<>();
         if(articleFilterDto.getMonth()!=null && articleFilterDto.getYear()!=null){
             predicates.addAll(createPredicates(articleFilterDto, articleRoot));
         }
-        Predicate status = createStatusPredicate(criteriaBuilder, articleRoot, articleFilterDto.getStatus());
-        predicates.add(status);
+        predicates.add(createStatusPredicate(criteriaBuilder, articleRoot, articleFilterDto.getStatus()));
+
         if(articleFilterDto.getRating()!=null){
             predicates.add(createLikesPredicate(articleRoot, Double.valueOf(articleFilterDto.getRating())));
         }
-        List<Predicate> joins = createJoins(articleFilterDto, criteriaQuery, articleRoot);
-        predicates.addAll(joins);
+        predicates.addAll(createJoins(articleFilterDto, criteriaQuery, articleRoot));
+
 
         if(articleFilterDto.getAuthorId()!=null
                 && articleFilterDto.getUserId()!=null
                 &&  articleFilterDto.getAuthorId().equals(articleFilterDto.getUserId())){
             predicates.add(createOwnPredicate(criteriaBuilder, articleRoot, articleFilterDto.getAuthorId()));
         }
-        criteriaQuery.select(articleRoot)
-                .where(predicates.toArray(Predicate[]::new))
-                .orderBy(criteriaBuilder.asc(articleRoot.get("created")));
-        return criteriaQuery;
+        return predicates;
+
     }
 
     private Predicate createOwnPredicate(CriteriaBuilder criteriaBuilder, Root<Article> articleRoot, String authorId) {

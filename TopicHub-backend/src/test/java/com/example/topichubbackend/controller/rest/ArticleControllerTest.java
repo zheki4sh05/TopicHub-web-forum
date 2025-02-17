@@ -11,16 +11,15 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.context.*;
-import org.springframework.util.*;
+import org.springframework.test.web.servlet.*;
 import org.testcontainers.junit.jupiter.*;
-import org.springframework.test.web.servlet.MockMvc;
+
 import java.sql.*;
 import java.time.*;
 import java.util.*;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers
 @SpringBootTest(classes = TestContainerConfig.class)
@@ -74,7 +73,7 @@ class ArticleControllerTest {
                 .theme("тема")
                 .keyWords("слова")
                 .created(Timestamp.valueOf(LocalDateTime.now()))
-                .status(StatusDto.MODERATION.type())
+                .status(StatusDto.MODERATION.name())
                 .build();
         ArticleEntity article2 = ArticleEntity.builder()
                 .author(userRepository.findById(id1).orElseThrow(EntityNotFoundException::new))
@@ -82,7 +81,7 @@ class ArticleControllerTest {
                 .theme("тема2")
                 .keyWords("слова2")
                 .created(Timestamp.valueOf(LocalDateTime.now()))
-                .status(StatusDto.MODERATION.type())
+                .status(StatusDto.MODERATION.name())
                 .build();
 
         var savedArticle = articleRepo.save(article1);
@@ -97,7 +96,7 @@ class ArticleControllerTest {
                         .param("month", "12")
                         .param("year", "2025")
                         .param("userId", id1.toString())
-                        .param("status", StatusDto.MODERATION.type())
+                        .param("status", StatusDto.MODERATION.name())
                         .param("hub", hubId.toString())
                         .param("page", "1"))
                 .andExpect(status().isOk())

@@ -5,9 +5,9 @@ import com.example.topichubbackend.security.util.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 
 /**
@@ -20,7 +20,6 @@ import java.util.*;
  */
 @RequestMapping("/api/v1/subscription")
 @AllArgsConstructor
-@Slf4j
 @RestController
 public class SubscribeController {
 
@@ -31,10 +30,10 @@ public class SubscribeController {
      * Fetches a list of authors that the user has subscribed to or the list of followers.
      *
      * <p>This endpoint allows users to fetch either a list of authors they have subscribed to or a list of followers,
-     * based on the type specified in the request.
+     * based on the name specified in the request.
      *
-     * @param type the type of subscription to fetch: either "subscribes" for subscribed authors or "followers" for followers.
-     * @return a ResponseEntity containing a list of AuthorDto objects and a 200 OK status if successful, or a 400 BAD REQUEST if the type is invalid.
+     * @param type the name of subscription to fetch: either "subscribes" for subscribed authors or "followers" for followers.
+     * @return a ResponseEntity containing a list of AuthorDto objects and a 200 OK status if successful, or a 400 BAD REQUEST if the name is invalid.
      * @see AuthorDto
      */
     @GetMapping("")

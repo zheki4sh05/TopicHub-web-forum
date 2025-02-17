@@ -2,14 +2,16 @@ package com.example.topichubbackend.services.impls;
 
 import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.services.interfaces.*;
-import jakarta.mail.*;
 import jakarta.mail.Session;
+import jakarta.mail.*;
 import jakarta.mail.internet.*;
+import lombok.extern.slf4j.*;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@Slf4j
 public class EmailService implements IEmailService {
     private final Session session;
     private final String email;
@@ -51,6 +53,7 @@ public class EmailService implements IEmailService {
             Transport.send(message);
 
         } catch (MessagingException e) {
+            log.error("Email service:{}", e.getMessage());
         }
     }
 }

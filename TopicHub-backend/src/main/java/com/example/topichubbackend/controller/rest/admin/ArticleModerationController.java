@@ -6,12 +6,11 @@ import com.example.topichubbackend.services.interfaces.*;
 import com.example.topichubbackend.util.*;
 import jakarta.validation.*;
 import lombok.*;
-import lombok.extern.slf4j.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 
-@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admin/article")
@@ -21,24 +20,24 @@ public class ArticleModerationController {
     private final CustomSecurityExpression customSecurityExpression;
 
     @GetMapping("/fetch")
-    public ResponseEntity<?> getModeration(
+    public ResponseEntity<PageResponse<ArticleDto>> getModeration(
             @RequestParam Map<String, String> reqParam
     ){
         var articleFilter = HttpRequestUtils.parseFilterParams(reqParam);
         articleFilter.setUserId(customSecurityExpression.getUserId());
-        PageResponse<ArticleDto> articles = articleService.fetch(articleFilter);
+        var articles = articleService.fetch(articleFilter);
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
     @PostMapping("/status")
-    public  ResponseEntity<?> updateStatus(
+    public  ResponseEntity<ArticleStatusDto> updateStatus(
             @Valid  @RequestBody ArticleStatusDto articleStatusDto
     ){
         articleService.update(articleStatusDto);
         return new ResponseEntity<>(articleStatusDto, HttpStatus.OK);
     }
     @DeleteMapping("/del")
-    public  ResponseEntity<?> delete(
+    public  ResponseEntity<String> delete(
            @RequestParam("id") String id
     ){
         articleService.deleteAdmin(id);

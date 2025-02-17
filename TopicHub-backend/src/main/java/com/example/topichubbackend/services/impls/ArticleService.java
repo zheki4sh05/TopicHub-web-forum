@@ -8,14 +8,11 @@ import com.example.topichubbackend.model.*;
 import com.example.topichubbackend.repository.*;
 import com.example.topichubbackend.services.interfaces.*;
 import jakarta.persistence.criteria.*;
-import jakarta.transaction.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
 
-import java.sql.*;
-import java.time.*;
 import java.util.*;
 
 @AllArgsConstructor
@@ -31,39 +28,23 @@ public class ArticleService implements IArticleService {
     private final ArticleRepo articleRepo;
     private final ArticleViewRepository articleViewRepository;
     private final FilterQueryFactory filterQueryFactory;
+    private final ArticlePartMapper articlePartMapper;
 
     @Override
     @Transactional
     public Long create(ArticleDto articleDto, String id) {
-        final String DILIMITER = "|";
         List<Hub> hubList = hubDao.findAll();
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(EntityNotFoundException::new);
-        final var article = ArticleEntity.builder()
-                .theme(articleDto.getTheme())
-                .keyWords(String.join(DILIMITER, articleDto.getKeyWords()))
-                .created(Timestamp.valueOf(LocalDateTime.now()))
-                .author(user)
-                .status(StatusDto.MODERATION.type())
-                .hub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElseThrow())
-                .build();
-
+        final var article = articleMapper.fromDto(articleDto);
+        article.setAuthor(user);
+        article.setHub(hubList.stream().filter(item->item.getId().equals(articleDto.getHub())).findFirst().orElse(null));
       Long savedId = articleRepo.save(article).getId();
-
         articleDto.getList().forEach(item->{
-            articlePartRepository.save(ArticlePart.builder()
-                    .uuid(UUID.randomUUID())
-                    .id(item.getId())
-                    .value(item.getValue())
-                    .name(item.getName())
-                    .type(item.getType())
-                    .created(item.getCreated())
-                    .articleEntity(article)
-                    .build());
+            var newPart = articlePartMapper.fromDto(item);
+            newPart.setArticleEntity(article);
+            articlePartRepository.save(newPart);
         });
-
         return savedId;
-
-
     }
 
     @Override
@@ -90,7 +71,7 @@ public class ArticleService implements IArticleService {
 
     }
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public PageResponse<ArticleDto> fetchBookMarks(String userId, Integer page) {
         Pageable pageable= PageRequest.of(page-1,15);
         Page<Article> articles = articleViewRepository.findBookmarks(UUID.fromString(userId),pageable);
@@ -102,7 +83,7 @@ public class ArticleService implements IArticleService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public PageResponse<ArticleDto> fetch(ArticleFilterDto articleFilter) {
         CriteriaQuery<Article> articleCriteriaQuery = filterQueryFactory.createQuery(articleFilter);
         PageResponse<Article> articlePage = articleRepository.findByQuery(
@@ -118,6 +99,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
+    @Transactional
     public void update(ArticleDto updatedArticle, String id) {
         var delArticle = articleRepo.findById(updatedArticle.getId()).orElseThrow(()->new EntityNotFoundException("Статья не найдена"));
         articleRepo.delete(delArticle);
@@ -135,7 +117,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ArticleDto findById(String id) {
         var a = articleViewRepository.findById(Long.parseLong(id));
         return articleMapper.toDto(a
