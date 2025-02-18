@@ -8,7 +8,7 @@ import org.mapstruct.*;
 public interface ComplaintMapper {
 
     @Mapping( target = "id", expression = "java(item.getId().toString())")
-    @Mapping(source = "article.id", target = "targetId")
+    @Mapping(target = "targetId", expression = "java(\"id\")")
     @Mapping(target = "type", ignore = true)
     @Mapping(source = "date", target = "date")
     @Mapping(target = "userDto", source = "author")

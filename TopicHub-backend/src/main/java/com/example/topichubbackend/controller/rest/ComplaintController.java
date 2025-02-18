@@ -38,7 +38,9 @@ public class ComplaintController {
     @PostMapping("")
     public ResponseEntity<?> doPost(@RequestBody ComplaintDto complaintDto)  {
         String userId = customSecurityExpression.getUserId();
-        complaintDto.getUserDto().setId(userId);
+        complaintDto.setUserDto(AuthorDto.builder()
+                        .id(userId)
+                .build());
         complaintControl.create(complaintDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

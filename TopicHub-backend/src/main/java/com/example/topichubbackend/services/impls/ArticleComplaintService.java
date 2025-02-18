@@ -71,6 +71,9 @@ public class ArticleComplaintService implements IArticleComplaintService {
                 .article(article)
                 .date(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
-        return complaintMapper.mapFrom( articleComplaintRepository.save(articleComplaint));
+        var saved =  articleComplaintRepository.save(articleComplaint);
+        var dto = complaintMapper.mapFrom(saved);
+        dto.setTargetId(String.valueOf(article.getId()));
+        return dto;
     }
 }

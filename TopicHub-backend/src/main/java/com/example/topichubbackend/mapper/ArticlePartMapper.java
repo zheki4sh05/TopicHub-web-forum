@@ -19,7 +19,7 @@ public interface ArticlePartMapper {
     ArticlePartDto toDto(ArticlePart articlePart);
 
     @Mappings({
-            @Mapping(target = "uuid", expression = "java(java.util.UUID.fromString(articlePartDto.getId().toString()))"),
+            @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID())"),
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "value", source = "value"),
             @Mapping(target = "name", source = "value"),

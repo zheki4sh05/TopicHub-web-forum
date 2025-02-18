@@ -22,30 +22,7 @@ public class ComplaintService implements IComplaintControl {
                 articleComplaintService::create,
                 commentComplaintService::create
                 ,complaintDto);
-//        User user = userRepository.findById(UUID.fromString(userId))
-//                .orElseThrow(EntityNotFoundException::new);
-//
-//        if(complaintDto.getType().equals(ARTICLE)){
-//
-//            Optional<ArticleComplaint> complaint = articleComplaintRepository.findByArticleUserId(Long.valueOf(complaintDto.getTargetId()), UUID.fromString(userId));
-//            if(complaint.isEmpty()){
-//
-//                createAndSaveArticleComplaint(complaintDto, user);
-//
-//            }else{
-//                throw new EntityAlreadyExists();
-//            }
-//
-//        }else if(complaintDto.getType().equals(COMMENT)){
-//            Optional<CommentComplaint> complaint = commentComplaintRepository.findByCommentUserId(complaintDto.getTargetId(), userId);
-//            if(complaint.isEmpty()){
-//                createAndSaveCommentComplaint(complaintDto, user);
-//            }else{
-//                throw new EntityAlreadyExists();
-//            }
-//        }else{
-//            throw new BadRequestException();
-//        }
+
     }
 
     @Override
